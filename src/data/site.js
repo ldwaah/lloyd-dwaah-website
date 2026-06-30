@@ -171,11 +171,11 @@ export const experience = {
       id: "web3-defi",
       year: "2020 - Present",
       title: "Web3, DeFi & Emerging Technology",
-      role: "Social Media Marketing · DeFi Protocols",
+      role: "EvolveOne.ai · AI · LLMs · Websites",
       summary:
-        "Originally working in social media marketing before becoming deeply involved in DeFi protocols and distributed product teams.",
+        "Founded EvolveOne.ai, originally as a digital marketing company; now focused on AI, LLMs and websites.",
       detail:
-        "From 2020, artificial intelligence joined decentralised finance as a growing thread of work: practical experience in emerging technology that increasingly informs how I think about systems, scale and impact in education.",
+        "Alongside earlier work in DeFi protocols and distributed product teams, EvolveOne.ai now builds AI products, LLM-powered tools and websites for businesses and education.",
     },
     {
       id: "sport-youth",
@@ -274,7 +274,7 @@ export const experience = {
         endDate: "Present",
         title: "Founder",
         organisation: "EvolveOne.ai",
-        note: "Originally founded as a digital marketing company; EvolveOne.ai listed on LinkedIn from January 2025.",
+        note: "Originally founded as a digital marketing company; now focused on AI, LLMs and websites.",
       },
       {
         id: "besf",
@@ -305,7 +305,7 @@ export const ventures = {
       status: "Live",
       href: "https://evolveone.ai",
       description:
-        "Building intelligent AI products, educational technology and digital platforms that improve learning, productivity and human potential.",
+        "Originally founded as a digital marketing company; now focused on AI, LLMs and websites.",
     },
     {
       logo: "/assets/redefiningms-logo.png",
