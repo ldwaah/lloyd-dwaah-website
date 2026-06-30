@@ -71,19 +71,19 @@ function VentureScrollMoment({ venture, index, total }) {
   );
   const logoY = useTransform(scrollYProgress, [0, 0.28], [24, 0]);
   const logoScale = useTransform(scrollYProgress, [0, 0.28], [0.88, 1]);
-  const logoOpacity = useTransform(scrollYProgress, [0, 0.12], [0, 1]);
+  const logoOpacity = useTransform(scrollYProgress, [0, 0.12], [0.25, 1]);
   const logoRotate = useTransform(scrollYProgress, [0, 0.28], [fromLeft ? -5 : 5, 0]);
 
   const glowOpacity = useTransform(scrollYProgress, [0, 0.22, 0.65], [0, 0.55, 0.25]);
 
   const indexOpacity = useTransform(scrollYProgress, [0.02, 0.15], [0, 1]);
-  const titleOpacity = useTransform(scrollYProgress, [0.08, 0.22], [0, 1]);
+  const titleOpacity = useTransform(scrollYProgress, [0.08, 0.22], [0.4, 1]);
   const titleY = useTransform(scrollYProgress, [0.08, 0.24], [36, 0]);
 
-  const detailsOpacity = useTransform(scrollYProgress, [0.18, 0.36], [0, 1]);
+  const detailsOpacity = useTransform(scrollYProgress, [0.18, 0.36], [0.4, 1]);
   const detailsY = useTransform(scrollYProgress, [0.18, 0.38], [28, 0]);
 
-  const ctaOpacity = useTransform(scrollYProgress, [0.32, 0.48], [0, 1]);
+  const ctaOpacity = useTransform(scrollYProgress, [0.32, 0.48], [0.4, 1]);
   const ctaY = useTransform(scrollYProgress, [0.32, 0.48], [16, 0]);
 
   const exitOpacity = useTransform(scrollYProgress, [0.78, 1], [1, 0.35]);
@@ -231,7 +231,7 @@ function VentureScrollMoment({ venture, index, total }) {
 
 function HorizonSection() {
   return (
-    <section className="border-t border-line bg-hq-deep/40">
+    <section className="border-t border-line bg-hq-deep">
       <div className="section-pad mx-auto max-w-3xl text-center">
         <Reveal y={20}>
           <span className="status-label-gold">{ventures.future.label}</span>

@@ -41,8 +41,6 @@ export default function HomeOnly() {
   const reduced = prefersReducedMotion();
 
   const heroTrackRef = useRef(null);
-  const nameTrackRef = useRef(null);
-  const ethosTrackRef = useRef(null);
 
   const { scrollYProgress: heroProgress } = useScroll({
     target: heroTrackRef,
@@ -50,23 +48,8 @@ export default function HomeOnly() {
   });
 
   const sceneOpacity = useTransform(heroProgress, [0, 0.55, 1], [1, 0.35, 0]);
-  const sceneScale = useTransform(heroProgress, [0, 1], [1, reduced ? 1 : 0.94]);
+  const sceneScale = useTransform(heroProgress, [0, 1], [1, reduced ? 1 : 0.96]);
   const chevronOpacity = useTransform(heroProgress, [0, 0.2], [1, 0]);
-
-  const { scrollYProgress: pageProgress } = useScroll();
-  const contentY = useTransform(pageProgress, [0, 1], [0, reduced ? 0 : -32]);
-
-  const nameParallax = useScroll({
-    target: nameTrackRef,
-    offset: ["start end", "end start"],
-  });
-  const nameY = useTransform(nameParallax.scrollYProgress, [0, 1], [48, -48]);
-
-  const ethosParallax = useScroll({
-    target: ethosTrackRef,
-    offset: ["start end", "end start"],
-  });
-  const ethosY = useTransform(ethosParallax.scrollYProgress, [0, 1], [40, -40]);
 
   const handlePreloaderComplete = useCallback(() => {
     setShowPreloader(false);
@@ -96,8 +79,7 @@ export default function HomeOnly() {
         onComplete={handlePreloaderComplete}
       />
 
-      <motion.div
-        style={{ y: contentY }}
+      <div
         className={`page-enter relative z-10 ${showPreloader ? "pointer-events-none" : ""}`}
       >
         <SiteNav transparent />
@@ -113,56 +95,41 @@ export default function HomeOnly() {
           </div>
         </section>
 
-        {/* Name */}
-        <section
-          ref={nameTrackRef}
-          className="relative bg-hq-deep/85 backdrop-blur-md"
-        >
+        {/* Name — solid panel so text always reads over the portrait */}
+        <section className="relative z-20 bg-hq-deep">
           <div className="section-pad mx-auto flex min-h-screen max-w-4xl flex-col justify-center text-center">
-            <motion.div style={{ y: reduced ? 0 : nameY }}>
-              <RevealLines
-                lines={[home.nameReveal]}
-                lineClassName="font-serif text-statement text-ink text-balance"
-                revealDelay={0.32}
-                lineStagger={0.12}
-              />
-            </motion.div>
+            <RevealLines
+              lines={[home.nameReveal]}
+              lineClassName="font-serif text-statement text-ink text-balance"
+              revealDelay={0.2}
+            />
           </div>
         </section>
 
         {/* Ethos */}
-        <section
-          ref={ethosTrackRef}
-          className="relative bg-hq-deep/90 backdrop-blur-md"
-        >
+        <section className="relative z-20 bg-hq-deep">
           <div className="section-pad mx-auto flex min-h-screen max-w-4xl flex-col justify-center text-center">
-            <motion.div style={{ y: reduced ? 0 : ethosY }}>
-              <RevealLines
-                lines={[home.ethosStatement]}
-                lineClassName="font-serif text-statement text-ink text-balance"
-                revealDelay={0.34}
-                lineStagger={0.1}
-              />
-            </motion.div>
+            <Reveal revealDelay={0.22} y={28} viewportMargin="0px 0px -40px 0px">
+              <p className="font-serif text-statement text-ink text-balance">
+                {home.ethosStatement}
+              </p>
+            </Reveal>
           </div>
         </section>
 
         {/* Core principles */}
-        <section
-          id="principles"
-          className="relative border-t border-line bg-hq-deep/95 backdrop-blur-sm"
-        >
+        <section id="principles" className="relative z-20 border-t border-line bg-hq-deep">
           <div className="section-pad mx-auto max-w-4xl">
-            <Reveal revealDelay={0.24} y={20}>
+            <Reveal revealDelay={0.2} y={20}>
               <span className="eyebrow">{ethos.principlesHeading}</span>
             </Reveal>
-            <Reveal revealDelay={0.24} delay={0.14} y={32}>
+            <Reveal revealDelay={0.2} delay={0.1} y={28}>
               <h2 className="mt-8 font-serif text-hero text-ink">{ethos.principlesIntro}</h2>
             </Reveal>
 
             <div className="mt-20 space-y-0">
               {ethos.principles.map((principle, i) => (
-                <Reveal key={principle.id} revealDelay={0.2} delay={i * 0.1} y={20}>
+                <Reveal key={principle.id} revealDelay={0.15} delay={i * 0.08} y={20}>
                   <article className="group border-t border-line py-10 transition-colors duration-500 hover:bg-white/[0.02] md:py-14">
                     <div className="flex flex-col gap-4 md:flex-row md:items-start md:gap-12">
                       <span className="font-serif text-sm tracking-widest text-accent/50">
@@ -189,7 +156,7 @@ export default function HomeOnly() {
         </section>
 
         <SiteFooter minimal />
-      </motion.div>
+      </div>
     </div>
   );
 }

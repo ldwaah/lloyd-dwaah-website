@@ -76,9 +76,9 @@ function TimelineMilestone({ entry, index, total }) {
     offset: ["start end", "center center"],
   });
 
-  const opacity = useTransform(scrollYProgress, [0, 0.4, 1], [0, 1, 1]);
-  const y = useTransform(scrollYProgress, [0, 0.5], [80, 0]);
-  const scale = useTransform(scrollYProgress, [0, 0.5], [0.96, 1]);
+  const opacity = useTransform(scrollYProgress, [0, 0.25, 1], [0.35, 1, 1]);
+  const y = useTransform(scrollYProgress, [0, 0.5], [48, 0]);
+  const scale = useTransform(scrollYProgress, [0, 0.5], [0.98, 1]);
 
   if (reduced) {
     return (

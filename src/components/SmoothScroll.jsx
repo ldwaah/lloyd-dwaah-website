@@ -9,7 +9,8 @@ export function useLenis() {
 }
 
 /**
- * Weighted smooth scroll (Lenis). Syncs with framer-motion useScroll and Scene3D.
+ * Weighted smooth scroll (Lenis). Dispatches scroll events so framer-motion
+ * useScroll / whileInView stay in sync.
  */
 export function SmoothScrollProvider({ children }) {
   const lenisRef = useRef(null);
@@ -29,6 +30,10 @@ export function SmoothScrollProvider({ children }) {
 
     lenisRef.current = lenis;
     window.__lenis = lenis;
+
+    lenis.on("scroll", () => {
+      window.dispatchEvent(new Event("scroll"));
+    });
 
     let rafId = 0;
     const raf = (time) => {
