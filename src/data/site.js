@@ -340,8 +340,8 @@ export const publications = {
   intro:
     "Writing is how I make sense of things. These collections bring together music and storytelling to explore identity, character, language and the human experience.",
   portrait: {
-    src: "/assets/lloyd-avatar.webp",
-    alt: "Lloyd Dwaah reading",
+    src: "/assets/publications/author-hero.webp",
+    alt: "Lloyd Dwaah writing at his desk",
     caption: "Author & publisher",
   },
   books: [

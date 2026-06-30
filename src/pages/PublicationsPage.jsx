@@ -1,7 +1,14 @@
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import PageShell from "../components/PageShell.jsx";
 import Reveal from "../components/Reveal.jsx";
+import PublicationsIntro, {
+  shouldPlayPublicationsIntro,
+} from "../components/PublicationsIntro.jsx";
 import { publications, featuredBookSlugs } from "../data/site.js";
+
+const AUTHOR_HERO = "/assets/publications/author-hero.webp";
+const ease = [0.22, 1, 0.36, 1];
 
 const SPINE_COLORS = [
   "from-amber-900/80 to-amber-950",
@@ -124,29 +131,68 @@ function Shelf({ books, label }) {
 }
 
 export default function PublicationsPage() {
+  const [playIntro, setPlayIntro] = useState(false);
+  const [contentVisible, setContentVisible] = useState(false);
+
+  useEffect(() => {
+    if (shouldPlayPublicationsIntro()) {
+      setPlayIntro(true);
+    } else {
+      setContentVisible(true);
+    }
+  }, []);
+
   return (
     <PageShell ambient="publications">
-      <section className="section-pad pb-12">
-        <Reveal>
-          <span className="eyebrow">{publications.eyebrow}</span>
-          <h1 className="mt-8 max-w-3xl font-serif text-display text-ink">{publications.heading}</h1>
-          <p className="mt-8 max-w-2xl text-xl leading-relaxed text-muted">{publications.intro}</p>
-        </Reveal>
-      </section>
+      {playIntro && (
+        <PublicationsIntro
+          onComplete={() => {
+            setPlayIntro(false);
+            setContentVisible(true);
+          }}
+        />
+      )}
 
-      <section className="border-t border-line bg-hq-darker/50">
-        <div className="section-pad mx-auto max-w-6xl">
-          <div className="mb-20 flex items-end gap-8">
-            <div className="flex-1">
-              <Shelf books={featuredBooks} label="The collection" />
-            </div>
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: contentVisible ? 1 : 0 }}
+        transition={{ duration: 1.2, ease }}
+      >
+        <section className="relative min-h-[55vh] w-full overflow-hidden md:min-h-[62vh]">
+          <img
+            src={AUTHOR_HERO}
+            alt="Lloyd Dwaah writing at his desk in a private study"
+            className="absolute inset-0 h-full w-full object-cover object-[center_35%]"
+            fetchPriority="high"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-hq-darker via-hq-darker/55 to-hq-darker/15" />
+          <div className="relative flex min-h-[55vh] flex-col justify-end section-pad pb-14 md:min-h-[62vh] md:pb-20">
+            <Reveal>
+              <span className="eyebrow">{publications.eyebrow}</span>
+              <h1 className="mt-8 max-w-3xl font-serif text-display text-ink">
+                {publications.heading}
+              </h1>
+              <p className="mt-8 max-w-2xl text-xl leading-relaxed text-muted">
+                {publications.intro}
+              </p>
+            </Reveal>
           </div>
+        </section>
 
-          <Reveal>
-            <p className="text-center text-sm italic text-muted/70">{publications.note}</p>
-          </Reveal>
-        </div>
-      </section>
+        <section className="border-t border-line bg-hq-darker/50">
+          <div className="section-pad mx-auto max-w-6xl">
+            <div className="mb-20 flex items-end gap-8">
+              <div className="flex-1">
+                <Shelf books={featuredBooks} label="The collection" />
+              </div>
+            </div>
+
+            <Reveal>
+              <p className="text-center text-sm italic text-muted/70">{publications.note}</p>
+            </Reveal>
+          </div>
+        </section>
+      </motion.div>
     </PageShell>
   );
 }
