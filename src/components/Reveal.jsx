@@ -4,13 +4,18 @@ import { prefersReducedMotion } from "../lib/input.js";
 
 const easing = [0.22, 1, 0.36, 1];
 
+/** Default pause after entering viewport before fade-up begins (seconds). */
+export const REVEAL_DEFAULT_DELAY = 0.22;
+
 export default function Reveal({
   children,
   delay = 0,
+  revealDelay = REVEAL_DEFAULT_DELAY,
   y = 24,
   className = "",
   once = true,
   duration = 0.85,
+  viewportMargin = "-8% 0px",
 }) {
   const reduced = prefersReducedMotion();
 
@@ -23,8 +28,8 @@ export default function Reveal({
       className={className}
       initial={{ opacity: 0, y }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once, margin: "-72px" }}
-      transition={{ duration, delay, ease: easing }}
+      viewport={{ once, margin: viewportMargin }}
+      transition={{ duration, delay: revealDelay + delay, ease: easing }}
     >
       {children}
     </motion.div>
@@ -35,9 +40,11 @@ export default function Reveal({
 export function RevealStagger({
   children,
   className = "",
-  stagger = 0.08,
+  stagger = 0.12,
+  revealDelay = REVEAL_DEFAULT_DELAY,
   y = 20,
   once = true,
+  viewportMargin = "-8% 0px",
 }) {
   const reduced = prefersReducedMotion();
   const items = Children.toArray(children).filter(isValidElement);
@@ -53,8 +60,12 @@ export function RevealStagger({
           key={child.key ?? i}
           initial={{ opacity: 0, y }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once, margin: "-72px" }}
-          transition={{ duration: 0.8, delay: i * stagger, ease: easing }}
+          viewport={{ once, margin: viewportMargin }}
+          transition={{
+            duration: 0.8,
+            delay: revealDelay + i * stagger,
+            ease: easing,
+          }}
         >
           {child}
         </motion.div>
@@ -63,7 +74,13 @@ export function RevealStagger({
   );
 }
 
-export function RevealLines({ lines, className = "", lineClassName = "" }) {
+export function RevealLines({
+  lines,
+  className = "",
+  lineClassName = "",
+  revealDelay = REVEAL_DEFAULT_DELAY,
+  lineStagger = 0.14,
+}) {
   const reduced = prefersReducedMotion();
 
   if (reduced) {
@@ -86,8 +103,12 @@ export function RevealLines({ lines, className = "", lineClassName = "" }) {
             className={`block ${lineClassName}`}
             initial={{ y: "110%" }}
             whileInView={{ y: "0%" }}
-            viewport={{ once: true, margin: "-80px" }}
-            transition={{ duration: 1.1, delay: i * 0.12, ease: easing }}
+            viewport={{ once: true, margin: "-8% 0px" }}
+            transition={{
+              duration: 1.1,
+              delay: revealDelay + i * lineStagger,
+              ease: easing,
+            }}
           >
             {line}
           </motion.span>

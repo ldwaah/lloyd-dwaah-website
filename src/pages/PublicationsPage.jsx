@@ -26,7 +26,7 @@ function BookOnShelf({ book, index, order }) {
   const spineColor = SPINE_COLORS[index % SPINE_COLORS.length];
 
   return (
-    <Reveal delay={index * 0.1} y={32} className="h-full">
+    <Reveal revealDelay={0.2} delay={index * 0.12} y={32} className="h-full">
     <motion.article
       className="perspective-1000 group relative flex h-full flex-col items-center"
       whileHover={{ zIndex: 20 }}
@@ -173,15 +173,15 @@ export default function PublicationsPage() {
           />
           <div className="absolute inset-0 bg-gradient-to-t from-hq-darker via-hq-darker/55 to-hq-darker/15" />
           <div className="relative flex min-h-[55vh] flex-col justify-end section-pad pb-14 md:min-h-[62vh] md:pb-20">
-            <Reveal y={20}>
+            <Reveal revealDelay={0.24} y={20}>
               <span className="eyebrow">{publications.eyebrow}</span>
             </Reveal>
-            <Reveal delay={0.08} y={36}>
+            <Reveal revealDelay={0.24} delay={0.12} y={36}>
               <h1 className="mt-8 max-w-3xl font-serif text-display text-ink">
                 {publications.heading}
               </h1>
             </Reveal>
-            <Reveal delay={0.16} y={28}>
+            <Reveal revealDelay={0.24} delay={0.24} y={28}>
               <p className="mt-8 max-w-2xl text-xl leading-relaxed text-muted">
                 {publications.intro}
               </p>

@@ -85,7 +85,7 @@ export default function HomeOnly() {
 
         <section className="relative border-t border-line/30 bg-hq-deep/80 backdrop-blur-sm">
           <div className="section-pad mx-auto flex min-h-[55vh] max-w-4xl flex-col justify-center text-center md:min-h-[60vh]">
-            <Reveal y={28}>
+            <Reveal revealDelay={0.28} y={28}>
               <h2 className="font-serif text-statement text-ink text-balance">{home.nameReveal}</h2>
             </Reveal>
           </div>
@@ -93,7 +93,7 @@ export default function HomeOnly() {
 
         <section className="relative border-t border-line/30 bg-hq-deep/80 backdrop-blur-sm">
           <div className="section-pad mx-auto flex min-h-[55vh] max-w-4xl flex-col justify-center text-center md:min-h-[60vh]">
-            <Reveal y={32}>
+            <Reveal revealDelay={0.3} y={32}>
               <p className="font-serif text-statement text-ink text-balance">{home.ethosStatement}</p>
             </Reveal>
           </div>
@@ -104,16 +104,16 @@ export default function HomeOnly() {
           className="relative border-t border-line bg-hq-deep/90 backdrop-blur-sm"
         >
           <div className="section-pad mx-auto max-w-4xl">
-            <Reveal y={20}>
+            <Reveal revealDelay={0.24} y={20}>
               <span className="eyebrow">{ethos.principlesHeading}</span>
             </Reveal>
-            <Reveal delay={0.1} y={32}>
+            <Reveal revealDelay={0.24} delay={0.14} y={32}>
               <h2 className="mt-8 font-serif text-hero text-ink">{ethos.principlesIntro}</h2>
             </Reveal>
 
             <div className="mt-20 space-y-0">
               {ethos.principles.map((principle, i) => (
-                <Reveal key={principle.id} delay={i * 0.08} y={20}>
+                <Reveal key={principle.id} revealDelay={0.2} delay={i * 0.1} y={20}>
                   <article className="group border-t border-line py-10 transition-colors duration-500 hover:bg-white/[0.02] md:py-14">
                     <div className="flex flex-col gap-4 md:flex-row md:items-start md:gap-12">
                       <span className="font-serif text-sm tracking-widest text-accent/50">

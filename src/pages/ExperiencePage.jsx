@@ -74,19 +74,19 @@ export default function ExperiencePage() {
   return (
     <PageShell ambient="experience">
       <section className="section-pad pb-16">
-        <Reveal y={20}>
+        <Reveal revealDelay={0.24} y={20}>
           <span className="eyebrow">{experience.eyebrow}</span>
         </Reveal>
-        <Reveal delay={0.08} y={40}>
+        <Reveal revealDelay={0.24} delay={0.12} y={40}>
           <h1 className="mt-8 max-w-4xl font-serif text-display text-ink text-balance">
             {experience.heading}
           </h1>
         </Reveal>
-        <Reveal delay={0.16} y={28}>
+        <Reveal revealDelay={0.24} delay={0.24} y={28}>
           <p className="mt-8 max-w-2xl text-xl leading-relaxed text-muted">{experience.intro}</p>
         </Reveal>
         {experience.spotlight && (
-          <Reveal delay={0.22} y={24}>
+          <Reveal revealDelay={0.22} delay={0.34} y={24}>
             <div className="relative mt-14 overflow-hidden rounded-2xl border border-line shadow-lift">
               <div className="relative min-h-[420px] md:min-h-[520px]">
                 <img
