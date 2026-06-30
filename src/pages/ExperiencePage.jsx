@@ -76,9 +76,8 @@ function TimelineMilestone({ entry, index, total }) {
     offset: ["start end", "center center"],
   });
 
-  const opacity = useTransform(scrollYProgress, [0, 0.25, 1], [0.35, 1, 1]);
-  const y = useTransform(scrollYProgress, [0, 0.5], [48, 0]);
-  const scale = useTransform(scrollYProgress, [0, 0.5], [0.98, 1]);
+  const y = useTransform(scrollYProgress, [0, 0.5], [32, 0]);
+  const scale = useTransform(scrollYProgress, [0, 0.5], [0.99, 1]);
 
   if (reduced) {
     return (
@@ -93,7 +92,7 @@ function TimelineMilestone({ entry, index, total }) {
   return (
     <motion.li
       ref={ref}
-      style={{ opacity, y, scale }}
+      style={{ y, scale }}
       className="relative min-h-[70vh] flex flex-col justify-center py-16 md:min-h-[80vh]"
     >
       <div className="absolute left-0 top-1/2 hidden h-px w-full -translate-y-1/2 bg-gradient-to-r from-transparent via-accent/20 to-transparent md:block" />

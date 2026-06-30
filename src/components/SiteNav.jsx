@@ -20,11 +20,7 @@ export default function SiteNav({ transparent = false }) {
 
   return (
     <>
-      <header
-        className={`fixed inset-x-0 top-0 z-[90] transition-all duration-500 ${
-          transparent && !menuOpen ? "bg-transparent" : "bg-hq/80 backdrop-blur-xl"
-        }`}
-      >
+      <header className="fixed inset-x-0 top-0 z-[100] bg-hq/95 backdrop-blur-xl transition-all duration-500">
         <nav className="relative mx-auto flex max-w-7xl items-center px-6 py-5 md:px-10">
           <StackedLogo className="shrink-0" />
 

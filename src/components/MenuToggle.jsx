@@ -10,7 +10,7 @@ export default function MenuToggle({ open, onClick, className = "" }) {
       aria-label={open ? "Close menu" : "Open menu"}
       aria-expanded={open}
       onClick={onClick}
-      className={`group relative z-[1] flex h-11 w-11 items-center justify-center border border-ink/25 bg-transparent transition-colors duration-300 hover:border-accent/50 hover:bg-white/[0.04] ${className}`}
+      className={`group relative z-[1] flex h-11 w-11 items-center justify-center border border-ink/60 bg-hq-deep/80 transition-colors duration-300 hover:border-accent/50 hover:bg-white/[0.06] ${className}`}
     >
       <motion.span
         className="absolute block h-px origin-center bg-ink group-hover:bg-accent"

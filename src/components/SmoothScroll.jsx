@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useRef } from "react";
 import Lenis from "lenis";
-import { prefersReducedMotion } from "../lib/input.js";
+import { isTouchDevice, prefersReducedMotion } from "../lib/input.js";
 
 const LenisContext = createContext(null);
 
@@ -9,14 +9,14 @@ export function useLenis() {
 }
 
 /**
- * Weighted smooth scroll (Lenis). Dispatches scroll events so framer-motion
- * useScroll / whileInView stay in sync.
+ * Smooth scroll on desktop pointer devices only.
+ * Touch/coarse pointers keep native scroll so content and menus stay reliable.
  */
 export function SmoothScrollProvider({ children }) {
   const lenisRef = useRef(null);
 
   useEffect(() => {
-    if (prefersReducedMotion()) return undefined;
+    if (prefersReducedMotion() || isTouchDevice()) return undefined;
 
     document.documentElement.classList.add("lenis", "lenis-smooth");
 
@@ -25,7 +25,6 @@ export function SmoothScrollProvider({ children }) {
       easing: (t) => Math.min(1, 1.001 - 2 ** (-10 * t)),
       smoothWheel: true,
       wheelMultiplier: 0.95,
-      touchMultiplier: 1.15,
     });
 
     lenisRef.current = lenis;
@@ -48,6 +47,7 @@ export function SmoothScrollProvider({ children }) {
       lenisRef.current = null;
       window.__lenis = null;
       document.documentElement.classList.remove("lenis", "lenis-smooth");
+      document.body.style.overflow = "";
     };
   }, []);
 

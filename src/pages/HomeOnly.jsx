@@ -3,7 +3,7 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import Scene3D from "../components/Scene3D.jsx";
 import SiteNav from "../components/SiteNav.jsx";
 import SiteFooter from "../components/SiteFooter.jsx";
-import Reveal, { RevealLines } from "../components/Reveal.jsx";
+import Reveal from "../components/Reveal.jsx";
 import HomeScrollLayers from "../components/HomeScrollLayers.jsx";
 import Preloader, { hasSeenHomePreloader } from "../components/Preloader.jsx";
 import { home, ethos } from "../data/site.js";
@@ -79,9 +79,7 @@ export default function HomeOnly() {
         onComplete={handlePreloaderComplete}
       />
 
-      <div
-        className={`page-enter relative z-10 ${showPreloader ? "pointer-events-none" : ""}`}
-      >
+      <div className="page-enter relative z-10">
         <SiteNav transparent />
 
         {/* Scroll track — hero holds the viewport while scene fades */}
@@ -95,25 +93,17 @@ export default function HomeOnly() {
           </div>
         </section>
 
-        {/* Name — solid panel so text always reads over the portrait */}
+        {/* Name */}
         <section className="relative z-20 bg-hq-deep">
           <div className="section-pad mx-auto flex min-h-screen max-w-4xl flex-col justify-center text-center">
-            <RevealLines
-              lines={[home.nameReveal]}
-              lineClassName="font-serif text-statement text-ink text-balance"
-              revealDelay={0.2}
-            />
+            <p className="font-serif text-statement text-ink text-balance">{home.nameReveal}</p>
           </div>
         </section>
 
         {/* Ethos */}
         <section className="relative z-20 bg-hq-deep">
           <div className="section-pad mx-auto flex min-h-screen max-w-4xl flex-col justify-center text-center">
-            <Reveal revealDelay={0.22} y={28} viewportMargin="0px 0px -40px 0px">
-              <p className="font-serif text-statement text-ink text-balance">
-                {home.ethosStatement}
-              </p>
-            </Reveal>
+            <p className="font-serif text-statement text-ink text-balance">{home.ethosStatement}</p>
           </div>
         </section>
 

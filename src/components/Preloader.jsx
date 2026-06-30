@@ -24,6 +24,12 @@ export default function Preloader({ active, sceneReady, onComplete }) {
   const [visible, setVisible] = useState(true);
 
   useEffect(() => {
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, []);
+
+  useEffect(() => {
     if (!active) return;
     setVisible(true);
   }, [active]);
@@ -44,7 +50,7 @@ export default function Preloader({ active, sceneReady, onComplete }) {
 
     const tryExit = () => {
       if (cancelled || !visible) return;
-      if (minElapsed && imageReady && sceneReady) {
+      if (minElapsed && imageReady) {
         setVisible(false);
       }
     };
@@ -83,6 +89,15 @@ export default function Preloader({ active, sceneReady, onComplete }) {
       document.body.style.overflow = "";
     };
   }, [active, visible]);
+
+  useEffect(() => {
+    if (!active || visible) return undefined;
+    const timer = window.setTimeout(() => {
+      markHomePreloaderSeen();
+      onComplete();
+    }, 650);
+    return () => window.clearTimeout(timer);
+  }, [active, onComplete, visible]);
 
   if (!active) return null;
 

@@ -33,6 +33,12 @@ export function useScrollRef() {
 export const isMobile = () =>
   typeof window !== "undefined" && window.innerWidth < 768;
 
+export const isTouchDevice = () =>
+  typeof window !== "undefined" &&
+  (window.matchMedia("(pointer: coarse)").matches ||
+    "ontouchstart" in window ||
+    navigator.maxTouchPoints > 0);
+
 export const prefersReducedMotion = () =>
   typeof window !== "undefined" &&
   window.matchMedia("(prefers-reduced-motion: reduce)").matches;

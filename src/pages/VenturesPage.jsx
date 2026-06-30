@@ -71,23 +71,15 @@ function VentureScrollMoment({ venture, index, total }) {
   );
   const logoY = useTransform(scrollYProgress, [0, 0.28], [24, 0]);
   const logoScale = useTransform(scrollYProgress, [0, 0.28], [0.88, 1]);
-  const logoOpacity = useTransform(scrollYProgress, [0, 0.12], [0.25, 1]);
   const logoRotate = useTransform(scrollYProgress, [0, 0.28], [fromLeft ? -5 : 5, 0]);
 
   const glowOpacity = useTransform(scrollYProgress, [0, 0.22, 0.65], [0, 0.55, 0.25]);
 
-  const indexOpacity = useTransform(scrollYProgress, [0.02, 0.15], [0, 1]);
-  const titleOpacity = useTransform(scrollYProgress, [0.08, 0.22], [0.4, 1]);
-  const titleY = useTransform(scrollYProgress, [0.08, 0.24], [36, 0]);
+  const titleY = useTransform(scrollYProgress, [0.08, 0.24], [24, 0]);
+  const detailsY = useTransform(scrollYProgress, [0.18, 0.38], [20, 0]);
+  const ctaY = useTransform(scrollYProgress, [0.32, 0.48], [12, 0]);
 
-  const detailsOpacity = useTransform(scrollYProgress, [0.18, 0.36], [0.4, 1]);
-  const detailsY = useTransform(scrollYProgress, [0.18, 0.38], [28, 0]);
-
-  const ctaOpacity = useTransform(scrollYProgress, [0.32, 0.48], [0.4, 1]);
-  const ctaY = useTransform(scrollYProgress, [0.32, 0.48], [16, 0]);
-
-  const exitOpacity = useTransform(scrollYProgress, [0.78, 1], [1, 0.35]);
-  const exitScale = useTransform(scrollYProgress, [0.78, 1], [1, 0.97]);
+  const exitScale = useTransform(scrollYProgress, [0.78, 1], [1, 0.98]);
   const scrollHintOpacity = useTransform(scrollYProgress, [0.62, 0.85], [0, 0.5]);
 
   if (reduced) {
@@ -103,7 +95,7 @@ function VentureScrollMoment({ venture, index, total }) {
       aria-label={venture.title}
     >
       <motion.div
-        style={{ opacity: exitOpacity, scale: exitScale }}
+        style={{ scale: exitScale }}
         className="sticky top-16 flex h-[calc(100vh-4rem)] items-center overflow-hidden"
       >
         <div className="pointer-events-none absolute inset-0 opacity-[0.04]" aria-hidden="true">
@@ -119,13 +111,12 @@ function VentureScrollMoment({ venture, index, total }) {
         />
 
         <div className="relative mx-auto w-full max-w-6xl px-6 md:px-10">
-          <motion.p
-            style={{ opacity: indexOpacity }}
+          <p
             className="absolute left-6 top-0 font-serif text-6xl font-light text-ink/[0.04] md:left-10 md:text-8xl"
             aria-hidden="true"
           >
             {String(index + 1).padStart(2, "0")}
-          </motion.p>
+          </p>
 
           <div
             className={`grid items-center gap-12 md:grid-cols-2 md:gap-16 ${
@@ -137,7 +128,6 @@ function VentureScrollMoment({ venture, index, total }) {
                 x: logoX,
                 y: logoY,
                 scale: logoScale,
-                opacity: logoOpacity,
                 rotate: logoRotate,
               }}
               className="flex justify-center md:justify-center"
@@ -161,7 +151,7 @@ function VentureScrollMoment({ venture, index, total }) {
             </motion.div>
 
             <div className={`min-w-0 ${fromLeft ? "md:pl-4" : "md:pr-4"}`}>
-              <motion.div style={{ opacity: titleOpacity, y: titleY }}>
+              <motion.div style={{ y: titleY }}>
                 <span className="status-label">{venture.status}</span>
                 <h2 className="mt-5 font-serif text-4xl text-ink md:text-5xl lg:text-[3.25rem]">
                   {venture.href ? (
@@ -182,10 +172,7 @@ function VentureScrollMoment({ venture, index, total }) {
                 </p>
               </motion.div>
 
-              <motion.div
-                style={{ opacity: detailsOpacity, y: detailsY }}
-                className="mt-10 space-y-8 border-t border-line/60 pt-8"
-              >
+              <motion.div style={{ y: detailsY }} className="mt-10 space-y-8 border-t border-line/60 pt-8">
                 <div className="grid gap-6 sm:grid-cols-2">
                   <div>
                     <p className="meta-label">Role</p>
@@ -200,7 +187,7 @@ function VentureScrollMoment({ venture, index, total }) {
               </motion.div>
 
               {venture.href && (
-                <motion.div style={{ opacity: ctaOpacity, y: ctaY }} className="mt-10">
+                <motion.div style={{ y: ctaY }} className="mt-10">
                   <a
                     href={venture.href}
                     target="_blank"
