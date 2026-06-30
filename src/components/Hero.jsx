@@ -18,6 +18,15 @@ export default function Hero() {
             {home.eyebrow}
           </motion.span>
 
+          <motion.p
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.08, ease }}
+            className="mt-3 text-[11px] font-semibold uppercase tracking-[0.28em] text-brand/80"
+          >
+            {home.since}
+          </motion.p>
+
           <h1 className="mt-6 text-hero text-ink">
             {home.headline.split(" ").map((word, i) => (
               <span key={i} className="inline-block overflow-hidden align-top">

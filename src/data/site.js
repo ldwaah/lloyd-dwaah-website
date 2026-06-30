@@ -7,6 +7,7 @@
 export const meta = {
   name: "Lloyd Dwaah",
   initials: "LD",
+  since: "Since 2020",
 };
 
 // ---- Avatar / portrait source --------------------------------------------
@@ -32,6 +33,7 @@ export const nav = [
 // ---- 1. HOME — Who is Lloyd Dwaah? ---------------------------------------
 export const home = {
   eyebrow: "Lloyd Dwaah",
+  since: "Since 2020",
   // The defining line. Calm, ambitious, timeless.
   headline: "I build environments where people flourish.",
   sub: "Leader, builder and innovator working across education, sport, technology, coaching and writing. I create organisations, products and experiences that help people reach their potential.",
@@ -75,12 +77,12 @@ export const disciplineIllustrations = {
 
 export const highlights = {
   eyebrow: "At a glance",
-  heading: "Six disciplines. Two decades of building.",
+  heading: "Six disciplines. Since 2020.",
   items: [
     { value: "6", label: "Core disciplines", detail: "Leadership, education, coaching, sport, technology and writing" },
     { value: "5", label: "Published works", detail: "Anthologies, memoir and A Way With Words" },
     { value: "2", label: "Active ventures", detail: "EvolveOne.ai and RedefiningMS.co.uk" },
-    { value: "2020+", label: "Web3 & AI", detail: "DeFi protocols, product ops and emerging tech" },
+    { value: "Since 2020", label: "Web3 & AI", detail: "DeFi protocols, product ops and emerging tech" },
   ],
 };
 

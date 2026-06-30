@@ -40,7 +40,7 @@ export default function Footer() {
           <p className="text-xs text-muted">
             © {year} {meta.name}. All rights reserved.
           </p>
-          <p className="text-xs text-muted/80">Designed to evolve.</p>
+          <p className="text-xs text-muted/80">{meta.since} · Designed to evolve.</p>
         </div>
       </div>
     </footer>
