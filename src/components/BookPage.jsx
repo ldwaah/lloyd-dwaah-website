@@ -1,5 +1,5 @@
 import { Link, Navigate, useParams } from "react-router-dom";
-import { getBookBySlug, sectionIllustrations } from "../data/site.js";
+import { getBookBySlug, publications } from "../data/site.js";
 
 const alignClass = {
   left: "mr-auto text-left",
@@ -17,7 +17,7 @@ export default function BookPage() {
   const book = getBookBySlug(slug);
 
   if (!book) {
-    return <Navigate to="/#writing" replace />;
+    return <Navigate to="/#publications" replace />;
   }
 
   const sections = book.sections || [];
@@ -31,25 +31,30 @@ export default function BookPage() {
           <Link to="/" className="text-sm font-medium text-brand hover:text-brand-dark">
             ← Lloyd Dwaah
           </Link>
-          <Link to="/#writing" className="text-sm text-muted hover:text-ink">
-            All books
+          <Link to="/#publications" className="text-sm text-muted hover:text-ink">
+            All publications
           </Link>
         </div>
       </header>
 
       <main className="mx-auto max-w-5xl px-6 py-14 md:py-20">
-        {/* Centered square hero */}
         <div className="flex flex-col items-center text-center">
           <div className="h-44 w-44 overflow-hidden rounded-2xl border border-line bg-white shadow-card md:h-52 md:w-52">
             <img
-              src={sectionIllustrations.writing.src}
-              alt={sectionIllustrations.writing.alt}
-              className="h-full w-full object-cover"
+              src={publications.portrait.src}
+              alt={publications.portrait.alt}
+              className="h-full w-full object-cover object-top"
             />
           </div>
           <h1 className="mt-8 max-w-2xl font-serif text-3xl text-ink md:text-4xl">{book.title}</h1>
           {book.status && (
-            <span className="mt-3 rounded-full border border-brand/25 bg-brand/5 px-3 py-1 text-xs font-medium text-brand">
+            <span
+              className={`mt-3 rounded-full border px-3 py-1 text-xs font-medium ${
+                book.status === "Not Available"
+                  ? "border-line bg-canvas text-muted"
+                  : "border-brand/25 bg-brand/5 text-brand"
+              }`}
+            >
               {book.status}
             </span>
           )}
@@ -103,7 +108,6 @@ export default function BookPage() {
           </div>
         )}
 
-        {/* Zigzag: left → right → left */}
         <div className="mt-16 space-y-10 md:mt-20 md:space-y-14">
           {sections.map((section, index) => {
             const align = zigzagAligns[index % zigzagAligns.length];

@@ -84,6 +84,44 @@
   .link-underline:hover::after {
     @apply w-full;
   }
+
+  .section-dark {
+    @apply bg-navy text-white;
+  }
+
+  .section-dark .eyebrow {
+    @apply text-white/70;
+  }
+  .section-dark .eyebrow::before {
+    @apply bg-white/35;
+  }
+
+  .section-dark .text-ink,
+  .section-dark h2,
+  .section-dark h3 {
+    @apply text-white;
+  }
+
+  .section-dark .text-muted,
+  .section-dark p {
+    @apply text-white/70;
+  }
+
+  .section-dark .text-body {
+    @apply text-white/80;
+  }
+
+  .stat-value {
+    @apply font-serif text-3xl text-white md:text-4xl;
+  }
+
+  .stat-label {
+    @apply mt-2 text-sm font-semibold text-white;
+  }
+
+  .stat-detail {
+    @apply mt-2 text-xs leading-relaxed text-white/65;
+  }
 }
 
 @layer utilities {

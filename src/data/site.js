@@ -1,7 +1,5 @@
 // =====================================================================
 //  LLOYD DWAAH — site content & configuration
-//  This single file holds the entire narrative. Edit here to evolve the
-//  site over the years; the components read everything from this object.
 // =====================================================================
 
 export const meta = {
@@ -10,93 +8,75 @@ export const meta = {
   since: "Since 2020",
 };
 
-// ---- Avatar / portrait source --------------------------------------------
-// mode: "image" | "video" | "glb"  (see README for the GLB upgrade path)
 export const avatarConfig = {
   mode: "image",
   image: "/assets/lloyd-avatar.webp",
   video: "/assets/lloyd-avatar.mp4",
   glb: "/models/lloyd-head.glb",
-  tilt: 8, // degrees of mouse parallax — kept subtle and premium
+  tilt: 8,
 };
 
 // ---- Navigation -----------------------------------------------------------
 export const nav = [
-  { label: "Home", href: "#home" },
-  { label: "Ethos", href: "#ethos" },
-  { label: "Experience", href: "#experience" },
-  { label: "Ventures", href: "#ventures" },
-  { label: "Writing", href: "#writing" },
+  { label: "Home", href: "/" },
+  { label: "Experience", href: "/experience.html" },
+  { label: "Ventures", href: "/ventures.html" },
+  { label: "Publications", href: "/publications.html" },
   { label: "Contact", href: "#contact" },
 ];
 
-// ---- 1. HOME — Who is Lloyd Dwaah? ---------------------------------------
+// ---- 1. HOME --------------------------------------------------------------
 export const home = {
   eyebrow: "Lloyd Dwaah",
   since: "Since 2020",
-  // The defining line. Calm, ambitious, timeless.
-  headline: "I build environments where people flourish.",
-  sub: "Leader, builder and innovator working across education, sport, technology, coaching and writing. I create organisations, products and experiences that help people reach their potential.",
-  cta: { label: "Explore the work", href: "#experience" },
-  secondary: { label: "What I believe", href: "#ethos" },
-};
-
-// ---- Section illustrations (portrait-based editorial art) ----------------
-// Replace `src` paths when Higgsfield-generated assets are available.
-export const sectionIllustrations = {
-  ethos: {
-    src: "/assets/illustrations/ethos.svg",
-    alt: "Lloyd Dwaah — professional ethos and purpose",
-    caption: "Ethos & purpose",
-  },
-  ventures: {
-    src: "/assets/illustrations/ventures.svg",
-    alt: "Lloyd Dwaah — building ventures",
-    caption: "Building ventures",
-  },
-  writing: {
-    src: "/assets/illustrations/writing.svg",
-    alt: "Lloyd Dwaah — author and writer",
-    caption: "Author & writing",
-  },
-  contact: {
-    src: "/assets/illustrations/business.svg",
-    alt: "Lloyd Dwaah — leadership and collaboration",
-    caption: "Let's collaborate",
-  },
-};
-
-export const disciplineIllustrations = {
-  leadership: "/assets/illustrations/business.svg",
-  education: "/assets/illustrations/education.svg",
-  coaching: "/assets/illustrations/ethos.svg",
-  sport: "/assets/illustrations/ventures.svg",
-  technology: "/assets/illustrations/defi.svg",
-  writing: "/assets/illustrations/writing.svg",
+  ethosStatement:
+    "I believe that great leadership creates environments where people can flourish.",
+  cta: { label: "Explore my work", href: "/ventures.html" },
+  secondary: { label: "What I believe", href: "#principles" },
 };
 
 export const highlights = {
   eyebrow: "At a glance",
-  heading: "Six disciplines. Since 2020.",
+  heading: "A portfolio built across disciplines, ventures and publications.",
   items: [
-    { value: "6", label: "Core disciplines", detail: "Leadership, education, coaching, sport, technology and writing" },
-    { value: "5", label: "Published works", detail: "Anthologies, memoir and A Way With Words" },
-    { value: "2", label: "Active ventures", detail: "EvolveOne.ai and RedefiningMS.co.uk" },
-    { value: "Since 2020", label: "Web3 & AI", detail: "DeFi protocols, product ops and emerging tech" },
+    {
+      value: "6",
+      label: "Core disciplines",
+      detail: "Leadership, education, coaching, sport, technology and writing",
+    },
+    {
+      value: "3",
+      label: "Published books",
+      detail: "Gold Shades, The Perfect Gentleman and A True Lady",
+    },
+    {
+      value: "3",
+      label: "Upcoming works",
+      detail: "A Way With Words, When My Body Says No and future publications",
+    },
+    {
+      value: "2",
+      label: "Live ventures",
+      detail: "EvolveOne.ai and RedefiningMS.co.uk",
+    },
+    {
+      value: "Since 2020",
+      label: "Web3 & AI",
+      detail: "DeFi protocols, product operations and emerging technology",
+    },
   ],
 };
 
-// ---- 2. ETHOS — What does he believe? ------------------------------------
+// ---- 2. ETHOS -------------------------------------------------------------
 export const ethos = {
-  eyebrow: "Professional Ethos",
-  // Pulled apart for a cinematic, line-by-line reveal.
+  eyebrow: "Ethos",
   statementLines: [
     "I believe great leadership",
     "creates environments where",
     "people can flourish.",
   ],
   body: "Whether through education, coaching, sport, writing or technology, my purpose is to build systems, experiences and opportunities that help people realise their potential.",
-  principles: [
+  beliefs: [
     {
       title: "People before structures",
       text: "Organisations are only as strong as the people within them. I lead by building cultures where people feel trusted, challenged and able to grow.",
@@ -110,24 +90,16 @@ export const ethos = {
       text: "How something is made signals how much its people matter. I hold the same standard whether shaping a curriculum, a company or a sentence.",
     },
   ],
-};
-
-// ---- 3. EXPERIENCE — What has shaped him? --------------------------------
-// The six disciplines, presented as an interactive narrative.
-export const experience = {
-  eyebrow: "Core Experience",
-  heading: "Six disciplines. One philosophy.",
-  intro:
-    "My work has never followed a single track. Each discipline sharpens a different instinct, and together they shape how I lead and build.",
-  disciplines: [
+  principlesHeading: "Core principles",
+  principlesIntro: "That shape how I lead and build",
+  principles: [
     {
       id: "leadership",
       no: "01",
       title: "Leadership & Strategy",
       summary: "Building organisations and the cultures that carry them.",
       detail:
-        "Leading organisations, managing multidisciplinary teams, and shaping operational strategy and organisational development. I build cultures where people are trusted to do their best work, where high standards and humanity coexist.",
-      chipsLabel: "Focus",
+        "Leading organisations, managing multidisciplinary teams, and shaping operational strategy and organisational development.",
       tags: ["Organisational development", "Operational strategy", "Team leadership", "Culture building"],
     },
     {
@@ -136,9 +108,8 @@ export const experience = {
       title: "Education",
       summary: "Designing learning for those the system often leaves behind.",
       detail:
-        "Alternative Provision leadership, behaviour strategy, safeguarding, curriculum development, inclusion and school improvement. I build educational environments that hold high expectations and deep care in the same hand, and treat innovation as a duty rather than a luxury.",
-      chipsLabel: "Focus",
-      tags: ["Alternative Provision", "Behaviour strategy", "Safeguarding", "Curriculum", "Inclusion", "School improvement"],
+        "Alternative Provision leadership, behaviour strategy, safeguarding, curriculum development, inclusion and school improvement.",
+      tags: ["Alternative Provision", "Behaviour strategy", "Safeguarding", "Curriculum", "Inclusion"],
     },
     {
       id: "coaching",
@@ -146,9 +117,8 @@ export const experience = {
       title: "Coaching & Mentoring",
       summary: "Developing people through structured coaching and mentoring.",
       detail:
-        "Developing staff, leaders and young people through structured coaching, mentoring and personal development. I help people see further than they thought they could and build the habits to get there.",
-      chipsLabel: "Qualifications",
-      tags: ["Level 5 Coaching & Mentoring", "Working towards QTS", "Working towards Level 3 Safeguarding"],
+        "Developing staff, leaders and young people through structured coaching, mentoring and personal development.",
+      tags: ["Level 5 Coaching & Mentoring", "Working towards QTS", "Safeguarding"],
     },
     {
       id: "sport",
@@ -156,9 +126,8 @@ export const experience = {
       title: "Sport & Community Development",
       summary: "Using sport to develop leadership, discipline and growth.",
       detail:
-        "Managing sports facilities, leading sports academies and developing youth sport programmes and community initiatives. I use sport as a vehicle to develop leadership, discipline and personal growth, turning talent and energy into character and opportunity.",
-      chipsLabel: "Focus",
-      tags: ["Sports academies", "Youth programmes", "Facilities management", "Community initiatives"],
+        "Managing sports facilities, leading sports academies and developing youth sport programmes and community initiatives.",
+      tags: ["Sports academies", "Youth programmes", "Community initiatives"],
     },
     {
       id: "technology",
@@ -166,24 +135,8 @@ export const experience = {
       title: "Emerging Technologies",
       summary: "Building and scaling products across AI, Web3 and DeFi.",
       detail:
-        "Innovation has been a defining thread throughout my career. Since 2020 I have worked across Web3, blockchain, decentralised finance and artificial intelligence, contributing to multiple blockchain projects including established multi-million-dollar DeFi protocols.",
-      note:
-        "My work has included building international communities, leading distributed teams, supporting product launches, coordinating operations and helping digital products grow from early concepts into sustainable ecosystems. These experiences strengthened my ability to lead globally distributed teams, operate in fast-moving environments and build products that scale.",
-      chipsLabel: "Experience",
-      tags: [
-        "Artificial Intelligence",
-        "Web3",
-        "Blockchain",
-        "Decentralised Finance (DeFi)",
-        "Product Strategy",
-        "Digital Platforms",
-        "Product Operations",
-        "Community Leadership",
-        "Team Leadership",
-        "Brand Development",
-        "Content Strategy",
-        "Partnership Development",
-      ],
+        "Since 2020, working across Web3, blockchain, decentralised finance and artificial intelligence — including multi-million-dollar DeFi protocols.",
+      tags: ["Artificial Intelligence", "Web3", "Blockchain", "DeFi", "Product Operations"],
     },
     {
       id: "writing",
@@ -191,26 +144,75 @@ export const experience = {
       title: "Writing & Personal Development",
       summary: "Where leadership, resilience and purpose meet.",
       detail:
-        "Writing is where leadership, resilience and purpose meet. As a law graduate and author, I explore identity, character, resilience and human potential, distilling what I learn from leading, coaching and building into ideas others can use.",
-      chipsLabel: "Themes",
+        "As a law graduate and author, exploring identity, character, resilience and human potential through published work.",
       tags: ["Author", "Law graduate", "Leadership", "Resilience", "Identity"],
     },
   ],
 };
 
-// ---- 4. VENTURES — What is he building? ----------------------------------
+// ---- 3. EXPERIENCE --------------------------------------------------------
+export const experience = {
+  eyebrow: "Experience",
+  heading: "A journey across education, sport and technology.",
+  intro:
+    "From law and publishing to sport academies, decentralised finance and alternative provision leadership — work shaped by building environments where people flourish.",
+  timeline: [
+    {
+      id: "ap-head",
+      year: "Present",
+      title: "Alternative Provision Leadership",
+      role: "Head of Centre",
+      summary:
+        "Leading an alternative provision centre — shaping culture, curriculum and outcomes for young people who need a different path.",
+      detail:
+        "Education leadership sits at the centre of my work today: high expectations, deep care, and environments built so every young person has room to grow.",
+    },
+    {
+      id: "web3-defi",
+      year: "2020 — Present",
+      title: "Web3, DeFi & Emerging Technology",
+      role: "Social Media Marketing · DeFi Protocols",
+      summary:
+        "Originally working in social media marketing before becoming deeply involved in DeFi protocols and distributed product teams.",
+      detail:
+        "From 2020, artificial intelligence joined decentralised finance as a growing thread of work — practical experience in emerging technology that increasingly informs how I think about systems, scale and impact in education.",
+    },
+    {
+      id: "sport-youth",
+      year: "2018 onwards",
+      title: "Sport, Coaching & Youth Development",
+      role: "Sports Centre · Private Academy",
+      summary:
+        "Managed a sports centre — coaching and mentoring young people, running a private academy and an online tuition programme to support their learning.",
+      detail:
+        "Partnerships with Herbalife and a physiotherapy company supported young people's health and performance. Built pathways into post-16 education rooted in sport, discipline and personal growth.",
+    },
+    {
+      id: "law-books",
+      year: "2018",
+      title: "Law & Published Author",
+      role: "University · Writing",
+      summary:
+        "Completed a Law degree in 2018. Published several books during and around this period — exploring identity, character and human potential.",
+      detail:
+        "A law graduate and author whose writing distils lessons from leadership, resilience and lived experience into ideas others can carry.",
+    },
+  ],
+};
+
+// ---- 4. VENTURES ----------------------------------------------------------
 export const ventures = {
   eyebrow: "Ventures",
-  heading: "What I'm building.",
+  heading: "What I'm building now.",
   intro:
-    "A growing body of organisations, products and initiatives, each one an attempt to help more people reach their potential at greater scale.",
+    "A growing body of organisations, products and initiatives — each one an attempt to help more people reach their potential at greater scale.",
   items: [
     {
       logo: "/assets/evolveone-logo.svg",
       logoFit: "contain",
       title: "EvolveOne.ai",
       field: "AI · Technology",
-      status: "Building",
+      status: "Live",
       description:
         "Building intelligent AI products, educational technology and digital platforms that improve learning, productivity and human potential.",
     },
@@ -219,24 +221,28 @@ export const ventures = {
       logoFit: "cover",
       title: "RedefiningMS.co.uk",
       field: "Health · Community",
-      status: "Building",
+      status: "Live",
       description:
-        "A platform dedicated to documenting life with Multiple Sclerosis while providing education, awareness, support and practical resources for others living with neurological conditions.",
+        "A platform dedicated to documenting life with Multiple Sclerosis while providing education, awareness, support and practical resources.",
     },
   ],
-  // Visible placeholder so the section clearly invites future growth.
   future: {
     label: "On the horizon",
     text: "Advisory work · Keynote speaking · New ventures · Further AI products and businesses.",
   },
 };
 
-// ---- 5. WRITING ----------------------------------------------------------
-export const writing = {
-  eyebrow: "Writing",
-  heading: "Books & Anthologies",
+// ---- 5. PUBLICATIONS ------------------------------------------------------
+export const publications = {
+  eyebrow: "Publications",
+  heading: "Books & anthologies",
   intro:
-    "Writing is how I make sense of things. These five collections bring together music and storytelling to explore identity, character, language and the human experience — including A Way With Words.",
+    "Writing is how I make sense of things. These collections bring together music and storytelling to explore identity, character, language and the human experience.",
+  portrait: {
+    src: "/assets/lloyd-avatar.webp",
+    alt: "Lloyd Dwaah reading",
+    caption: "Author & publisher",
+  },
   books: [
     {
       slug: "gold-shades",
@@ -248,15 +254,15 @@ export const writing = {
       sections: [
         {
           title: "What it is",
-          body: "Gold Shades brings together music and narrative to explore how we relate to one another — the tenderness, tension and truth of everyday connection.",
+          body: "Gold Shades brings together music and narrative to explore how we relate to one another.",
         },
         {
           title: "Themes",
-          body: "Identity, belonging, love and loss run through the collection. Each piece stands alone, but together they form a portrait of the human experience.",
+          body: "Identity, belonging, love and loss run through the collection.",
         },
         {
           title: "Why it matters",
-          body: "The anthology is written for readers who want honesty without spectacle — stories that feel lived-in rather than performed.",
+          body: "Stories that feel lived-in rather than performed.",
         },
       ],
     },
@@ -268,20 +274,11 @@ export const writing = {
       amazon: "https://www.amazon.co.uk/Gold-Shades-Lloyd-Kingsley-Dwaah/dp/1786932067",
       trailer: "https://www.youtube.com/watch?v=b6FGqqo5ZfU",
       description:
-        "A series of songs and anthologies exploring modern masculinity, leadership, integrity and character.",
+        "A series exploring modern masculinity, leadership, integrity and character.",
       sections: [
-        {
-          title: "The question",
-          body: "What does it mean to be a gentleman today — not as costume, but as conduct? This series examines leadership, integrity and the pressure men carry in public and private life.",
-        },
-        {
-          title: "Form",
-          body: "Written as a linked series of songs and short narratives, each entry tests a different facet of character: responsibility, restraint, courage and care.",
-        },
-        {
-          title: "Audience",
-          body: "For young men finding their footing, and for anyone mentoring them — coaches, teachers, fathers and leaders who want substance over swagger.",
-        },
+        { title: "The question", body: "What does it mean to be a gentleman today — not as costume, but as conduct?" },
+        { title: "Form", body: "A linked series of songs and short narratives testing character." },
+        { title: "Audience", body: "For young men finding their footing and those mentoring them." },
       ],
     },
     {
@@ -292,20 +289,11 @@ export const writing = {
       amazon: "https://www.amazon.co.uk/Gold-Shades-Lloyd-Kingsley-Dwaah/dp/1788784553",
       trailer: "https://www.youtube.com/watch?v=uHYb95rzkew",
       description:
-        "An anthology centred around the stories of nine women, celebrating resilience, identity, strength and individual journeys.",
+        "An anthology centred around nine women, celebrating resilience, identity and individual journeys.",
       sections: [
-        {
-          title: "Nine voices",
-          body: "Each woman in the collection has her own story, her own rhythm and her own definition of strength. The anthology refuses a single template of womanhood.",
-        },
-        {
-          title: "Structure",
-          body: "Every profile is designed to stand as its own chapter — a square portrait of character, followed by the context, conflict and resolve that shaped it.",
-        },
-        {
-          title: "Intent",
-          body: "To celebrate resilience without romanticising struggle — honouring identity, ambition and the quiet decisions that define a life.",
-        },
+        { title: "Nine voices", body: "Each woman has her own story and definition of strength." },
+        { title: "Structure", body: "Every profile stands as its own chapter." },
+        { title: "Intent", body: "Celebrating resilience without romanticising struggle." },
       ],
     },
     {
@@ -315,20 +303,11 @@ export const writing = {
       status: "",
       amazon: "https://www.amazon.co.uk/way-words-Lloyd-T-Dwaah/dp/1985038226",
       description:
-        "A collection exploring voice, rhetoric and the power of language — how words shape identity, persuade, heal and hold people to account.",
+        "A collection exploring voice, rhetoric and the power of language.",
       sections: [
-        {
-          title: "About the work",
-          body: "A Way With Words sits alongside the Gold Shades anthologies as a study of language itself — how we speak, how we are heard, and what changes when someone finds their voice.",
-        },
-        {
-          title: "Scope",
-          body: "From classroom debate to public leadership, from lyric writing to everyday conversation, the collection traces how rhetoric and storytelling change outcomes.",
-        },
-        {
-          title: "Connection",
-          body: "Written from the same philosophy as my education work: that literacy of the heart and the tongue is as important as any formal qualification.",
-        },
+        { title: "About the work", body: "A study of language — how we speak, how we are heard." },
+        { title: "Scope", body: "From classroom debate to public leadership and lyric writing." },
+        { title: "Connection", body: "Literacy of the heart and the tongue." },
       ],
     },
     {
@@ -337,39 +316,25 @@ export const writing = {
       kind: "Memoir",
       status: "Not Available",
       description:
-        "A personal exploration of living with Multiple Sclerosis, resilience, purpose and discovering strength through adversity.",
+        "A personal exploration of living with Multiple Sclerosis, resilience and purpose.",
       sections: [
-        {
-          title: "The premise",
-          body: "A memoir of living with Multiple Sclerosis — not as tragedy, but as truth. The title comes from the moment the body refuses what the mind still wants to do.",
-        },
-        {
-          title: "What it covers",
-          body: "Diagnosis, adaptation, purpose and the slow work of rebuilding a life when the old map no longer fits the terrain.",
-        },
-        {
-          title: "Why write it",
-          body: "To give language to an experience many people live in silence — and to connect that personal story to the wider work of RedefiningMS and community support.",
-        },
+        { title: "The premise", body: "A memoir of living with MS — not as tragedy, but as truth." },
+        { title: "What it covers", body: "Diagnosis, adaptation and rebuilding a life." },
+        { title: "Why write it", body: "Giving language to an experience many live in silence." },
       ],
     },
   ],
   note: "New work will appear here as it is published.",
 };
 
+// Back-compat alias for book routes
+export const writing = publications;
+
 export function getBookBySlug(slug) {
-  return writing.books.find((book) => book.slug === slug);
+  return publications.books.find((book) => book.slug === slug);
 }
 
-// ---- 6. HORIZON — Where is he going? -------------------------------------
-export const horizon = {
-  eyebrow: "Where I'm going",
-  statement:
-    "To build organisations, products and experiences across education, sport and technology that help people reach their potential at ever greater scale.",
-  sub: "A body of work designed to outlast any single role, and to grow for decades.",
-};
-
-// ---- 7. CONTACT ----------------------------------------------------------
+// ---- 6. CONTACT -----------------------------------------------------------
 export const contact = {
   eyebrow: "Contact",
   heading: "Let's build something that matters.",

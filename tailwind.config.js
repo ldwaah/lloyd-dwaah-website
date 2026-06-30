@@ -14,6 +14,10 @@ export default {
         body: "#334155",
         muted: "#64748b",
         line: "#d6dde5",
+        navy: {
+          DEFAULT: "#0f1b24",
+          light: "#16242f",
+        },
         // Legacy tokens kept for gradual migration
         platinum: "#1f2933",
         mist: "#475569",

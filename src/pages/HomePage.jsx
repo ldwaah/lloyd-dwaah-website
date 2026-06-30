@@ -5,8 +5,7 @@ import Highlights from "../components/Highlights.jsx";
 import Ethos from "../components/Ethos.jsx";
 import Experience from "../components/Experience.jsx";
 import Ventures from "../components/Ventures.jsx";
-import Writing from "../components/Writing.jsx";
-import Horizon from "../components/Horizon.jsx";
+import Publications from "../components/Publications.jsx";
 import Contact from "../components/Contact.jsx";
 import Footer from "../components/Footer.jsx";
 
@@ -21,8 +20,7 @@ export default function HomePage() {
         <Ethos />
         <Experience />
         <Ventures />
-        <Writing />
-        <Horizon />
+        <Publications />
         <Contact />
       </main>
       <Footer />
