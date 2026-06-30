@@ -85,16 +85,32 @@ export default function ExperiencePage() {
         <Reveal delay={0.16} y={28}>
           <p className="mt-8 max-w-2xl text-xl leading-relaxed text-muted">{experience.intro}</p>
         </Reveal>
-        <Reveal delay={0.22} y={24}>
-          <div className="mt-12 max-w-3xl overflow-hidden rounded-2xl border border-line shadow-lift">
-            <img
-              src="/assets/experience/coaching-hero.jpg"
-              alt="Lloyd Dwaah coaching and mentoring"
-              className="aspect-[16/10] w-full object-cover object-[center_20%]"
-              loading="lazy"
-            />
-          </div>
-        </Reveal>
+        {experience.spotlight && (
+          <Reveal delay={0.22} y={24}>
+            <div className="relative mt-14 overflow-hidden rounded-2xl border border-line shadow-lift">
+              <div className="relative min-h-[420px] md:min-h-[520px]">
+                <img
+                  src={experience.spotlight.image}
+                  alt={experience.spotlight.alt}
+                  className="absolute inset-0 h-full w-full object-cover object-[center_15%]"
+                  loading="lazy"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-hq-darker via-hq-darker/50 to-hq-darker/10" />
+                <div className="relative flex min-h-[420px] flex-col justify-end p-8 md:min-h-[520px] md:p-12">
+                  <p className="text-[10px] font-light uppercase tracking-[0.28em] text-accent/80">
+                    {experience.spotlight.eyebrow}
+                  </p>
+                  <h2 className="mt-4 max-w-xl font-serif text-hero text-ink text-balance">
+                    {experience.spotlight.title}
+                  </h2>
+                  <p className="mt-4 max-w-lg text-base leading-relaxed text-muted md:text-lg">
+                    {experience.spotlight.summary}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </Reveal>
+        )}
       </section>
 
       <section ref={containerRef} className="relative border-t border-line">

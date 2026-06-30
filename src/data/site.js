@@ -161,6 +161,14 @@ export const experience = {
   heading: "A journey across education, sport and technology.",
   intro:
     "From law and publishing to sport academies, decentralised finance and alternative provision leadership. Work shaped by building environments where people flourish.",
+  spotlight: {
+    eyebrow: "Coaching & Mentoring",
+    title: "Teaching and developing people",
+    summary:
+      "Developing staff, leaders and young people through structured coaching, mentoring and personal development.",
+    image: "/assets/experience/coaching-hero.webp",
+    alt: "Lloyd Dwaah coaching and mentoring young people and leaders",
+  },
   timeline: [
     {
       id: "ap-head",
