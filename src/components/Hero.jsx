@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
-import { home, avatarConfig } from "../data/site.js";
+import TiltPortrait from "./TiltPortrait.jsx";
+import { home } from "../data/site.js";
 
 const ease = [0.22, 1, 0.36, 1];
 
@@ -60,16 +61,8 @@ export default function Hero() {
           initial={{ opacity: 0, scale: 0.96 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.9, delay: 0.2, ease }}
-          className="mx-auto w-full max-w-sm"
         >
-          <div className="aspect-square overflow-hidden rounded-2xl border border-line bg-canvas shadow-card">
-            <img
-              src={avatarConfig.image}
-              alt="Lloyd Dwaah"
-              className="h-full w-full object-cover"
-              draggable={false}
-            />
-          </div>
+          <TiltPortrait />
         </motion.div>
       </div>
     </section>

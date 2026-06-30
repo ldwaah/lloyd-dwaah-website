@@ -13,7 +13,7 @@ export const meta = {
 // mode: "image" | "video" | "glb"  (see README for the GLB upgrade path)
 export const avatarConfig = {
   mode: "image",
-  image: "/assets/lloyd-avatar.png",
+  image: "/assets/lloyd-avatar.webp",
   video: "/assets/lloyd-avatar.mp4",
   glb: "/models/lloyd-head.glb",
   tilt: 8, // degrees of mouse parallax — kept subtle and premium
@@ -217,7 +217,9 @@ export const writing = {
       slug: "gold-shades-the-perfect-gentleman",
       title: "Gold Shades: The Perfect Gentleman",
       kind: "Series",
-      status: "",
+      status: "Available now",
+      amazon: "https://www.amazon.co.uk/Gold-Shades-Lloyd-Kingsley-Dwaah/dp/1786932067",
+      trailer: "https://www.youtube.com/watch?v=b6FGqqo5ZfU",
       description:
         "A series of songs and anthologies exploring modern masculinity, leadership, integrity and character.",
       sections: [
@@ -239,7 +241,9 @@ export const writing = {
       slug: "gold-shades-a-true-lady",
       title: "Gold Shades: A True Lady",
       kind: "Anthology",
-      status: "",
+      status: "Available now",
+      amazon: "https://www.amazon.co.uk/Gold-Shades-Lloyd-Kingsley-Dwaah/dp/1788784553",
+      trailer: "https://www.youtube.com/watch?v=uHYb95rzkew",
       description:
         "An anthology centred around the stories of nine women, celebrating resilience, identity, strength and individual journeys.",
       sections: [

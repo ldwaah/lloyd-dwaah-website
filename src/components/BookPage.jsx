@@ -6,6 +6,12 @@ const alignClass = {
   right: "ml-auto text-right",
 };
 
+function getYouTubeId(url) {
+  if (!url) return null;
+  const m = url.match(/(?:v=|youtu\.be\/|embed\/)([\w-]{11})/);
+  return m ? m[1] : null;
+}
+
 export default function BookPage() {
   const { slug } = useParams();
   const book = getBookBySlug(slug);
@@ -16,6 +22,7 @@ export default function BookPage() {
 
   const sections = book.sections || [];
   const zigzagAligns = ["left", "right", "left"];
+  const ytId = getYouTubeId(book.trailer);
 
   return (
     <div className="min-h-screen bg-canvas text-ink">
@@ -50,7 +57,52 @@ export default function BookPage() {
           <p className="mt-5 max-w-xl text-pretty text-base leading-relaxed text-muted">
             {book.description}
           </p>
+
+          {(book.amazon || book.trailer) && (
+            <div className="mt-7 flex flex-wrap items-center justify-center gap-3">
+              {book.amazon && (
+                <a
+                  href={book.amazon}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center justify-center gap-2 rounded-lg bg-brand px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-brand-dark"
+                >
+                  Buy on Amazon
+                </a>
+              )}
+              {book.trailer && (
+                <a
+                  href={book.trailer}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center justify-center gap-2 rounded-lg border border-line bg-white px-5 py-2.5 text-sm font-medium text-ink transition hover:border-brand/30 hover:text-brand"
+                >
+                  Watch the trailer
+                </a>
+              )}
+            </div>
+          )}
         </div>
+
+        {ytId && (
+          <div className="mt-14 md:mt-20">
+            <h2 className="text-center text-xs font-semibold uppercase tracking-[0.2em] text-brand">
+              Book trailer
+            </h2>
+            <div className="mx-auto mt-6 max-w-3xl overflow-hidden rounded-2xl border border-line bg-black shadow-card">
+              <div className="relative w-full" style={{ paddingBottom: "56.25%" }}>
+                <iframe
+                  className="absolute inset-0 h-full w-full"
+                  src={`https://www.youtube-nocookie.com/embed/${ytId}`}
+                  title={`${book.title} — book trailer`}
+                  loading="lazy"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                />
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Zigzag: left → right → left */}
         <div className="mt-16 space-y-10 md:mt-20 md:space-y-14">
