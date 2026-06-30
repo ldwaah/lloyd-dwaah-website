@@ -17,18 +17,26 @@ export const avatarConfig = {
 };
 
 // ---- Navigation -----------------------------------------------------------
+/** Inline header links (desktop / tablet) */
+export const headerNav = [
+  { label: "Experience", href: "/experience.html" },
+  { label: "Ventures", href: "/ventures.html" },
+  { label: "Publications", href: "/publications.html" },
+  { label: "Ethos", href: "/#principles" },
+  { label: "Contact", href: "#contact" },
+];
+
+/** Full-screen overlay menu */
 export const menuNav = [
   { label: "Home", href: "/" },
   { label: "Experience", href: "/experience.html" },
   { label: "Ventures", href: "/ventures.html" },
   { label: "Publications", href: "/publications.html" },
-];
-
-/** @deprecated use menuNav for overlay; footer handles contact */
-export const nav = [
-  ...menuNav,
+  { label: "Ethos", href: "/#principles" },
   { label: "Contact", href: "#contact" },
 ];
+
+export const nav = [...menuNav];
 
 // ---- 1. HOME --------------------------------------------------------------
 export const home = {
