@@ -279,6 +279,7 @@ export const experience = {
         endDate: "Present",
         title: "Founder",
         organisation: "EvolveOne.ai",
+        href: "https://evolveone.ai",
         note: "Originally founded as a digital marketing company; now focused on AI, LLMs and websites.",
       },
       {
