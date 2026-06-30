@@ -5,7 +5,7 @@ import { menuNav, contact } from "../data/site.js";
 import { StackedLogo } from "./BrandMark.jsx";
 import MenuToggle from "./MenuToggle.jsx";
 import TopographicLines from "./TopographicLines.jsx";
-import { EmailIcon, LinkedInIcon, SocialIconLink } from "./SocialIcons.jsx";
+import { scrollToTarget } from "./SmoothScroll.jsx";
 
 const ease = [0.22, 1, 0.36, 1];
 
@@ -55,7 +55,7 @@ function handleNavClick(e, href, onClose) {
     e.preventDefault();
     onClose();
     requestAnimationFrame(() => {
-      document.querySelector("#principles")?.scrollIntoView({ behavior: "smooth" });
+      scrollToTarget("#principles", { offset: -72 });
     });
     return;
   }

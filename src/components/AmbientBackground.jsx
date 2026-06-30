@@ -1,57 +1,19 @@
-import { useEffect, useRef } from "react";
+import { motion, useScroll, useTransform } from "framer-motion";
+import TopographicLines from "./TopographicLines.jsx";
+import { prefersReducedMotion } from "../lib/input.js";
 
 /**
- * Atmospheric depth for inner pages — soft gradients, subtle particles.
- * Home uses Scene3D instead.
+ * Atmospheric depth for inner pages — scroll-linked parallax gradients.
  */
 export default function AmbientBackground({ variant = "default" }) {
-  const canvasRef = useRef(null);
+  const reduced = prefersReducedMotion();
+  const { scrollYProgress } = useScroll();
 
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext("2d");
-    let raf;
-    let w = 0;
-    let h = 0;
-
-    const particles = Array.from({ length: 48 }, () => ({
-      x: Math.random(),
-      y: Math.random(),
-      r: 0.4 + Math.random() * 1.2,
-      vx: (Math.random() - 0.5) * 0.00015,
-      vy: (Math.random() - 0.5) * 0.0001,
-      a: 0.15 + Math.random() * 0.35,
-    }));
-
-    const resize = () => {
-      w = canvas.width = window.innerWidth;
-      h = canvas.height = window.innerHeight;
-    };
-
-    const draw = () => {
-      ctx.clearRect(0, 0, w, h);
-      for (const p of particles) {
-        p.x += p.vx;
-        p.y += p.vy;
-        if (p.x < 0 || p.x > 1) p.vx *= -1;
-        if (p.y < 0 || p.y > 1) p.vy *= -1;
-        ctx.beginPath();
-        ctx.arc(p.x * w, p.y * h, p.r, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(94, 234, 255, ${p.a})`;
-        ctx.fill();
-      }
-      raf = requestAnimationFrame(draw);
-    };
-
-    resize();
-    draw();
-    window.addEventListener("resize", resize);
-    return () => {
-      cancelAnimationFrame(raf);
-      window.removeEventListener("resize", resize);
-    };
-  }, []);
+  const gradY = useTransform(scrollYProgress, [0, 1], ["0%", reduced ? "0%" : "14%"]);
+  const glowY = useTransform(scrollYProgress, [0, 1], [0, reduced ? 0 : -80]);
+  const glowY2 = useTransform(scrollYProgress, [0, 1], [0, reduced ? 0 : 60]);
+  const gridOpacity = useTransform(scrollYProgress, [0, 0.5, 1], [0.03, 0.045, 0.025]);
+  const topoY = useTransform(scrollYProgress, [0, 1], [0, reduced ? 0 : -100]);
 
   const gradients = {
     default: "from-hq via-hq-deep to-hq-darker",
@@ -62,19 +24,32 @@ export default function AmbientBackground({ variant = "default" }) {
 
   return (
     <div className="pointer-events-none fixed inset-0 z-0 overflow-hidden" aria-hidden="true">
-      <div
-        className={`absolute inset-0 bg-gradient-to-br ${gradients[variant] || gradients.default} animate-drift`}
+      <motion.div
+        style={{ y: gradY }}
+        className={`absolute inset-0 h-[115vh] bg-gradient-to-br ${gradients[variant] || gradients.default}`}
       />
-      <div className="absolute -left-1/4 top-0 h-[60vh] w-[60vw] rounded-full bg-accent/5 blur-[120px] animate-pulse-slow" />
-      <div className="absolute -right-1/4 bottom-0 h-[50vh] w-[50vw] rounded-full bg-accent-dim/5 blur-[100px] animate-pulse-slow" />
-      <canvas ref={canvasRef} className="absolute inset-0 opacity-40" />
-      <div
-        className="absolute inset-0 opacity-[0.03]"
+
+      <motion.div style={{ y: topoY }} className="absolute inset-0 h-[120vh] opacity-[0.04]">
+        <TopographicLines className="h-full w-full" />
+      </motion.div>
+
+      <motion.div
+        style={{ y: glowY }}
+        className="absolute -left-1/4 top-0 h-[60vh] w-[60vw] rounded-full bg-accent/5 blur-[120px]"
+      />
+      <motion.div
+        style={{ y: glowY2 }}
+        className="absolute -right-1/4 bottom-0 h-[50vh] w-[50vw] rounded-full bg-accent-dim/5 blur-[100px]"
+      />
+
+      <motion.div
         style={{
+          opacity: reduced ? 0.03 : gridOpacity,
           backgroundImage:
             "linear-gradient(rgba(94,234,255,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(94,234,255,0.5) 1px, transparent 1px)",
           backgroundSize: "64px 64px",
         }}
+        className="absolute inset-0"
       />
     </div>
   );

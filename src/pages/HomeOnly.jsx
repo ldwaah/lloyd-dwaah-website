@@ -1,9 +1,9 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import Scene3D from "../components/Scene3D.jsx";
 import SiteNav from "../components/SiteNav.jsx";
 import SiteFooter from "../components/SiteFooter.jsx";
-import Reveal from "../components/Reveal.jsx";
+import Reveal, { RevealLines } from "../components/Reveal.jsx";
 import HomeScrollLayers from "../components/HomeScrollLayers.jsx";
 import Preloader, { hasSeenHomePreloader } from "../components/Preloader.jsx";
 import { home, ethos } from "../data/site.js";
@@ -14,7 +14,7 @@ function ScrollChevron() {
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      transition={{ delay: 1.2, duration: 1 }}
+      transition={{ delay: 0.8, duration: 0.8 }}
       className="absolute bottom-10 left-1/2 -translate-x-1/2"
       aria-label="Scroll down"
     >
@@ -34,18 +34,39 @@ function ScrollChevron() {
 }
 
 export default function HomeOnly() {
-  const [scrolled, setScrolled] = useState(false);
   const [showPreloader, setShowPreloader] = useState(
     () => !hasSeenHomePreloader() && !prefersReducedMotion()
   );
   const [sceneReady, setSceneReady] = useState(false);
+  const reduced = prefersReducedMotion();
 
-  const { scrollYProgress } = useScroll();
-  const contentY = useTransform(
-    scrollYProgress,
-    [0, 1],
-    [0, prefersReducedMotion() ? 0 : -48]
-  );
+  const heroTrackRef = useRef(null);
+  const nameTrackRef = useRef(null);
+  const ethosTrackRef = useRef(null);
+
+  const { scrollYProgress: heroProgress } = useScroll({
+    target: heroTrackRef,
+    offset: ["start start", "end start"],
+  });
+
+  const sceneOpacity = useTransform(heroProgress, [0, 0.55, 1], [1, 0.35, 0]);
+  const sceneScale = useTransform(heroProgress, [0, 1], [1, reduced ? 1 : 0.94]);
+  const chevronOpacity = useTransform(heroProgress, [0, 0.2], [1, 0]);
+
+  const { scrollYProgress: pageProgress } = useScroll();
+  const contentY = useTransform(pageProgress, [0, 1], [0, reduced ? 0 : -32]);
+
+  const nameParallax = useScroll({
+    target: nameTrackRef,
+    offset: ["start end", "end start"],
+  });
+  const nameY = useTransform(nameParallax.scrollYProgress, [0, 1], [48, -48]);
+
+  const ethosParallax = useScroll({
+    target: ethosTrackRef,
+    offset: ["start end", "end start"],
+  });
+  const ethosY = useTransform(ethosParallax.scrollYProgress, [0, 1], [40, -40]);
 
   const handlePreloaderComplete = useCallback(() => {
     setShowPreloader(false);
@@ -55,17 +76,19 @@ export default function HomeOnly() {
     setSceneReady(true);
   }, []);
 
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > window.innerHeight * 0.15);
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
-
   return (
     <div className="relative min-h-screen bg-hq">
-      <Scene3D variant="hero" onPortraitReady={handlePortraitReady} />
-      <HomeScrollLayers />
+      {/* Fixed cinematic hero — fades as you scroll past the track */}
+      <motion.div
+        style={{
+          opacity: reduced ? 1 : sceneOpacity,
+          scale: reduced ? 1 : sceneScale,
+        }}
+        className="pointer-events-none fixed inset-0 z-0 origin-center will-change-transform"
+      >
+        <Scene3D variant="hero" onPortraitReady={handlePortraitReady} />
+        <HomeScrollLayers />
+      </motion.div>
 
       <Preloader
         active={showPreloader}
@@ -79,29 +102,55 @@ export default function HomeOnly() {
       >
         <SiteNav transparent />
 
-        <section id="home" className="relative min-h-screen">
-          {!scrolled && !showPreloader && <ScrollChevron />}
-        </section>
-
-        <section className="relative border-t border-line/30 bg-hq-deep/80 backdrop-blur-sm">
-          <div className="section-pad mx-auto flex min-h-[55vh] max-w-4xl flex-col justify-center text-center md:min-h-[60vh]">
-            <Reveal revealDelay={0.28} y={28}>
-              <h2 className="font-serif text-statement text-ink text-balance">{home.nameReveal}</h2>
-            </Reveal>
+        {/* Scroll track — hero holds the viewport while scene fades */}
+        <section ref={heroTrackRef} id="home" className="relative h-[115vh]">
+          <div className="sticky top-0 h-screen">
+            {!showPreloader && !reduced && (
+              <motion.div style={{ opacity: chevronOpacity }} className="absolute inset-0">
+                <ScrollChevron />
+              </motion.div>
+            )}
           </div>
         </section>
 
-        <section className="relative border-t border-line/30 bg-hq-deep/80 backdrop-blur-sm">
-          <div className="section-pad mx-auto flex min-h-[55vh] max-w-4xl flex-col justify-center text-center md:min-h-[60vh]">
-            <Reveal revealDelay={0.3} y={32}>
-              <p className="font-serif text-statement text-ink text-balance">{home.ethosStatement}</p>
-            </Reveal>
+        {/* Name */}
+        <section
+          ref={nameTrackRef}
+          className="relative bg-hq-deep/85 backdrop-blur-md"
+        >
+          <div className="section-pad mx-auto flex min-h-screen max-w-4xl flex-col justify-center text-center">
+            <motion.div style={{ y: reduced ? 0 : nameY }}>
+              <RevealLines
+                lines={[home.nameReveal]}
+                lineClassName="font-serif text-statement text-ink text-balance"
+                revealDelay={0.32}
+                lineStagger={0.12}
+              />
+            </motion.div>
           </div>
         </section>
 
+        {/* Ethos */}
+        <section
+          ref={ethosTrackRef}
+          className="relative bg-hq-deep/90 backdrop-blur-md"
+        >
+          <div className="section-pad mx-auto flex min-h-screen max-w-4xl flex-col justify-center text-center">
+            <motion.div style={{ y: reduced ? 0 : ethosY }}>
+              <RevealLines
+                lines={[home.ethosStatement]}
+                lineClassName="font-serif text-statement text-ink text-balance"
+                revealDelay={0.34}
+                lineStagger={0.1}
+              />
+            </motion.div>
+          </div>
+        </section>
+
+        {/* Core principles */}
         <section
           id="principles"
-          className="relative border-t border-line bg-hq-deep/90 backdrop-blur-sm"
+          className="relative border-t border-line bg-hq-deep/95 backdrop-blur-sm"
         >
           <div className="section-pad mx-auto max-w-4xl">
             <Reveal revealDelay={0.24} y={20}>

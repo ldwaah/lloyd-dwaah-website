@@ -6,6 +6,49 @@ import Reveal from "../components/Reveal.jsx";
 import { experience } from "../data/site.js";
 import { prefersReducedMotion } from "../lib/input.js";
 
+function CoachingSpotlight({ spotlight }) {
+  const ref = useRef(null);
+  const reduced = prefersReducedMotion();
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start end", "end start"],
+  });
+  const imageY = useTransform(scrollYProgress, [0, 1], ["-8%", "8%"]);
+  const textY = useTransform(scrollYProgress, [0, 1], [24, -24]);
+
+  return (
+    <div
+      ref={ref}
+      className="relative mt-14 overflow-hidden rounded-2xl border border-line shadow-lift"
+    >
+      <div className="relative min-h-[420px] md:min-h-[520px]">
+        <motion.img
+          src={spotlight.image}
+          alt={spotlight.alt}
+          style={{ y: reduced ? 0 : imageY }}
+          className="absolute inset-0 h-[120%] w-full object-cover object-[center_15%] will-change-transform"
+          loading="lazy"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-hq-darker via-hq-darker/50 to-hq-darker/10" />
+        <motion.div
+          style={{ y: reduced ? 0 : textY }}
+          className="relative flex min-h-[420px] flex-col justify-end p-8 md:min-h-[520px] md:p-12"
+        >
+          <p className="text-[10px] font-light uppercase tracking-[0.28em] text-accent/80">
+            {spotlight.eyebrow}
+          </p>
+          <h2 className="mt-4 max-w-xl font-serif text-hero text-ink text-balance">
+            {spotlight.title}
+          </h2>
+          <p className="mt-4 max-w-lg text-base leading-relaxed text-muted md:text-lg">
+            {spotlight.summary}
+          </p>
+        </motion.div>
+      </div>
+    </div>
+  );
+}
+
 function TimelineContent({ entry, index }) {
   return (
     <div className={`relative grid items-center gap-12 md:grid-cols-2 ${index % 2 === 1 ? "md:direction-rtl" : ""}`}>
@@ -87,28 +130,7 @@ export default function ExperiencePage() {
         </Reveal>
         {experience.spotlight && (
           <Reveal revealDelay={0.22} delay={0.34} y={24}>
-            <div className="relative mt-14 overflow-hidden rounded-2xl border border-line shadow-lift">
-              <div className="relative min-h-[420px] md:min-h-[520px]">
-                <img
-                  src={experience.spotlight.image}
-                  alt={experience.spotlight.alt}
-                  className="absolute inset-0 h-full w-full object-cover object-[center_15%]"
-                  loading="lazy"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-hq-darker via-hq-darker/50 to-hq-darker/10" />
-                <div className="relative flex min-h-[420px] flex-col justify-end p-8 md:min-h-[520px] md:p-12">
-                  <p className="text-[10px] font-light uppercase tracking-[0.28em] text-accent/80">
-                    {experience.spotlight.eyebrow}
-                  </p>
-                  <h2 className="mt-4 max-w-xl font-serif text-hero text-ink text-balance">
-                    {experience.spotlight.title}
-                  </h2>
-                  <p className="mt-4 max-w-lg text-base leading-relaxed text-muted md:text-lg">
-                    {experience.spotlight.summary}
-                  </p>
-                </div>
-              </div>
-            </div>
+            <CoachingSpotlight spotlight={experience.spotlight} />
           </Reveal>
         )}
       </section>
