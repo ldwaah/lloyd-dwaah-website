@@ -1,13 +1,13 @@
-import { useEffect, useState } from "react";
-import { motion } from "framer-motion";
+import { useCallback, useEffect, useState } from "react";
+import { motion, useScroll, useTransform } from "framer-motion";
 import Scene3D from "../components/Scene3D.jsx";
 import SiteNav from "../components/SiteNav.jsx";
 import SiteFooter from "../components/SiteFooter.jsx";
 import Reveal from "../components/Reveal.jsx";
-import TopographicLines from "../components/TopographicLines.jsx";
+import HomeScrollLayers from "../components/HomeScrollLayers.jsx";
+import Preloader, { hasSeenHomePreloader } from "../components/Preloader.jsx";
 import { meta, home, ethos } from "../data/site.js";
-
-const ease = [0.22, 1, 0.36, 1];
+import { prefersReducedMotion } from "../lib/input.js";
 
 function ScrollChevron() {
   return (
@@ -35,6 +35,25 @@ function ScrollChevron() {
 
 export default function HomeOnly() {
   const [scrolled, setScrolled] = useState(false);
+  const [showPreloader, setShowPreloader] = useState(
+    () => !hasSeenHomePreloader() && !prefersReducedMotion()
+  );
+  const [sceneReady, setSceneReady] = useState(false);
+
+  const { scrollYProgress } = useScroll();
+  const contentY = useTransform(
+    scrollYProgress,
+    [0, 1],
+    [0, prefersReducedMotion() ? 0 : -48]
+  );
+
+  const handlePreloaderComplete = useCallback(() => {
+    setShowPreloader(false);
+  }, []);
+
+  const handlePortraitReady = useCallback(() => {
+    setSceneReady(true);
+  }, []);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > window.innerHeight * 0.15);
@@ -45,19 +64,24 @@ export default function HomeOnly() {
 
   return (
     <div className="relative min-h-screen bg-hq">
-      <Scene3D variant="hero" />
-      {/* Atmospheric gradient only — portrait lives in Scene3D */}
-      <div className="pointer-events-none fixed inset-0 z-[1] h-screen overflow-hidden" aria-hidden="true">
-        <div className="absolute inset-0 bg-gradient-to-b from-hq/30 via-transparent to-hq-deep/70" />
-      </div>
-      <TopographicLines className="z-[1] opacity-[0.04]" />
+      <Scene3D variant="hero" onPortraitReady={handlePortraitReady} />
+      <HomeScrollLayers />
 
-      <div className="page-enter relative z-10">
+      <Preloader
+        active={showPreloader}
+        sceneReady={sceneReady}
+        onComplete={handlePreloaderComplete}
+      />
+
+      <motion.div
+        style={{ y: contentY }}
+        className={`page-enter relative z-10 ${showPreloader ? "pointer-events-none" : ""}`}
+      >
         <SiteNav transparent />
 
         {/* Image-first installation hero — no text until scroll */}
         <section id="home" className="relative min-h-screen">
-          {!scrolled && <ScrollChevron />}
+          {!scrolled && !showPreloader && <ScrollChevron />}
         </section>
 
         {/* Revealed on scroll */}
@@ -109,16 +133,9 @@ export default function HomeOnly() {
                         <p className="mt-0 max-h-0 overflow-hidden text-base leading-relaxed text-body opacity-0 transition-all duration-500 group-hover:mt-4 group-hover:max-h-40 group-hover:opacity-100">
                           {principle.detail}
                         </p>
-                        <div className="mt-4 flex flex-wrap gap-2 opacity-0 transition-opacity duration-500 group-hover:opacity-100">
-                          {principle.tags.map((tag) => (
-                            <span
-                              key={tag}
-                              className="rounded-full border border-line px-3 py-1 text-[10px] uppercase tracking-wider text-muted"
-                            >
-                              {tag}
-                            </span>
-                          ))}
-                        </div>
+                        <p className="mt-4 text-[10px] font-light uppercase tracking-[0.18em] text-muted/70 opacity-0 transition-opacity duration-500 group-hover:opacity-100">
+                          {principle.tags.join(" · ")}
+                        </p>
                       </div>
                     </div>
                   </article>
@@ -129,7 +146,7 @@ export default function HomeOnly() {
         </section>
 
         <SiteFooter />
-      </div>
+      </motion.div>
     </div>
   );
 }

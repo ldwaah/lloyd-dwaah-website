@@ -21,7 +21,7 @@ const damp = THREE.MathUtils.damp;
 //  The portrait exists inside this scene. Camera, lights and particles
 //  all respond to the cursor; the camera glides as the page scrolls.
 // =====================================================================
-export default function Scene3D({ variant = "default" }) {
+export default function Scene3D({ variant = "default", onPortraitReady }) {
   const pointer = usePointerRef();
   const scroll = useScrollRef();
   const [mobile] = useState(isMobile);
@@ -46,7 +46,13 @@ export default function Scene3D({ variant = "default" }) {
           <StudioEnvironment />
           <LightShafts />
 
-          <PortraitStage pointer={pointer} scroll={scroll} mobile={mobile} hero={hero} />
+          <PortraitStage
+            pointer={pointer}
+            scroll={scroll}
+            mobile={mobile}
+            hero={hero}
+            onPortraitReady={onPortraitReady}
+          />
 
           {!hero && (
             <TravelField scroll={scroll} pointer={pointer} mobile={mobile} />
@@ -126,15 +132,23 @@ function StudioEnvironment() {
 }
 
 // ---- The portrait, sitting on glass, in 3D space --------------------------
-function PortraitStage({ pointer, scroll, mobile, hero }) {
+function PortraitStage({ pointer, scroll, mobile, hero, onPortraitReady }) {
   const [ready, setReady] = useState(false);
+  const notified = useRef(false);
+
   useEffect(() => {
-    if (avatarConfig.mode === "glb") return; // handled separately if you add a GLB
+    if (avatarConfig.mode === "glb") return;
     const img = new Image();
     img.onload = () => setReady(true);
-    img.onerror = () => setReady(false);
+    img.onerror = () => setReady(true);
     img.src = avatarConfig.image;
   }, []);
+
+  useEffect(() => {
+    if (!ready || !onPortraitReady || notified.current) return;
+    notified.current = true;
+    onPortraitReady();
+  }, [ready, onPortraitReady]);
 
   return ready ? (
     <Suspense fallback={<PortraitPlaceholder pointer={pointer} scroll={scroll} mobile={mobile} hero={hero} />}>

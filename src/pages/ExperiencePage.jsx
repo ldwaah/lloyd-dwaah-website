@@ -62,9 +62,6 @@ export default function ExperiencePage() {
             {experience.heading}
           </h1>
           <p className="mt-8 max-w-2xl text-xl leading-relaxed text-muted">{experience.intro}</p>
-          <button type="button" onClick={() => setCvOpen(true)} className="btn-primary mt-12">
-            {holisticCv.label}
-          </button>
         </Reveal>
       </section>
 

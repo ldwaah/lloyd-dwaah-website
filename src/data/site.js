@@ -428,6 +428,14 @@ export const publications = {
   note: "New work will appear here as it is published.",
 };
 
+/** Four books shown on the publications page, in display order. */
+export const featuredBookSlugs = [
+  "gold-shades-the-perfect-gentleman",
+  "gold-shades-a-true-lady",
+  "a-way-with-words",
+  "when-my-body-says-no",
+];
+
 // Back-compat alias for book routes
 export const writing = publications;
 

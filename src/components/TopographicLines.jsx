@@ -1,4 +1,8 @@
+import { useId } from "react";
+
 export default function TopographicLines({ className = "" }) {
+  const patternId = `contour-${useId().replace(/:/g, "")}`;
+
   return (
     <svg
       className={`pointer-events-none absolute inset-0 h-full w-full opacity-[0.07] ${className}`}
@@ -7,7 +11,7 @@ export default function TopographicLines({ className = "" }) {
       aria-hidden="true"
     >
       <defs>
-        <pattern id="contour" width="120" height="120" patternUnits="userSpaceOnUse">
+        <pattern id={patternId} width="120" height="120" patternUnits="userSpaceOnUse">
           <path
             d="M0 60 Q30 20 60 60 T120 60 M0 90 Q40 50 80 90 T160 90"
             fill="none"
@@ -16,7 +20,7 @@ export default function TopographicLines({ className = "" }) {
           />
         </pattern>
       </defs>
-      <rect width="100%" height="100%" fill="url(#contour)" className="text-accent" />
+      <rect width="100%" height="100%" fill={`url(#${patternId})`} className="text-accent" />
       <ellipse cx="30%" cy="40%" rx="45%" ry="35%" fill="none" stroke="currentColor" strokeWidth="0.5" className="text-accent" />
       <ellipse cx="70%" cy="65%" rx="40%" ry="30%" fill="none" stroke="currentColor" strokeWidth="0.5" className="text-accent" />
       <path

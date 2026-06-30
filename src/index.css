@@ -63,11 +63,26 @@
   }
 
   .eyebrow {
-    @apply inline-flex items-center gap-3 text-[10px] font-semibold uppercase tracking-eyebrow text-accent/80;
+    @apply block text-[10px] font-light uppercase tracking-[0.28em] text-accent/65;
   }
-  .eyebrow::before {
+  .eyebrow::after {
     content: "";
-    @apply h-px w-10 bg-accent/40;
+    @apply mt-4 block h-px w-10 bg-accent/25;
+  }
+  .eyebrow-center::after {
+    @apply mx-auto;
+  }
+
+  .status-label {
+    @apply block text-[10px] font-light uppercase tracking-[0.28em] text-accent/70;
+  }
+
+  .status-label-gold {
+    @apply block text-[10px] font-light uppercase tracking-[0.28em] text-gold/80;
+  }
+
+  .meta-label {
+    @apply text-[10px] font-light uppercase tracking-[0.28em] text-muted;
   }
 
   .glass-panel {
@@ -93,21 +108,6 @@
 
   .text-gradient {
     @apply bg-gradient-to-r from-ink via-accent-glow to-accent bg-clip-text text-transparent;
-  }
-
-  .gold-badge {
-    @apply inline-flex items-center rounded-full border border-gold/30
-           bg-gold/10 px-3 py-1 text-[10px] font-semibold uppercase tracking-eyebrow text-gold;
-  }
-
-  .live-badge {
-    @apply inline-flex items-center gap-1.5 rounded-full border border-emerald-400/30
-           bg-emerald-400/10 px-3 py-1 text-[10px] font-semibold uppercase tracking-eyebrow text-emerald-300;
-  }
-  .live-badge::before {
-    content: "";
-    @apply h-1.5 w-1.5 rounded-full bg-emerald-400;
-    animation: pulse 2s ease-in-out infinite;
   }
 
   .nav-link {
