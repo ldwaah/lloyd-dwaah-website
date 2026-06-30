@@ -80,7 +80,33 @@ export default function HolisticCVModal({ open, onClose, cv }) {
                   {formatPeriod(entry)}
                 </p>
                 <h3 className="mt-2 text-lg font-medium text-ink">{entry.title}</h3>
-                <p className="mt-1 text-sm text-muted">{entry.organisation}</p>
+                <p className="mt-1 text-sm text-muted">
+                  {entry.href ? (
+                    <a
+                      href={entry.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-brand transition hover:underline"
+                    >
+                      {entry.organisation}
+                    </a>
+                  ) : (
+                    entry.organisation
+                  )}
+                  {entry.instagram && (
+                    <>
+                      {" · "}
+                      <a
+                        href={entry.instagram}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-brand transition hover:underline"
+                      >
+                        Instagram
+                      </a>
+                    </>
+                  )}
+                </p>
                 {entry.note && (
                   <p className="mt-2 text-sm leading-relaxed text-body">{entry.note}</p>
                 )}

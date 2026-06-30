@@ -221,6 +221,8 @@ export const experience = {
         endDate: "Present",
         title: "Director of Operations",
         organisation: "London Youth Premier Showcase",
+        href: "https://www.londonyouthpremiershowcase.com",
+        instagram: "https://www.instagram.com/lypshowcase/?hl=en",
       },
       {
         id: "crystal-palace",
@@ -244,7 +246,8 @@ export const experience = {
         startDate: "September 2018",
         endDate: "July 2024",
         title: "Managing Director",
-        organisation: "Soccerlution Group (Private Academy)",
+        organisation: "Independent Football Academy",
+        instagram: "https://www.instagram.com/independent_football_academy?utm_source=qr",
       },
       {
         id: "esg-director",
@@ -253,6 +256,7 @@ export const experience = {
         endDate: "Present",
         title: "Director",
         organisation: "Evolution Sports Group",
+        href: "https://www.evolution-sportsgroup.com",
       },
       {
         id: "evolution-education",
@@ -261,6 +265,7 @@ export const experience = {
         endDate: "Present",
         title: "Director",
         organisation: "Evolution Education",
+        href: "https://www.evolution-education.com",
       },
       {
         id: "evolveone",
@@ -278,6 +283,7 @@ export const experience = {
         endDate: "Present",
         title: "Charity Leadership",
         organisation: "Beyond Education Sports Foundation",
+        href: "https://beyondesf.com",
         note: "Charitable arm of Evolution Sports Group; registered February 2022.",
       },
     ],
