@@ -17,14 +17,7 @@ export const avatarConfig = {
 };
 
 // ---- Navigation -----------------------------------------------------------
-/** Inline header links (desktop / tablet) */
-export const headerNav = [
-  { label: "Experience", href: "/experience.html" },
-  { label: "Ventures", href: "/ventures.html" },
-  { label: "Publications", href: "/publications.html" },
-  { label: "Ethos", href: "/#principles" },
-  { label: "Contact", href: "#contact" },
-];
+export const linkedInUrl = "https://www.linkedin.com/in/lloyd-dwaah-026531268";
 
 /** Full-screen overlay menu */
 export const menuNav = [
@@ -33,7 +26,6 @@ export const menuNav = [
   { label: "Ventures", href: "/ventures.html" },
   { label: "Publications", href: "/publications.html" },
   { label: "Ethos", href: "/#principles" },
-  { label: "Contact", href: "#contact" },
 ];
 
 export const nav = [...menuNav];
@@ -448,9 +440,10 @@ export const contact = {
   heading: "Let's build something that matters.",
   text: "For advisory work, speaking, collaboration or a conversation about education, leadership or technology, I'd be glad to hear from you.",
   email: "lloydtkdwaah@gmail.com",
+  linkedin: linkedInUrl,
   socials: [
     { label: "Email", href: "mailto:lloydtkdwaah@gmail.com" },
-    { label: "LinkedIn", href: "https://www.linkedin.com/" },
+    { label: "LinkedIn", href: linkedInUrl },
     { label: "X", href: "https://x.com/" },
   ],
 };

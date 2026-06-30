@@ -14,7 +14,7 @@ export function StackedLogo({ className = "" }) {
         {first.toUpperCase()}
       </span>
       <span className="mt-1.5 block h-px w-0 bg-accent/60 transition-all duration-500 group-hover:w-full" />
-      <span className="mt-1.5 font-sans text-[10px] font-bold tracking-[0.32em] text-accent md:text-[11px]">
+      <span className="mt-1.5 font-sans text-[10px] font-bold tracking-[0.32em] text-ink/90 md:text-[11px]">
         {last.toUpperCase()}
       </span>
     </a>

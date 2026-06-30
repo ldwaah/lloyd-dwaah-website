@@ -46,14 +46,9 @@ export default function HomeOnly() {
   return (
     <div className="relative min-h-screen bg-hq">
       <Scene3D variant="hero" />
-      {/* Full-bleed portrait atmosphere behind 3D */}
+      {/* Atmospheric gradient only — portrait lives in Scene3D */}
       <div className="pointer-events-none fixed inset-0 z-[1] h-screen overflow-hidden" aria-hidden="true">
-        <img
-          src="/assets/lloyd-avatar.webp"
-          alt=""
-          className="absolute inset-0 h-full w-full scale-110 object-cover object-[center_15%] opacity-[0.18]"
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-hq/40 via-transparent to-hq-deep/80" />
+        <div className="absolute inset-0 bg-gradient-to-b from-hq/30 via-transparent to-hq-deep/70" />
       </div>
       <TopographicLines className="z-[1] opacity-[0.04]" />
 
