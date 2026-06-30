@@ -1,4 +1,3 @@
-import { Link } from "react-router-dom";
 import Reveal from "./Reveal.jsx";
 import SectionIllustration from "./SectionIllustration.jsx";
 import { writing, sectionIllustrations } from "../data/site.js";
@@ -42,10 +41,11 @@ export default function Writing() {
 
 function BookCard({ book, index }) {
   const hasLinks = book.amazon || book.trailer;
+
   return (
     <Reveal delay={index * 0.05}>
       <div className="group flex flex-col rounded-2xl border border-line bg-canvas p-5 shadow-card transition hover:border-brand/30 hover:shadow-lift">
-        <Link to={`/writing/${book.slug}`} className="flex flex-1 gap-4">
+        <div className="flex flex-1 gap-4">
           <div className="grid h-16 w-14 shrink-0 place-items-center rounded-lg border border-line bg-white text-center">
             <span className="px-1 text-[7px] font-semibold uppercase tracking-widest text-brand">
               {book.kind}
@@ -57,15 +57,20 @@ function BookCard({ book, index }) {
                 {book.title}
               </h3>
               {book.status && (
-                <span className="rounded-full border border-brand/20 bg-brand/5 px-2 py-0.5 text-[10px] text-brand">
+                <span
+                  className={`rounded-full border px-2 py-0.5 text-[10px] ${
+                    book.status === "Not Available"
+                      ? "border-line bg-white text-muted"
+                      : "border-brand/20 bg-brand/5 text-brand"
+                  }`}
+                >
                   {book.status}
                 </span>
               )}
             </div>
             <p className="mt-2 text-sm leading-relaxed text-muted">{book.description}</p>
-            <span className="mt-2 inline-block text-xs font-medium text-brand">View book →</span>
           </div>
-        </Link>
+        </div>
 
         {hasLinks && (
           <div className="mt-3 flex flex-wrap items-center gap-2 border-t border-line pt-3">

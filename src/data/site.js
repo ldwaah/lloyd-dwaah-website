@@ -313,6 +313,7 @@ export const writing = {
       title: "A Way With Words",
       kind: "Anthology",
       status: "",
+      amazon: "https://www.amazon.co.uk/way-words-Lloyd-T-Dwaah/dp/1985038226",
       description:
         "A collection exploring voice, rhetoric and the power of language — how words shape identity, persuade, heal and hold people to account.",
       sections: [
@@ -334,7 +335,7 @@ export const writing = {
       slug: "when-my-body-says-no",
       title: "When My Body Says No",
       kind: "Memoir",
-      status: "In progress",
+      status: "Not Available",
       description:
         "A personal exploration of living with Multiple Sclerosis, resilience, purpose and discovering strength through adversity.",
       sections: [
