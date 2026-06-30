@@ -5,7 +5,7 @@ import { menuNav, contact } from "../data/site.js";
 import { StackedLogo } from "./BrandMark.jsx";
 import MenuToggle from "./MenuToggle.jsx";
 import TopographicLines from "./TopographicLines.jsx";
-import { scrollToTarget } from "./SmoothScroll.jsx";
+import { scrollToTarget } from "../lib/scroll.js";
 
 const ease = [0.22, 1, 0.36, 1];
 

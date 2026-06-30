@@ -29,7 +29,11 @@ export default function Scene3D({ variant = "default", onPortraitReady }) {
   const hero = variant === "hero";
 
   return (
-    <div className={`pointer-events-none fixed inset-0 z-0 ${hero ? "h-screen" : ""}`}>
+    <div
+      className={`pointer-events-none z-0 ${
+        hero ? "absolute inset-0 h-full w-full" : "fixed inset-0"
+      }`}
+    >
       <Canvas
         shadows={false}
         dpr={mobile ? [1, 1.4] : [1, 1.9]}
