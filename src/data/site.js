@@ -19,6 +19,7 @@ export const avatarConfig = {
 // ---- Navigation -----------------------------------------------------------
 export const nav = [
   { label: "Home", href: "/" },
+  { label: "Ethos", href: "/#principles" },
   { label: "Experience", href: "/experience.html" },
   { label: "Ventures", href: "/ventures.html" },
   { label: "Publications", href: "/publications.html" },
@@ -303,6 +304,8 @@ export const ventures = {
       title: "EvolveOne.ai",
       field: "AI · Technology",
       status: "Live",
+      role: "Founder",
+      impact: "AI products, LLM tools and websites for business and education",
       href: "https://evolveone.ai",
       description:
         "Originally founded as a digital marketing company; now focused on AI, LLMs and websites.",
@@ -313,6 +316,8 @@ export const ventures = {
       title: "RedefiningMS.co.uk",
       field: "Health · Community",
       status: "Live",
+      role: "Founder",
+      impact: "Education, awareness and practical support for people living with MS",
       description:
         "A platform dedicated to documenting life with Multiple Sclerosis while providing education, awareness, support and practical resources.",
     },

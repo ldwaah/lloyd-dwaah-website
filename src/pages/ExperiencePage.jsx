@@ -1,60 +1,99 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
+import { motion, useScroll, useTransform } from "framer-motion";
 import PageShell from "../components/PageShell.jsx";
 import HolisticCVModal from "../components/HolisticCVModal.jsx";
+import Reveal from "../components/Reveal.jsx";
 import { experience } from "../data/site.js";
+
+function TimelineMilestone({ entry, index, total }) {
+  const ref = useRef(null);
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start end", "center center"],
+  });
+
+  const opacity = useTransform(scrollYProgress, [0, 0.4, 1], [0, 1, 1]);
+  const y = useTransform(scrollYProgress, [0, 0.5], [80, 0]);
+  const scale = useTransform(scrollYProgress, [0, 0.5], [0.96, 1]);
+
+  return (
+    <motion.li
+      ref={ref}
+      style={{ opacity, y, scale }}
+      className="relative min-h-[70vh] flex flex-col justify-center py-16 md:min-h-[80vh]"
+    >
+      <div className="absolute left-0 top-1/2 hidden h-px w-full -translate-y-1/2 bg-gradient-to-r from-transparent via-accent/20 to-transparent md:block" />
+
+      <div className={`relative grid items-center gap-12 md:grid-cols-2 ${index % 2 === 1 ? "md:direction-rtl" : ""}`}>
+        <div className={index % 2 === 1 ? "md:order-2 md:text-right" : ""}>
+          <p className="text-[11px] font-semibold uppercase tracking-[0.25em] text-accent/70">
+            {entry.year}
+          </p>
+          <h2 className="mt-6 font-serif text-hero text-ink text-balance">{entry.title}</h2>
+          <p className="mt-4 text-lg text-accent/80">{entry.role}</p>
+        </div>
+
+        <div className={`glass-panel rounded-2xl p-8 md:p-10 ${index % 2 === 1 ? "md:order-1" : ""}`}>
+          <p className="text-lg leading-relaxed text-body text-pretty">{entry.summary}</p>
+          <p className="mt-6 text-base leading-relaxed text-muted">{entry.detail}</p>
+        </div>
+      </div>
+
+      {index < total - 1 && (
+        <div className="absolute bottom-0 left-1/2 hidden h-16 w-px -translate-x-1/2 bg-gradient-to-b from-accent/30 to-transparent md:block" />
+      )}
+    </motion.li>
+  );
+}
 
 export default function ExperiencePage() {
   const [cvOpen, setCvOpen] = useState(false);
   const { holisticCv } = experience;
+  const containerRef = useRef(null);
+  const { scrollYProgress } = useScroll({ target: containerRef });
+  const lineHeight = useTransform(scrollYProgress, [0, 1], ["0%", "100%"]);
 
   return (
-    <PageShell>
-      <section className="section bg-white">
-        <span className="eyebrow">{experience.eyebrow}</span>
-        <h1 className="mt-5 max-w-2xl text-statement serif text-ink">{experience.heading}</h1>
-        <p className="mt-4 max-w-2xl text-pretty text-muted">{experience.intro}</p>
-        <button
-          type="button"
-          onClick={() => setCvOpen(true)}
-          className="btn-accent mt-8"
-        >
-          {holisticCv.label}
-        </button>
+    <PageShell ambient="experience">
+      <section className="section-pad pb-16">
+        <Reveal>
+          <span className="eyebrow">{experience.eyebrow}</span>
+          <h1 className="mt-8 max-w-4xl font-serif text-display text-ink text-balance">
+            {experience.heading}
+          </h1>
+          <p className="mt-8 max-w-2xl text-xl leading-relaxed text-muted">{experience.intro}</p>
+          <button type="button" onClick={() => setCvOpen(true)} className="btn-primary mt-12">
+            {holisticCv.label}
+          </button>
+        </Reveal>
       </section>
 
-      <section className="border-t border-line bg-navy">
-        <div className="section section-dark !text-white">
-          <ol className="relative space-y-0 border-l border-white/15 pl-8">
-            {experience.timeline.map((entry) => (
-              <li key={entry.id} className="group relative pb-10 last:pb-0">
-                <span className="absolute -left-[5px] top-1.5 h-2.5 w-2.5 rounded-full bg-white transition group-hover:scale-125" />
-                <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-white/50">
-                  {entry.year}
-                </p>
-                <h2 className="mt-2 text-xl font-medium text-white">{entry.title}</h2>
-                <p className="mt-1 text-sm text-white/60">{entry.role}</p>
-                <p className="mt-3 max-w-2xl text-sm leading-relaxed text-white/75">
-                  {entry.summary}
-                </p>
-                <div className="grid grid-rows-[0fr] opacity-0 transition-all duration-300 group-hover:grid-rows-[1fr] group-hover:opacity-100">
-                  <div className="overflow-hidden">
-                    <p className="mt-2 max-w-2xl text-sm leading-relaxed text-white/55">
-                      {entry.detail}
-                    </p>
-                  </div>
-                </div>
-              </li>
-            ))}
-          </ol>
+      <section ref={containerRef} className="relative border-t border-line">
+        <div className="absolute left-6 top-0 hidden h-full w-px bg-line md:left-10 md:block">
+          <motion.div
+            className="w-full bg-gradient-to-b from-accent via-accent/50 to-transparent"
+            style={{ height: lineHeight }}
+          />
+        </div>
 
+        <ol className="section-pad !pt-8">
+          {experience.timeline.map((entry, i) => (
+            <TimelineMilestone
+              key={entry.id}
+              entry={entry}
+              index={i}
+              total={experience.timeline.length}
+            />
+          ))}
+        </ol>
+
+        <div className="section-pad-tight border-t border-line text-center">
           <button
             type="button"
             onClick={() => setCvOpen(true)}
-            className="mt-10 inline-flex items-center gap-2 text-sm font-medium text-white/70 transition hover:text-white"
+            className="btn-ghost"
           >
-            <span className="h-px w-8 bg-white/30" />
-            {holisticCv.label}
-            <span aria-hidden="true">→</span>
+            {holisticCv.label} →
           </button>
         </div>
       </section>

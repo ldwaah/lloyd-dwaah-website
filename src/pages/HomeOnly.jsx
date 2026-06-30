@@ -1,53 +1,35 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
+import Scene3D from "../components/Scene3D.jsx";
 import SiteNav from "../components/SiteNav.jsx";
 import SiteFooter from "../components/SiteFooter.jsx";
-import { meta, avatarConfig, home, ethos } from "../data/site.js";
+import Reveal from "../components/Reveal.jsx";
+import TopographicLines from "../components/TopographicLines.jsx";
+import { meta, home, ethos } from "../data/site.js";
 
-function ScrollSection({ children, className = "" }) {
-  const ref = useRef(null);
-  const [visible, setVisible] = useState(false);
-
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) setVisible(true);
-      },
-      { threshold: 0.12, rootMargin: "0px 0px -8% 0px" }
-    );
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, []);
-
-  return (
-    <div
-      ref={ref}
-      className={`transition-all duration-700 ${
-        visible ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"
-      } ${className}`}
-    >
-      {children}
-    </div>
-  );
-}
+const ease = [0.22, 1, 0.36, 1];
 
 function ScrollChevron() {
   return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.5"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className="h-6 w-6 animate-bounce text-muted"
-      aria-hidden="true"
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ delay: 1.2, duration: 1 }}
+      className="absolute bottom-10 left-1/2 -translate-x-1/2"
+      aria-label="Scroll down"
     >
-      <path d="M12 5v14" />
-      <path d="m6 13 6 6 6-6" />
-    </svg>
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1"
+        className="h-8 w-8 animate-bounce text-accent/40"
+        aria-hidden="true"
+      >
+        <path d="M12 5v14M7 12l5 5 5-5" strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
+    </motion.div>
   );
 }
 
@@ -55,82 +37,95 @@ export default function HomeOnly() {
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > window.innerHeight * 0.08);
+    const onScroll = () => setScrolled(window.scrollY > window.innerHeight * 0.15);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
   return (
-    <div className="bg-white">
-      <SiteNav />
+    <div className="relative min-h-screen bg-hq">
+      <Scene3D />
+      <TopographicLines className="z-[1] opacity-[0.04]" />
 
-      <section id="home" className="flex min-h-screen flex-col items-center justify-center px-6 pb-16 pt-24 text-center">
-        <div className="overflow-hidden rounded-2xl border border-line bg-canvas shadow-card">
-          <img
-            src={avatarConfig.image}
-            alt={meta.name}
-            className="h-48 w-48 object-cover md:h-56 md:w-56"
-          />
-        </div>
+      <div className="page-enter relative z-10">
+        <SiteNav transparent />
 
-        <h1 className="mt-10 font-serif text-4xl tracking-tight text-ink md:text-5xl">
-          {meta.name}
-        </h1>
+        {/* Image-first installation hero — no text until scroll */}
+        <section id="home" className="relative min-h-screen">
+          {!scrolled && <ScrollChevron />}
+        </section>
 
-        <p className="mt-6 max-w-xl text-pretty font-serif text-xl leading-relaxed text-ink md:text-2xl">
-          {home.ethosStatement}
-        </p>
-
-        <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
-          <a href={home.cta.href} className="btn-accent">
-            {home.cta.label}
-          </a>
-          <a href={home.secondary.href} className="btn">
-            {home.secondary.label}
-          </a>
-        </div>
-
-        {!scrolled && (
-          <div className="mt-12" aria-label="Scroll down">
-            <ScrollChevron />
+        {/* Revealed on scroll */}
+        <section className="relative border-t border-line/30 bg-hq-deep/80 backdrop-blur-sm">
+          <div className="section-pad mx-auto max-w-4xl text-center">
+            <Reveal>
+              <p className="text-[11px] font-bold uppercase tracking-[0.28em] text-accent/70">
+                {meta.name}
+              </p>
+              <h1 className="mt-8 font-serif text-statement text-ink text-balance">
+                {home.ethosStatement}
+              </h1>
+              <div className="mt-12 flex flex-wrap items-center justify-center gap-4">
+                <a href={home.cta.href} className="btn-primary">
+                  {home.cta.label}
+                </a>
+                <a href={home.secondary.href} className="btn-ghost">
+                  {home.secondary.label}
+                </a>
+              </div>
+            </Reveal>
           </div>
-        )}
-      </section>
+        </section>
 
-      <section id="principles" className="border-t border-line bg-canvas">
-        <div className="mx-auto max-w-3xl px-6 py-16 md:py-20">
-          <ScrollSection>
-            <h2 className="font-serif text-3xl text-ink md:text-4xl">
-              {ethos.principlesHeading}
-            </h2>
-            <p className="mt-3 text-lg text-muted">{ethos.principlesIntro}</p>
-          </ScrollSection>
+        {/* Core principles */}
+        <section
+          id="principles"
+          className="relative border-t border-line bg-hq-deep/90 backdrop-blur-sm"
+        >
+          <div className="section-pad mx-auto max-w-4xl">
+            <Reveal>
+              <span className="eyebrow">{ethos.principlesHeading}</span>
+              <h2 className="mt-8 font-serif text-hero text-ink">{ethos.principlesIntro}</h2>
+            </Reveal>
 
-          <div className="mt-10 space-y-0 divide-y divide-line border-y border-line bg-white">
-            {ethos.principles.map((principle) => (
-              <ScrollSection key={principle.id}>
-                <article className="group px-5 py-6 transition-colors hover:bg-canvas md:px-6 md:py-7">
-                  <div className="flex items-baseline gap-4">
-                    <span className="font-serif text-sm text-brand/60">{principle.no}</span>
-                    <h3 className="text-lg font-medium text-ink">{principle.title}</h3>
-                  </div>
-                  <p className="mt-2 pl-9 text-sm text-muted">{principle.summary}</p>
-                  <div className="grid grid-rows-[0fr] opacity-0 transition-all duration-300 group-hover:grid-rows-[1fr] group-hover:opacity-100">
-                    <div className="overflow-hidden">
-                      <p className="mt-3 pl-9 text-sm leading-relaxed text-body">
-                        {principle.detail}
-                      </p>
+            <div className="mt-20 space-y-0">
+              {ethos.principles.map((principle, i) => (
+                <Reveal key={principle.id} delay={i * 0.06}>
+                  <article className="group border-t border-line py-10 transition-colors duration-500 hover:bg-white/[0.02] md:py-14">
+                    <div className="flex flex-col gap-4 md:flex-row md:items-start md:gap-12">
+                      <span className="font-serif text-sm tracking-widest text-accent/50">
+                        {principle.no}
+                      </span>
+                      <div className="flex-1">
+                        <h3 className="font-serif text-2xl text-ink md:text-3xl">
+                          {principle.title}
+                        </h3>
+                        <p className="mt-3 text-lg text-muted">{principle.summary}</p>
+                        <p className="mt-0 max-h-0 overflow-hidden text-base leading-relaxed text-body opacity-0 transition-all duration-500 group-hover:mt-4 group-hover:max-h-40 group-hover:opacity-100">
+                          {principle.detail}
+                        </p>
+                        <div className="mt-4 flex flex-wrap gap-2 opacity-0 transition-opacity duration-500 group-hover:opacity-100">
+                          {principle.tags.map((tag) => (
+                            <span
+                              key={tag}
+                              className="rounded-full border border-line px-3 py-1 text-[10px] uppercase tracking-wider text-muted"
+                            >
+                              {tag}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                </article>
-              </ScrollSection>
-            ))}
+                  </article>
+                </Reveal>
+              ))}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      <SiteFooter />
+        <SiteFooter />
+      </div>
     </div>
   );
 }

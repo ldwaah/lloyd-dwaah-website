@@ -35,8 +35,8 @@ export default function Scene3D() {
         gl={{ antialias: true, alpha: false, powerPreference: "high-performance" }}
         camera={{ position: [0, 0.3, 6], fov: 38 }}
         onCreated={({ scene }) => {
-          scene.background = new THREE.Color("#05070f");
-          scene.fog = new THREE.FogExp2("#05070f", 0.058);
+          scene.background = new THREE.Color("#203140");
+          scene.fog = new THREE.FogExp2("#16242f", 0.045);
         }}
       >
         <Suspense fallback={null}>
@@ -155,6 +155,14 @@ function usePortraitMotion(group, { pointer, scroll, mobile }) {
     g.position.y = damp(g.position.y, targetY, 3, dt);
     g.rotation.y = damp(g.rotation.y, p.x * 0.32, 3, dt);
     g.rotation.x = damp(g.rotation.x, -p.y * 0.2, 3, dt);
+    const breathe = 1 + Math.sin(state.clock.elapsedTime * 0.8) * 0.008;
+    const baseScale = props.mobile ? 0.78 : 1;
+    if (!g.userData.breatheApplied) {
+      g.userData.baseScale = baseScale;
+      g.userData.breatheApplied = true;
+    }
+    const s = (g.userData.baseScale || baseScale) * breathe;
+    g.scale.set(s, s, s);
 
     // Fade the portrait out once we leave the hero.
     const fade = THREE.MathUtils.clamp(1 - (sp - 0.04) * 6, 0, 1);
@@ -181,7 +189,7 @@ function TexturedPortrait(props) {
   const w = h * aspect;
 
   return (
-    <group ref={group} position={[1.75, 0.15, 0]} scale={props.mobile ? 0.78 : 1}>
+    <group ref={group} position={[1.75, 0.15, 0]}>
       <Float speed={1.1} rotationIntensity={0.18} floatIntensity={0.45}>
         <PortraitFrame w={w} h={h}>
           <mesh position={[0, 0, 0.11]}>
@@ -200,7 +208,7 @@ function PortraitPlaceholder(props) {
   const w = 2.6;
   const h = 3.3;
   return (
-    <group ref={group} position={[1.75, 0.15, 0]} scale={props.mobile ? 0.78 : 1}>
+    <group ref={group} position={[1.75, 0.15, 0]}>
       <Float speed={1.1} rotationIntensity={0.18} floatIntensity={0.45}>
         <PortraitFrame w={w} h={h}>
           <mesh position={[0, 0, 0.11]}>
@@ -393,7 +401,7 @@ function Floor() {
         minDepthThreshold={0.4}
         maxDepthThreshold={1.4}
         roughness={0.95}
-        color="#05070f"
+        color="#16242f"
         metalness={0.55}
         mirror={0.45}
       />

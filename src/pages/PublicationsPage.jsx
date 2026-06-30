@@ -1,77 +1,144 @@
+import { motion } from "framer-motion";
 import PageShell from "../components/PageShell.jsx";
+import Reveal from "../components/Reveal.jsx";
 import { publications } from "../data/site.js";
 
-export default function PublicationsPage() {
+const SPINE_COLORS = [
+  "from-amber-900/80 to-amber-950",
+  "from-slate-700/90 to-slate-900",
+  "from-rose-900/70 to-rose-950",
+  "from-teal-900/70 to-teal-950",
+  "from-indigo-900/70 to-indigo-950",
+];
+
+function BookOnShelf({ book, index, shelfIndex }) {
+  const hasLinks = book.amazon || book.trailer;
+  const isUnavailable = book.status === "Not Available";
+  const spineColor = SPINE_COLORS[index % SPINE_COLORS.length];
+
   return (
-    <PageShell>
-      <section className="section bg-white">
-        <span className="eyebrow">{publications.eyebrow}</span>
-        <h1 className="mt-5 max-w-2xl text-statement serif text-ink">{publications.heading}</h1>
+    <motion.article
+      className="perspective-1000 group relative flex flex-col"
+      whileHover={{ zIndex: 20 }}
+    >
+      <motion.div
+        className="relative mx-auto w-full max-w-[140px] cursor-default"
+        whileHover={{ y: -24, rotateY: -8, scale: 1.04 }}
+        transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+        style={{ transformStyle: "preserve-3d" }}
+      >
+        {/* Book spine */}
+        <div
+          className={`relative aspect-[2/3] overflow-hidden rounded-sm bg-gradient-to-b ${spineColor} shadow-lift ring-1 ring-white/10`}
+        >
+          <div className="absolute inset-0 bg-gradient-to-r from-black/20 to-transparent" />
+          <div className="flex h-full flex-col justify-between p-3">
+            <span className="text-[8px] font-semibold uppercase tracking-widest text-gold/80">
+              {book.kind}
+            </span>
+            <p
+              className="font-serif text-[11px] leading-tight text-ink/90"
+              style={{ writingMode: "vertical-rl", textOrientation: "mixed" }}
+            >
+              {book.title}
+            </p>
+          </div>
+          {book.status === "Available now" && (
+            <span className="absolute right-1 top-2 h-1 w-1 rounded-full bg-gold shadow-[0_0_6px_rgba(201,169,98,0.8)]" />
+          )}
+        </div>
+      </motion.div>
+
+      {/* Detail panel slides up on hover */}
+      <motion.div
+        initial={{ opacity: 0, y: 8 }}
+        whileHover={{ opacity: 1, y: 0 }}
+        className="pointer-events-none absolute left-1/2 top-full z-30 mt-4 w-72 -translate-x-1/2 rounded-2xl border border-line glass-panel p-5 opacity-0 shadow-lift transition-opacity duration-300 group-hover:pointer-events-auto group-hover:opacity-100"
+      >
+        <h2 className="font-serif text-lg text-ink">{book.title}</h2>
+        {book.status && (
+          <span
+            className={`mt-2 inline-block text-[10px] font-semibold uppercase tracking-wider ${
+              isUnavailable ? "text-muted" : "text-gold"
+            }`}
+          >
+            {book.status}
+          </span>
+        )}
+        <p className="mt-3 text-sm leading-relaxed text-muted">{book.description}</p>
+
+        {hasLinks && (
+          <div className="mt-4 flex flex-wrap gap-2">
+            {book.amazon && (
+              <a
+                href={book.amazon}
+                target="_blank"
+                rel="noreferrer"
+                className="btn-primary px-4 py-2 text-xs"
+              >
+                Buy on Amazon
+              </a>
+            )}
+            {book.trailer && (
+              <a
+                href={book.trailer}
+                target="_blank"
+                rel="noreferrer"
+                className="btn-ghost px-4 py-2 text-xs"
+              >
+                Trailer
+              </a>
+            )}
+          </div>
+        )}
+      </motion.div>
+    </motion.article>
+  );
+}
+
+function Shelf({ books, shelfIndex, label }) {
+  return (
+    <div className="relative">
+      <p className="mb-8 text-[10px] font-semibold uppercase tracking-[0.3em] text-muted/50">
+        {label}
+      </p>
+      <div className="relative grid grid-cols-2 gap-8 sm:grid-cols-3 md:grid-cols-5 md:gap-6">
+        {books.map((book, i) => (
+          <BookOnShelf key={book.slug} book={book} index={i} shelfIndex={shelfIndex} />
+        ))}
+      </div>
+      {/* Shelf plank */}
+      <div className="relative mt-6 h-3 rounded-sm bg-gradient-to-b from-amber-900/40 to-amber-950/60 shadow-[inset_0_2px_4px_rgba(0,0,0,0.4)]" />
+      <div className="h-1 bg-black/30" />
+    </div>
+  );
+}
+
+export default function PublicationsPage() {
+  const allBooks = publications.books;
+
+  return (
+    <PageShell ambient="publications">
+      <section className="section-pad pb-12">
+        <Reveal>
+          <span className="eyebrow">{publications.eyebrow}</span>
+          <h1 className="mt-8 max-w-3xl font-serif text-display text-ink">{publications.heading}</h1>
+          <p className="mt-8 max-w-2xl text-xl leading-relaxed text-muted">{publications.intro}</p>
+        </Reveal>
       </section>
 
-      <section className="border-t border-line bg-canvas">
-        <div className="mx-auto max-w-3xl space-y-4 px-6 py-10 md:py-14">
-          {publications.books.map((book) => {
-            const hasLinks = book.amazon || book.trailer;
-            return (
-              <article
-                key={book.slug}
-                className="rounded-2xl border border-line bg-white p-5 shadow-card"
-              >
-                <div className="flex gap-4">
-                  <div className="grid h-16 w-14 shrink-0 place-items-center rounded-lg border border-line bg-canvas text-center">
-                    <span className="px-1 text-[7px] font-semibold uppercase tracking-widest text-brand">
-                      {book.kind}
-                    </span>
-                  </div>
-                  <div className="min-w-0">
-                    <div className="flex flex-wrap items-center gap-2">
-                      <h2 className="text-base font-medium text-ink">{book.title}</h2>
-                      {book.status && (
-                        <span
-                          className={`rounded-full border px-2 py-0.5 text-[10px] ${
-                            book.status === "Not Available"
-                              ? "border-line bg-canvas text-muted"
-                              : "border-brand/20 bg-brand/5 text-brand"
-                          }`}
-                        >
-                          {book.status}
-                        </span>
-                      )}
-                    </div>
-                    <p className="mt-2 text-sm leading-relaxed text-muted">{book.description}</p>
-                  </div>
-                </div>
+      <section className="border-t border-line bg-hq-darker/50">
+        <div className="section-pad mx-auto max-w-6xl">
+          {/* Library atmosphere */}
+          <div className="mb-20 flex items-end gap-8">
+            <Reveal className="flex-1">
+              <Shelf books={allBooks} shelfIndex={0} label="The collection" />
+            </Reveal>
+          </div>
 
-                {hasLinks && (
-                  <div className="mt-3 flex flex-wrap gap-2 border-t border-line pt-3">
-                    {book.amazon && (
-                      <a
-                        href={book.amazon}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="inline-flex rounded-md bg-brand px-3 py-1.5 text-xs font-semibold text-white hover:bg-brand-dark"
-                      >
-                        Buy on Amazon
-                      </a>
-                    )}
-                    {book.trailer && (
-                      <a
-                        href={book.trailer}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="inline-flex rounded-md border border-line bg-white px-3 py-1.5 text-xs font-medium text-ink hover:border-brand/30 hover:text-brand"
-                      >
-                        Trailer ↗
-                      </a>
-                    )}
-                  </div>
-                )}
-              </article>
-            );
-          })}
-
-          <p className="text-sm italic text-muted">{publications.note}</p>
+          <Reveal>
+            <p className="text-center text-sm italic text-muted/70">{publications.note}</p>
+          </Reveal>
         </div>
       </section>
     </PageShell>

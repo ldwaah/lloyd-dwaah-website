@@ -1,4 +1,5 @@
 import { useEffect, useId, useMemo, useRef } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
 function formatPeriod(entry) {
   return `${entry.startDate} - ${entry.endDate}`;
@@ -32,89 +33,102 @@ export default function HolisticCVModal({ open, onClose, cv }) {
     };
   }, [open, onClose]);
 
-  if (!open) return null;
-
   return (
-    <div
-      className="fixed inset-0 z-50 flex items-end justify-center p-0 sm:items-center sm:p-6"
-      role="presentation"
-    >
-      <button
-        type="button"
-        className="absolute inset-0 bg-navy/70 backdrop-blur-sm"
-        aria-label="Close CV"
-        onClick={onClose}
-      />
-
-      <div
-        ref={panelRef}
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby={titleId}
-        tabIndex={-1}
-        className="relative flex max-h-[92vh] w-full max-w-2xl flex-col overflow-hidden rounded-t-2xl border border-line bg-white shadow-card sm:rounded-2xl"
-      >
-        <div className="flex items-start justify-between gap-4 border-b border-line px-6 py-5">
-          <div>
-            <p className="eyebrow">{cv.label}</p>
-            <h2 id={titleId} className="mt-3 font-serif text-2xl text-ink md:text-3xl">
-              {cv.heading}
-            </h2>
-            <p className="mt-2 text-sm leading-relaxed text-muted">{cv.intro}</p>
-          </div>
+    <AnimatePresence>
+      {open && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.3 }}
+          className="fixed inset-0 z-50 flex items-end justify-center p-0 sm:items-center sm:p-6"
+          role="presentation"
+        >
           <button
             type="button"
+            className="absolute inset-0 bg-hq-darker/80 backdrop-blur-md"
+            aria-label="Close CV"
             onClick={onClose}
-            className="shrink-0 rounded-lg border border-line px-3 py-2 text-sm font-medium text-ink transition hover:border-brand/30 hover:text-brand"
-            aria-label="Close"
-          >
-            Close
-          </button>
-        </div>
+          />
 
-        <div className="overflow-y-auto px-6 py-5">
-          <ol className="space-y-0 divide-y divide-line border-y border-line">
-            {entries.map((entry) => (
-              <li key={entry.id} className="py-5 first:pt-5 last:pb-5">
-                <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-brand/70">
-                  {formatPeriod(entry)}
-                </p>
-                <h3 className="mt-2 text-lg font-medium text-ink">{entry.title}</h3>
-                <p className="mt-1 text-sm text-muted">
-                  {entry.href ? (
-                    <a
-                      href={entry.href}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-brand transition hover:underline"
-                    >
-                      {entry.organisation}
-                    </a>
-                  ) : (
-                    entry.organisation
-                  )}
-                  {entry.instagram && (
-                    <>
-                      {" · "}
-                      <a
-                        href={entry.instagram}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-brand transition hover:underline"
-                      >
-                        Instagram
-                      </a>
-                    </>
-                  )}
-                </p>
-                {entry.note && (
-                  <p className="mt-2 text-sm leading-relaxed text-body">{entry.note}</p>
-                )}
-              </li>
-            ))}
-          </ol>
-        </div>
-      </div>
-    </div>
+          <motion.div
+            ref={panelRef}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby={titleId}
+            tabIndex={-1}
+            initial={{ opacity: 0, y: 40, scale: 0.98 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 20, scale: 0.98 }}
+            transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+            className="relative flex max-h-[92vh] w-full max-w-2xl flex-col overflow-hidden rounded-t-3xl border border-line glass-panel sm:rounded-3xl"
+          >
+            <div className="flex items-start justify-between gap-4 border-b border-line px-8 py-6">
+              <div>
+                <span className="eyebrow">{cv.label}</span>
+                <h2 id={titleId} className="mt-4 font-serif text-2xl text-ink md:text-3xl">
+                  {cv.heading}
+                </h2>
+                <p className="mt-2 text-sm leading-relaxed text-muted">{cv.intro}</p>
+              </div>
+              <button
+                type="button"
+                onClick={onClose}
+                className="btn-ghost shrink-0 px-4 py-2 text-xs"
+                aria-label="Close"
+              >
+                Close
+              </button>
+            </div>
+
+            <div className="overflow-y-auto px-8 py-6">
+              <ol className="space-y-0">
+                {entries.map((entry, i) => (
+                  <li
+                    key={entry.id}
+                    className="border-t border-line py-6 first:border-t-0 first:pt-0"
+                  >
+                    <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-accent/70">
+                      {formatPeriod(entry)}
+                    </p>
+                    <h3 className="mt-3 font-serif text-xl text-ink">{entry.title}</h3>
+                    <p className="mt-1 text-sm text-muted">
+                      {entry.href ? (
+                        <a
+                          href={entry.href}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-accent transition hover:underline"
+                        >
+                          {entry.organisation}
+                        </a>
+                      ) : (
+                        entry.organisation
+                      )}
+                      {entry.instagram && (
+                        <>
+                          {" · "}
+                          <a
+                            href={entry.instagram}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-accent transition hover:underline"
+                          >
+                            Instagram
+                          </a>
+                        </>
+                      )}
+                    </p>
+                    {entry.note && (
+                      <p className="mt-2 text-sm leading-relaxed text-body">{entry.note}</p>
+                    )}
+                  </li>
+                ))}
+              </ol>
+            </div>
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 }
