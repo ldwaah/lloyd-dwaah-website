@@ -3,7 +3,7 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import Scene3D from "../components/Scene3D.jsx";
 import SiteNav from "../components/SiteNav.jsx";
 import SiteFooter from "../components/SiteFooter.jsx";
-import Reveal from "../components/Reveal.jsx";
+import Reveal, { RevealStagger } from "../components/Reveal.jsx";
 import HomeScrollLayers from "../components/HomeScrollLayers.jsx";
 import Preloader, { hasSeenHomePreloader } from "../components/Preloader.jsx";
 import { meta, home, ethos } from "../data/site.js";
@@ -94,15 +94,15 @@ export default function HomeOnly() {
               <h1 className="mt-8 font-serif text-statement text-ink text-balance">
                 {home.ethosStatement}
               </h1>
-              <div className="mt-12 flex flex-wrap items-center justify-center gap-4">
-                <a href={home.cta.href} className="btn-primary">
-                  {home.cta.label}
-                </a>
-                <a href={home.secondary.href} className="btn-ghost">
-                  {home.secondary.label}
-                </a>
-              </div>
             </Reveal>
+            <RevealStagger className="mt-12 flex flex-wrap items-center justify-center gap-4" stagger={0.1}>
+              <a href={home.cta.href} className="btn-primary">
+                {home.cta.label}
+              </a>
+              <a href={home.secondary.href} className="btn-ghost">
+                {home.secondary.label}
+              </a>
+            </RevealStagger>
           </div>
         </section>
 
@@ -119,7 +119,7 @@ export default function HomeOnly() {
 
             <div className="mt-20 space-y-0">
               {ethos.principles.map((principle, i) => (
-                <Reveal key={principle.id} delay={i * 0.06}>
+                <Reveal key={principle.id} delay={i * 0.08} y={20}>
                   <article className="group border-t border-line py-10 transition-colors duration-500 hover:bg-white/[0.02] md:py-14">
                     <div className="flex flex-col gap-4 md:flex-row md:items-start md:gap-12">
                       <span className="font-serif text-sm tracking-widest text-accent/50">

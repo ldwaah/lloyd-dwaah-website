@@ -4,8 +4,29 @@ import PageShell from "../components/PageShell.jsx";
 import HolisticCVModal from "../components/HolisticCVModal.jsx";
 import Reveal from "../components/Reveal.jsx";
 import { experience } from "../data/site.js";
+import { prefersReducedMotion } from "../lib/input.js";
+
+function TimelineContent({ entry, index }) {
+  return (
+    <div className={`relative grid items-center gap-12 md:grid-cols-2 ${index % 2 === 1 ? "md:direction-rtl" : ""}`}>
+      <div className={index % 2 === 1 ? "md:order-2 md:text-right" : ""}>
+        <p className="text-[11px] font-light uppercase tracking-[0.25em] text-accent/70">
+          {entry.year}
+        </p>
+        <h2 className="mt-6 font-serif text-hero text-ink text-balance">{entry.title}</h2>
+        <p className="mt-4 text-lg text-accent/80">{entry.role}</p>
+      </div>
+
+      <div className={`glass-panel rounded-2xl p-8 md:p-10 ${index % 2 === 1 ? "md:order-1" : ""}`}>
+        <p className="text-lg leading-relaxed text-body text-pretty">{entry.summary}</p>
+        <p className="mt-6 text-base leading-relaxed text-muted">{entry.detail}</p>
+      </div>
+    </div>
+  );
+}
 
 function TimelineMilestone({ entry, index, total }) {
+  const reduced = prefersReducedMotion();
   const ref = useRef(null);
   const { scrollYProgress } = useScroll({
     target: ref,
@@ -16,6 +37,16 @@ function TimelineMilestone({ entry, index, total }) {
   const y = useTransform(scrollYProgress, [0, 0.5], [80, 0]);
   const scale = useTransform(scrollYProgress, [0, 0.5], [0.96, 1]);
 
+  if (reduced) {
+    return (
+      <li className="relative border-t border-line py-16 md:py-24">
+        <Reveal delay={index * 0.1}>
+          <TimelineContent entry={entry} index={index} />
+        </Reveal>
+      </li>
+    );
+  }
+
   return (
     <motion.li
       ref={ref}
@@ -24,20 +55,7 @@ function TimelineMilestone({ entry, index, total }) {
     >
       <div className="absolute left-0 top-1/2 hidden h-px w-full -translate-y-1/2 bg-gradient-to-r from-transparent via-accent/20 to-transparent md:block" />
 
-      <div className={`relative grid items-center gap-12 md:grid-cols-2 ${index % 2 === 1 ? "md:direction-rtl" : ""}`}>
-        <div className={index % 2 === 1 ? "md:order-2 md:text-right" : ""}>
-          <p className="text-[11px] font-semibold uppercase tracking-[0.25em] text-accent/70">
-            {entry.year}
-          </p>
-          <h2 className="mt-6 font-serif text-hero text-ink text-balance">{entry.title}</h2>
-          <p className="mt-4 text-lg text-accent/80">{entry.role}</p>
-        </div>
-
-        <div className={`glass-panel rounded-2xl p-8 md:p-10 ${index % 2 === 1 ? "md:order-1" : ""}`}>
-          <p className="text-lg leading-relaxed text-body text-pretty">{entry.summary}</p>
-          <p className="mt-6 text-base leading-relaxed text-muted">{entry.detail}</p>
-        </div>
-      </div>
+      <TimelineContent entry={entry} index={index} />
 
       {index < total - 1 && (
         <div className="absolute bottom-0 left-1/2 hidden h-16 w-px -translate-x-1/2 bg-gradient-to-b from-accent/30 to-transparent md:block" />
@@ -85,13 +103,15 @@ export default function ExperiencePage() {
         </ol>
 
         <div className="section-pad-tight border-t border-line text-center">
-          <button
-            type="button"
-            onClick={() => setCvOpen(true)}
-            className="btn-ghost"
-          >
-            {holisticCv.label} →
-          </button>
+          <Reveal y={16}>
+            <button
+              type="button"
+              onClick={() => setCvOpen(true)}
+              className="btn-ghost"
+            >
+              {holisticCv.label} →
+            </button>
+          </Reveal>
         </div>
       </section>
 

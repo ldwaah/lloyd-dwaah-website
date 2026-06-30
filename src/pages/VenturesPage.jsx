@@ -12,7 +12,7 @@ function VentureStaticPanel({ venture, index }) {
   return (
     <article className="border-t border-line py-16 md:py-24">
       <div className="mx-auto max-w-5xl px-6 md:px-10">
-        <Reveal>
+        <Reveal delay={index * 0.1}>
           <p className="text-[10px] font-light uppercase tracking-[0.32em] text-muted/50">
             {String(index + 1).padStart(2, "0")}
           </p>
