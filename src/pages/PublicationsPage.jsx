@@ -146,6 +146,7 @@ export default function PublicationsPage() {
     <PageShell ambient="publications">
       {playIntro && (
         <PublicationsIntro
+          onFadeStart={() => setContentVisible(true)}
           onComplete={() => {
             setPlayIntro(false);
             setContentVisible(true);
@@ -156,7 +157,8 @@ export default function PublicationsPage() {
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: contentVisible ? 1 : 0 }}
-        transition={{ duration: 1.2, ease }}
+        transition={{ duration: 1, ease }}
+        aria-hidden={!contentVisible}
       >
         <section className="relative min-h-[55vh] w-full overflow-hidden md:min-h-[62vh]">
           <img
