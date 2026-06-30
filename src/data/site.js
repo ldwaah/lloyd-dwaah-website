@@ -135,7 +135,7 @@ export const ethos = {
       title: "Emerging Technologies",
       summary: "Building and scaling products across AI, Web3 and DeFi.",
       detail:
-        "Since 2020, working across Web3, blockchain, decentralised finance and artificial intelligence — including multi-million-dollar DeFi protocols.",
+        "Since 2020, working across Web3, blockchain, decentralised finance and artificial intelligence, including multi-million-dollar DeFi protocols.",
       tags: ["Artificial Intelligence", "Web3", "Blockchain", "DeFi", "Product Operations"],
     },
     {
@@ -155,7 +155,7 @@ export const experience = {
   eyebrow: "Experience",
   heading: "A journey across education, sport and technology.",
   intro:
-    "From law and publishing to sport academies, decentralised finance and alternative provision leadership — work shaped by building environments where people flourish.",
+    "From law and publishing to sport academies, decentralised finance and alternative provision leadership. Work shaped by building environments where people flourish.",
   timeline: [
     {
       id: "ap-head",
@@ -163,19 +163,19 @@ export const experience = {
       title: "Alternative Provision Leadership",
       role: "Head of Centre",
       summary:
-        "Leading an alternative provision centre — shaping culture, curriculum and outcomes for young people who need a different path.",
+        "Leading an alternative provision centre, shaping culture, curriculum and outcomes for young people who need a different path.",
       detail:
         "Education leadership sits at the centre of my work today: high expectations, deep care, and environments built so every young person has room to grow.",
     },
     {
       id: "web3-defi",
-      year: "2020 — Present",
+      year: "2020 - Present",
       title: "Web3, DeFi & Emerging Technology",
       role: "Social Media Marketing · DeFi Protocols",
       summary:
         "Originally working in social media marketing before becoming deeply involved in DeFi protocols and distributed product teams.",
       detail:
-        "From 2020, artificial intelligence joined decentralised finance as a growing thread of work — practical experience in emerging technology that increasingly informs how I think about systems, scale and impact in education.",
+        "From 2020, artificial intelligence joined decentralised finance as a growing thread of work: practical experience in emerging technology that increasingly informs how I think about systems, scale and impact in education.",
     },
     {
       id: "sport-youth",
@@ -183,7 +183,7 @@ export const experience = {
       title: "Sport, Coaching & Youth Development",
       role: "Sports Centre · Private Academy",
       summary:
-        "Managed a sports centre — coaching and mentoring young people, running a private academy and an online tuition programme to support their learning.",
+        "Managed a sports centre, coaching and mentoring young people, running a private academy and an online tuition programme to support their learning.",
       detail:
         "Partnerships with Herbalife and a physiotherapy company supported young people's health and performance. Built pathways into post-16 education rooted in sport, discipline and personal growth.",
     },
@@ -193,11 +193,95 @@ export const experience = {
       title: "Law & Published Author",
       role: "University · Writing",
       summary:
-        "Completed a Law degree in 2018. Published several books during and around this period — exploring identity, character and human potential.",
+        "Completed a Law degree in 2018. Published several books during and around this period, exploring identity, character and human potential.",
       detail:
         "A law graduate and author whose writing distils lessons from leadership, resilience and lived experience into ideas others can carry.",
     },
   ],
+  holisticCv: {
+    label: "My Holistic CV",
+    heading: "My Holistic CV",
+    intro:
+      "A fuller view of roles, ventures and commitments across education, sport, technology and community. Dates verified from LinkedIn where listed.",
+    source: "https://www.linkedin.com/in/lloyd-dwaah-026531268",
+    entries: [
+      {
+        id: "author-macaulay",
+        sortStart: "2017-05",
+        startDate: "May 2017",
+        endDate: "Present",
+        title: "Author",
+        organisation: "Austin Macaulay",
+        note: "Gold Shades: The Perfect Gentleman and Gold Shades: A True Lady.",
+      },
+      {
+        id: "lyps",
+        sortStart: "2017-05",
+        startDate: "May 2017",
+        endDate: "Present",
+        title: "Director of Operations",
+        organisation: "London Youth Premier Showcase",
+      },
+      {
+        id: "crystal-palace",
+        sortStart: "2017-09",
+        startDate: "September 2017",
+        endDate: "March 2025",
+        title: "Talent Scout",
+        organisation: "Crystal Palace Football Club",
+      },
+      {
+        id: "bridgestone",
+        sortStart: "2018-08",
+        startDate: "August 2018",
+        endDate: "December 2024",
+        title: "Operations Manager",
+        organisation: "Bridgestone Sports Facilities",
+      },
+      {
+        id: "private-academy",
+        sortStart: "2018-09",
+        startDate: "September 2018",
+        endDate: "July 2024",
+        title: "Managing Director",
+        organisation: "Soccerlution Group (Private Academy)",
+      },
+      {
+        id: "esg-director",
+        sortStart: "2020-01",
+        startDate: "January 2020",
+        endDate: "Present",
+        title: "Director",
+        organisation: "Evolution Sports Group",
+      },
+      {
+        id: "evolution-education",
+        sortStart: "2020-01",
+        startDate: "January 2020",
+        endDate: "Present",
+        title: "Director",
+        organisation: "Evolution Education",
+      },
+      {
+        id: "evolveone",
+        sortStart: "2020-01",
+        startDate: "January 2020",
+        endDate: "Present",
+        title: "Founder",
+        organisation: "EvolveOne.ai",
+        note: "Originally founded as a digital marketing company; EvolveOne.ai listed on LinkedIn from January 2025.",
+      },
+      {
+        id: "besf",
+        sortStart: "2022-02",
+        startDate: "February 2022",
+        endDate: "Present",
+        title: "Charity Leadership",
+        organisation: "Beyond Education Sports Foundation",
+        note: "Charitable arm of Evolution Sports Group; registered February 2022.",
+      },
+    ],
+  },
 };
 
 // ---- 4. VENTURES ----------------------------------------------------------
@@ -205,7 +289,7 @@ export const ventures = {
   eyebrow: "Ventures",
   heading: "What I'm building now.",
   intro:
-    "A growing body of organisations, products and initiatives — each one an attempt to help more people reach their potential at greater scale.",
+    "A growing body of organisations, products and initiatives, each one an attempt to help more people reach their potential at greater scale.",
   items: [
     {
       logo: "/assets/evolveone-logo.svg",
@@ -213,6 +297,7 @@ export const ventures = {
       title: "EvolveOne.ai",
       field: "AI · Technology",
       status: "Live",
+      href: "https://evolveone.ai",
       description:
         "Building intelligent AI products, educational technology and digital platforms that improve learning, productivity and human potential.",
     },
@@ -276,7 +361,7 @@ export const publications = {
       description:
         "A series exploring modern masculinity, leadership, integrity and character.",
       sections: [
-        { title: "The question", body: "What does it mean to be a gentleman today — not as costume, but as conduct?" },
+        { title: "The question", body: "What does it mean to be a gentleman today, not as costume, but as conduct?" },
         { title: "Form", body: "A linked series of songs and short narratives testing character." },
         { title: "Audience", body: "For young men finding their footing and those mentoring them." },
       ],
@@ -305,7 +390,7 @@ export const publications = {
       description:
         "A collection exploring voice, rhetoric and the power of language.",
       sections: [
-        { title: "About the work", body: "A study of language — how we speak, how we are heard." },
+        { title: "About the work", body: "A study of language: how we speak, how we are heard." },
         { title: "Scope", body: "From classroom debate to public leadership and lyric writing." },
         { title: "Connection", body: "Literacy of the heart and the tongue." },
       ],
@@ -318,7 +403,7 @@ export const publications = {
       description:
         "A personal exploration of living with Multiple Sclerosis, resilience and purpose.",
       sections: [
-        { title: "The premise", body: "A memoir of living with MS — not as tragedy, but as truth." },
+        { title: "The premise", body: "A memoir of living with MS, not as tragedy, but as truth." },
         { title: "What it covers", body: "Diagnosis, adaptation and rebuilding a life." },
         { title: "Why write it", body: "Giving language to an experience many live in silence." },
       ],

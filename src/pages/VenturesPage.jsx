@@ -33,7 +33,20 @@ export default function VenturesPage() {
                   {venture.status}
                 </span>
               </div>
-              <h2 className="mt-5 text-2xl font-medium text-ink">{venture.title}</h2>
+              <h2 className="mt-5 text-2xl font-medium text-ink">
+                {venture.href ? (
+                  <a
+                    href={venture.href}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="transition hover:text-brand"
+                  >
+                    {venture.title}
+                  </a>
+                ) : (
+                  venture.title
+                )}
+              </h2>
               <p className="mt-1 text-[11px] font-semibold uppercase tracking-eyebrow text-brand/70">
                 {venture.field}
               </p>

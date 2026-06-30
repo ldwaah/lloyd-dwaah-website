@@ -98,7 +98,7 @@ export default function BookPage() {
                 <iframe
                   className="absolute inset-0 h-full w-full"
                   src={`https://www.youtube-nocookie.com/embed/${ytId}`}
-                  title={`${book.title} — book trailer`}
+                  title={`${book.title} - book trailer`}
                   loading="lazy"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                   allowFullScreen

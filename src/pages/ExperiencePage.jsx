@@ -1,13 +1,25 @@
+import { useState } from "react";
 import PageShell from "../components/PageShell.jsx";
+import HolisticCVModal from "../components/HolisticCVModal.jsx";
 import { experience } from "../data/site.js";
 
 export default function ExperiencePage() {
+  const [cvOpen, setCvOpen] = useState(false);
+  const { holisticCv } = experience;
+
   return (
     <PageShell>
       <section className="section bg-white">
         <span className="eyebrow">{experience.eyebrow}</span>
         <h1 className="mt-5 max-w-2xl text-statement serif text-ink">{experience.heading}</h1>
         <p className="mt-4 max-w-2xl text-pretty text-muted">{experience.intro}</p>
+        <button
+          type="button"
+          onClick={() => setCvOpen(true)}
+          className="btn-accent mt-8"
+        >
+          {holisticCv.label}
+        </button>
       </section>
 
       <section className="border-t border-line bg-navy">
@@ -34,8 +46,20 @@ export default function ExperiencePage() {
               </li>
             ))}
           </ol>
+
+          <button
+            type="button"
+            onClick={() => setCvOpen(true)}
+            className="mt-10 inline-flex items-center gap-2 text-sm font-medium text-white/70 transition hover:text-white"
+          >
+            <span className="h-px w-8 bg-white/30" />
+            {holisticCv.label}
+            <span aria-hidden="true">→</span>
+          </button>
         </div>
       </section>
+
+      <HolisticCVModal open={cvOpen} onClose={() => setCvOpen(false)} cv={holisticCv} />
     </PageShell>
   );
 }
