@@ -5,18 +5,34 @@
 [build.environment]
   NODE_VERSION = "20"
 
-# Clean URLs without .html extension
+# Clean URLs: serve HTML at paths without extension
 [[redirects]]
   from = "/experience"
   to = "/experience.html"
-  status = 301
+  status = 200
 
 [[redirects]]
   from = "/ventures"
   to = "/ventures.html"
-  status = 301
+  status = 200
 
 [[redirects]]
   from = "/publications"
   to = "/publications.html"
+  status = 200
+
+# Redirect legacy .html URLs to clean paths
+[[redirects]]
+  from = "/experience.html"
+  to = "/experience"
+  status = 301
+
+[[redirects]]
+  from = "/ventures.html"
+  to = "/ventures"
+  status = 301
+
+[[redirects]]
+  from = "/publications.html"
+  to = "/publications"
   status = 301

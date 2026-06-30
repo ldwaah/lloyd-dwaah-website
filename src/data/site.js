@@ -22,9 +22,9 @@ export const linkedInUrl = "https://www.linkedin.com/in/lloyd-dwaah-026531268";
 /** Full-screen overlay menu */
 export const menuNav = [
   { label: "Home", href: "/" },
-  { label: "Experience", href: "/experience.html" },
-  { label: "Ventures", href: "/ventures.html" },
-  { label: "Publications", href: "/publications.html" },
+  { label: "Experience", href: "/experience" },
+  { label: "Ventures", href: "/ventures" },
+  { label: "Publications", href: "/publications" },
   { label: "Ethos", href: "/#principles" },
 ];
 
@@ -36,7 +36,7 @@ export const home = {
   since: "Since 2020",
   ethosStatement:
     "I believe that great leadership creates environments where people can flourish.",
-  cta: { label: "Explore my work", href: "/ventures.html" },
+  cta: { label: "Explore my work", href: "/ventures" },
   secondary: { label: "What I believe", href: "#principles" },
 };
 
@@ -306,9 +306,10 @@ export const experience = {
 
 // ---- 4. VENTURES ----------------------------------------------------------
 export const ventures = {
-  eyebrow: "Ventures",
-  heading: "What I'm building now.",
-  intro:
+  eyebrow: "Portfolio",
+  heading: "Ventures",
+  intro: "What I'm Building Now",
+  tagline:
     "A growing body of organisations, products and initiatives, each one an attempt to help more people reach their potential at greater scale.",
   items: [
     {
@@ -378,12 +379,12 @@ export const publications = {
     {
       slug: "gold-shades-the-perfect-gentleman",
       title: "Gold Shades: The Perfect Gentleman",
-      kind: "Series",
+      kind: "Anthology",
       status: "Available now",
       amazon: "https://www.amazon.co.uk/Gold-Shades-Lloyd-Kingsley-Dwaah/dp/1786932067",
       trailer: "https://www.youtube.com/watch?v=b6FGqqo5ZfU",
       description:
-        "A series exploring modern masculinity, leadership, integrity and character.",
+        "An anthology exploring modern masculinity, leadership, integrity and character.",
       sections: [
         { title: "The question", body: "What does it mean to be a gentleman today, not as costume, but as conduct?" },
         { title: "Form", body: "A linked series of songs and short narratives testing character." },
@@ -393,12 +394,12 @@ export const publications = {
     {
       slug: "gold-shades-a-true-lady",
       title: "Gold Shades: A True Lady",
-      kind: "Anthology",
+      kind: "Novel",
       status: "Available now",
       amazon: "https://www.amazon.co.uk/Gold-Shades-Lloyd-Kingsley-Dwaah/dp/1788784553",
       trailer: "https://www.youtube.com/watch?v=uHYb95rzkew",
       description:
-        "An anthology centred around nine women, celebrating resilience, identity and individual journeys.",
+        "A novel centred around nine women, celebrating resilience, identity and individual journeys.",
       sections: [
         { title: "Nine voices", body: "Each woman has her own story and definition of strength." },
         { title: "Structure", body: "Every profile stands as its own chapter." },
@@ -422,12 +423,12 @@ export const publications = {
     {
       slug: "when-my-body-says-no",
       title: "When My Body Says No",
-      kind: "Memoir",
+      kind: "Novel",
       status: "Not Available",
       description:
-        "A personal exploration of living with Multiple Sclerosis, resilience and purpose.",
+        "A novel exploring living with Multiple Sclerosis, resilience and purpose.",
       sections: [
-        { title: "The premise", body: "A memoir of living with MS, not as tragedy, but as truth." },
+        { title: "The premise", body: "A novel of living with MS, not as tragedy, but as truth." },
         { title: "What it covers", body: "Diagnosis, adaptation and rebuilding a life." },
         { title: "Why write it", body: "Giving language to an experience many live in silence." },
       ],

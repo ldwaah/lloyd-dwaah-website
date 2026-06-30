@@ -63,6 +63,10 @@ function BookOnShelf({ book, index, order }) {
         {book.title}
       </h2>
 
+      <p className="mt-2 text-[10px] font-light uppercase tracking-[0.22em] text-accent/75">
+        {book.kind}
+      </p>
+
       {isUnavailable ? (
         <p className="mt-2 text-[10px] font-light uppercase tracking-[0.22em] text-muted/60">
           Coming Soon

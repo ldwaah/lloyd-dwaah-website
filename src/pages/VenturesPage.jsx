@@ -66,29 +66,29 @@ function VentureScrollMoment({ venture, index, total }) {
 
   const logoX = useTransform(
     scrollYProgress,
-    [0, 0.38, 0.72],
-    [fromLeft ? -100 : 100, 0, 0]
+    [0, 0.28, 0.68],
+    [fromLeft ? -80 : 80, 0, 0]
   );
-  const logoY = useTransform(scrollYProgress, [0, 0.38], [36, 0]);
-  const logoScale = useTransform(scrollYProgress, [0, 0.4], [0.82, 1]);
-  const logoOpacity = useTransform(scrollYProgress, [0, 0.22], [0, 1]);
-  const logoRotate = useTransform(scrollYProgress, [0, 0.4], [fromLeft ? -5 : 5, 0]);
+  const logoY = useTransform(scrollYProgress, [0, 0.28], [24, 0]);
+  const logoScale = useTransform(scrollYProgress, [0, 0.28], [0.88, 1]);
+  const logoOpacity = useTransform(scrollYProgress, [0, 0.12], [0, 1]);
+  const logoRotate = useTransform(scrollYProgress, [0, 0.28], [fromLeft ? -5 : 5, 0]);
 
-  const glowOpacity = useTransform(scrollYProgress, [0, 0.3, 0.7], [0, 0.55, 0.25]);
+  const glowOpacity = useTransform(scrollYProgress, [0, 0.22, 0.65], [0, 0.55, 0.25]);
 
-  const indexOpacity = useTransform(scrollYProgress, [0.05, 0.25], [0, 1]);
-  const titleOpacity = useTransform(scrollYProgress, [0.14, 0.36], [0, 1]);
-  const titleY = useTransform(scrollYProgress, [0.14, 0.38], [52, 0]);
+  const indexOpacity = useTransform(scrollYProgress, [0.02, 0.15], [0, 1]);
+  const titleOpacity = useTransform(scrollYProgress, [0.08, 0.22], [0, 1]);
+  const titleY = useTransform(scrollYProgress, [0.08, 0.24], [36, 0]);
 
-  const detailsOpacity = useTransform(scrollYProgress, [0.3, 0.52], [0, 1]);
-  const detailsY = useTransform(scrollYProgress, [0.3, 0.54], [40, 0]);
+  const detailsOpacity = useTransform(scrollYProgress, [0.18, 0.36], [0, 1]);
+  const detailsY = useTransform(scrollYProgress, [0.18, 0.38], [28, 0]);
 
-  const ctaOpacity = useTransform(scrollYProgress, [0.48, 0.65], [0, 1]);
-  const ctaY = useTransform(scrollYProgress, [0.48, 0.65], [20, 0]);
+  const ctaOpacity = useTransform(scrollYProgress, [0.32, 0.48], [0, 1]);
+  const ctaY = useTransform(scrollYProgress, [0.32, 0.48], [16, 0]);
 
-  const exitOpacity = useTransform(scrollYProgress, [0.82, 1], [1, 0.35]);
-  const exitScale = useTransform(scrollYProgress, [0.82, 1], [1, 0.96]);
-  const scrollHintOpacity = useTransform(scrollYProgress, [0.7, 0.9], [0, 0.5]);
+  const exitOpacity = useTransform(scrollYProgress, [0.78, 1], [1, 0.35]);
+  const exitScale = useTransform(scrollYProgress, [0.78, 1], [1, 0.97]);
+  const scrollHintOpacity = useTransform(scrollYProgress, [0.62, 0.85], [0, 0.5]);
 
   if (reduced) {
     return <VentureStaticPanel venture={venture} index={index} />;
@@ -97,12 +97,14 @@ function VentureScrollMoment({ venture, index, total }) {
   return (
     <section
       ref={ref}
-      className="relative h-[190vh] border-t border-line md:h-[220vh]"
+      className={`relative border-t border-line ${
+        index === 0 ? "h-[95vh] md:h-[105vh]" : "h-[115vh] md:h-[130vh]"
+      }`}
       aria-label={venture.title}
     >
       <motion.div
         style={{ opacity: exitOpacity, scale: exitScale }}
-        className="sticky top-20 flex h-[calc(100vh-5rem)] items-center overflow-hidden"
+        className="sticky top-16 flex h-[calc(100vh-4rem)] items-center overflow-hidden"
       >
         <div className="pointer-events-none absolute inset-0 opacity-[0.04]" aria-hidden="true">
           <TopographicLines className="h-full w-full" />
@@ -245,19 +247,24 @@ function HorizonSection() {
 export default function VenturesPage() {
   return (
     <PageShell ambient="ventures">
-      <section className="section-pad pb-12 md:pb-16">
-        <Reveal y={20}>
+      <section className="section-pad pb-6 md:pb-8">
+        <Reveal y={16}>
           <span className="eyebrow">{ventures.eyebrow}</span>
         </Reveal>
-        <Reveal delay={0.08} y={40}>
-          <h1 className="mt-8 max-w-4xl font-serif text-display text-ink">{ventures.heading}</h1>
+        <Reveal delay={0.06} y={32}>
+          <h1 className="mt-6 max-w-4xl font-serif text-display text-ink">{ventures.heading}</h1>
         </Reveal>
-        <Reveal delay={0.16} y={28}>
-          <p className="mt-8 max-w-2xl text-xl leading-relaxed text-muted">{ventures.intro}</p>
+        <Reveal delay={0.12} y={24}>
+          <p className="mt-5 max-w-2xl font-serif text-2xl text-accent/90 md:text-3xl">
+            {ventures.intro}
+          </p>
+        </Reveal>
+        <Reveal delay={0.18} y={20}>
+          <p className="mt-6 max-w-2xl text-lg leading-relaxed text-muted">{ventures.tagline}</p>
         </Reveal>
       </section>
 
-      <div className="relative">
+      <div className="relative -mt-2">
         {ventures.items.map((venture, i) => (
           <VentureScrollMoment
             key={venture.title}

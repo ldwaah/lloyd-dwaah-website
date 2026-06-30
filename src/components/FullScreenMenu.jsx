@@ -9,17 +9,24 @@ import { EmailIcon, LinkedInIcon, SocialIconLink } from "./SocialIcons.jsx";
 
 const ease = [0.22, 1, 0.36, 1];
 
-function isActive(href) {
-  const path = window.location.pathname;
-  const hash = window.location.hash;
+function normalizePath(path) {
+  return path.replace(/\/index\.html$/i, "/").replace(/\.html$/i, "") || "/";
+}
 
-  if (href === "/" || href === "/index.html") {
-    return path === "/" || path.endsWith("/index.html");
+function isActive(href) {
+  const path = normalizePath(window.location.pathname);
+  const hash = window.location.hash;
+  const target = href.split("#")[0] || "/";
+  const targetPath = normalizePath(target === "" ? "/" : target);
+  const targetHash = href.includes("#") ? `#${href.split("#")[1]}` : "";
+
+  if (targetPath === "/" && !targetHash) {
+    return path === "/";
   }
-  if (href === "/#principles" || href === "#principles") {
-    return (path === "/" || path.endsWith("/index.html")) && hash === "#principles";
+  if (targetHash === "#principles" || href === "/#principles" || href === "#principles") {
+    return path === "/" && hash === "#principles";
   }
-  return path.endsWith(href.replace(/^\//, "").split("#")[0]);
+  return path === targetPath;
 }
 
 function ActiveStrike() {
@@ -42,8 +49,7 @@ function ActiveStrike() {
 }
 
 function handleNavClick(e, href, onClose) {
-  const onHome =
-    window.location.pathname === "/" || window.location.pathname.endsWith("/index.html");
+  const onHome = normalizePath(window.location.pathname) === "/";
 
   if ((href === "/#principles" || href === "#principles") && onHome) {
     e.preventDefault();
