@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { nav, meta } from "../data/site.js";
+import { nav, meta, avatarConfig } from "../data/site.js";
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
@@ -48,9 +48,12 @@ export default function Navbar() {
     >
       <nav className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
         <Link to="/" className="group flex items-center gap-3">
-          <span className="grid h-8 w-8 place-items-center rounded-full border border-line text-[11px] font-semibold text-brand transition-colors group-hover:border-brand/40">
-            {meta.initials}
-          </span>
+          <img
+            src={avatarConfig.image}
+            alt=""
+            aria-hidden="true"
+            className="h-8 w-8 rounded-full border border-line object-cover transition-colors group-hover:border-brand/40"
+          />
           <span className="text-sm font-medium text-ink">{meta.name}</span>
         </Link>
 

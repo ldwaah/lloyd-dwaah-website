@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { meta, nav } from "../data/site.js";
+import { meta, nav, avatarConfig } from "../data/site.js";
 
 export default function Footer() {
   const year = new Date().getFullYear();
@@ -9,9 +9,12 @@ export default function Footer() {
         <div className="flex flex-col items-start justify-between gap-8 md:flex-row md:items-center">
           <div className="max-w-sm">
             <Link to="/" className="flex items-center gap-3">
-              <span className="grid h-8 w-8 place-items-center rounded-full border border-line text-[11px] font-semibold text-brand">
-                {meta.initials}
-              </span>
+              <img
+                src={avatarConfig.image}
+                alt=""
+                aria-hidden="true"
+                className="h-8 w-8 rounded-full border border-line object-cover"
+              />
               <span className="text-sm font-medium text-ink">{meta.name}</span>
             </Link>
             <p className="mt-4 text-sm leading-relaxed text-muted">
