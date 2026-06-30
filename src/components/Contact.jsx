@@ -1,37 +1,51 @@
 import Reveal from "./Reveal.jsx";
-import { contact } from "../data/site.js";
+import SectionIllustration from "./SectionIllustration.jsx";
+import { contact, sectionIllustrations } from "../data/site.js";
 
 export default function Contact() {
+  const art = sectionIllustrations.contact;
+
   return (
     <section id="contact" className="section border-t border-line bg-canvas">
       <Reveal>
-        <div className="relative overflow-hidden rounded-3xl border border-line bg-white px-8 py-16 text-center shadow-card md:px-16 md:py-20">
-          <span className="eyebrow justify-center">{contact.eyebrow}</span>
-          <h2 className="mx-auto mt-6 max-w-2xl text-balance text-statement serif text-ink">
-            {contact.heading}
-          </h2>
-          <p className="mx-auto mt-5 max-w-xl text-pretty leading-relaxed text-muted">
-            {contact.text}
-          </p>
+        <div className="grid items-center gap-8 overflow-hidden rounded-3xl border border-line bg-white p-8 shadow-card md:grid-cols-[1fr_0.7fr] md:gap-10 md:p-10">
+          <div className="text-center md:text-left">
+            <span className="eyebrow justify-center md:justify-start">{contact.eyebrow}</span>
+            <h2 className="mt-4 max-w-xl text-balance text-statement serif text-ink">
+              {contact.heading}
+            </h2>
+            <p className="mt-4 max-w-lg text-pretty leading-relaxed text-muted">
+              {contact.text}
+            </p>
 
-          <div className="mt-8">
-            <a href={`mailto:${contact.email}`} className="btn-accent">
-              {contact.email}
-            </a>
+            <div className="mt-6">
+              <a href={`mailto:${contact.email}`} className="btn-accent">
+                {contact.email}
+              </a>
+            </div>
+
+            <div className="mt-6 flex flex-wrap items-center justify-center gap-6 text-sm md:justify-start">
+              {contact.socials.map((s) => (
+                <a
+                  key={s.label}
+                  href={s.href}
+                  target={s.href.startsWith("http") ? "_blank" : undefined}
+                  rel="noreferrer"
+                  className="link-underline"
+                >
+                  {s.label}
+                </a>
+              ))}
+            </div>
           </div>
 
-          <div className="mt-8 flex items-center justify-center gap-8 text-sm">
-            {contact.socials.map((s) => (
-              <a
-                key={s.label}
-                href={s.href}
-                target={s.href.startsWith("http") ? "_blank" : undefined}
-                rel="noreferrer"
-                className="link-underline"
-              >
-                {s.label}
-              </a>
-            ))}
+          <div className="flex justify-center md:justify-end">
+            <SectionIllustration
+              src={art.src}
+              alt={art.alt}
+              caption={art.caption}
+              size="large"
+            />
           </div>
         </div>
       </Reveal>

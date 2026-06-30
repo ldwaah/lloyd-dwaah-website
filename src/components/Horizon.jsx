@@ -14,7 +14,7 @@ export default function Horizon() {
   const lines = chunk(horizon.statement, 6);
 
   return (
-    <section className="border-t border-line bg-white py-24 md:py-32">
+    <section className="border-t border-line bg-white py-16 md:py-20">
       <div className="relative mx-auto max-w-4xl px-6 text-center">
         <span className="eyebrow justify-center">{horizon.eyebrow}</span>
         <RevealLines

@@ -1,6 +1,7 @@
 import ScrollProgress from "../components/ScrollProgress.jsx";
 import Navbar from "../components/Navbar.jsx";
 import Hero from "../components/Hero.jsx";
+import Highlights from "../components/Highlights.jsx";
 import Ethos from "../components/Ethos.jsx";
 import Experience from "../components/Experience.jsx";
 import Ventures from "../components/Ventures.jsx";
@@ -16,6 +17,7 @@ export default function HomePage() {
       <Navbar />
       <main className="pt-16">
         <Hero />
+        <Highlights />
         <Ethos />
         <Experience />
         <Ventures />

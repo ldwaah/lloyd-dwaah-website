@@ -40,7 +40,11 @@
 
 @layer components {
   .section {
-    @apply relative mx-auto w-full max-w-6xl px-6 py-20 md:py-28;
+    @apply relative mx-auto w-full max-w-6xl px-6 py-14 md:py-20;
+  }
+
+  .section-tight {
+    @apply relative mx-auto w-full max-w-6xl px-6 py-10 md:py-14;
   }
 
   .eyebrow {

@@ -39,6 +39,51 @@ export const home = {
   secondary: { label: "What I believe", href: "#ethos" },
 };
 
+// ---- Section illustrations (portrait-based editorial art) ----------------
+// Replace `src` paths when Higgsfield-generated assets are available.
+export const sectionIllustrations = {
+  ethos: {
+    src: "/assets/illustrations/ethos.svg",
+    alt: "Lloyd Dwaah — professional ethos and purpose",
+    caption: "Ethos & purpose",
+  },
+  ventures: {
+    src: "/assets/illustrations/ventures.svg",
+    alt: "Lloyd Dwaah — building ventures",
+    caption: "Building ventures",
+  },
+  writing: {
+    src: "/assets/illustrations/writing.svg",
+    alt: "Lloyd Dwaah — author and writer",
+    caption: "Author & writing",
+  },
+  contact: {
+    src: "/assets/illustrations/business.svg",
+    alt: "Lloyd Dwaah — leadership and collaboration",
+    caption: "Let's collaborate",
+  },
+};
+
+export const disciplineIllustrations = {
+  leadership: "/assets/illustrations/business.svg",
+  education: "/assets/illustrations/education.svg",
+  coaching: "/assets/illustrations/ethos.svg",
+  sport: "/assets/illustrations/ventures.svg",
+  technology: "/assets/illustrations/defi.svg",
+  writing: "/assets/illustrations/writing.svg",
+};
+
+export const highlights = {
+  eyebrow: "At a glance",
+  heading: "Six disciplines. Two decades of building.",
+  items: [
+    { value: "6", label: "Core disciplines", detail: "Leadership, education, coaching, sport, technology and writing" },
+    { value: "5", label: "Published works", detail: "Anthologies, memoir and A Way With Words" },
+    { value: "2", label: "Active ventures", detail: "EvolveOne.ai and RedefiningMS.co.uk" },
+    { value: "2020+", label: "Web3 & AI", detail: "DeFi protocols, product ops and emerging tech" },
+  ],
+};
+
 // ---- 2. ETHOS — What does he believe? ------------------------------------
 export const ethos = {
   eyebrow: "Professional Ethos",

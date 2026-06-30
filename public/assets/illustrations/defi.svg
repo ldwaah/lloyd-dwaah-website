@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 480 480" fill="none">
+  <rect width="480" height="480" rx="24" fill="#0f1b24"/>
+  <rect x="24" y="24" width="432" height="432" rx="18" fill="#16242f" stroke="#2a4254"/>
+  <g opacity="0.45">
+    <path d="M60 120h80l40-40 40 80 60-30 40 50" stroke="#38b6ff" stroke-width="2" fill="none"/>
+    <circle cx="140" cy="120" r="5" fill="#38b6ff"/>
+    <circle cx="220" cy="80" r="5" fill="#38b6ff"/>
+    <circle cx="260" cy="160" r="5" fill="#38b6ff"/>
+    <circle cx="320" cy="130" r="5" fill="#38b6ff"/>
+    <circle cx="360" cy="180" r="5" fill="#38b6ff"/>
+  </g>
+  <g opacity="0.2" stroke="#38b6ff" stroke-width="1">
+    <path d="M80 300h320M80 340h240M80 380h280"/>
+  </g>
+  <defs>
+    <clipPath id="defi-portrait"><circle cx="240" cy="250" r="108"/></clipPath>
+  </defs>
+  <circle cx="240" cy="250" r="112" fill="#38b6ff" opacity="0.12"/>
+  <image href="/assets/lloyd-avatar.webp" x="132" y="142" width="216" height="216" clip-path="url(#defi-portrait)" preserveAspectRatio="xMidYMid slice"/>
+  <circle cx="240" cy="250" r="108" stroke="#38b6ff" stroke-width="3" opacity="0.55"/>
+  <text x="40" y="430" font-family="Inter, Arial, sans-serif" font-size="13" font-weight="600" fill="#38b6ff" letter-spacing="3">DEFI · WEB3</text>
+</svg>

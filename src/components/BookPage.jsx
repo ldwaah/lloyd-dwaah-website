@@ -1,5 +1,5 @@
 import { Link, Navigate, useParams } from "react-router-dom";
-import { getBookBySlug } from "../data/site.js";
+import { getBookBySlug, sectionIllustrations } from "../data/site.js";
 
 const alignClass = {
   left: "mr-auto text-left",
@@ -40,13 +40,12 @@ export default function BookPage() {
       <main className="mx-auto max-w-5xl px-6 py-14 md:py-20">
         {/* Centered square hero */}
         <div className="flex flex-col items-center text-center">
-          <div className="grid h-44 w-44 place-items-center rounded-2xl border border-line bg-white shadow-card md:h-52 md:w-52">
-            <div className="px-4">
-              <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-brand">
-                {book.kind}
-              </p>
-              <p className="mt-3 font-serif text-lg leading-snug text-ink">{book.title}</p>
-            </div>
+          <div className="h-44 w-44 overflow-hidden rounded-2xl border border-line bg-white shadow-card md:h-52 md:w-52">
+            <img
+              src={sectionIllustrations.writing.src}
+              alt={sectionIllustrations.writing.alt}
+              className="h-full w-full object-cover"
+            />
           </div>
           <h1 className="mt-8 max-w-2xl font-serif text-3xl text-ink md:text-4xl">{book.title}</h1>
           {book.status && (

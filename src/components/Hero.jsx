@@ -7,7 +7,7 @@ const ease = [0.22, 1, 0.36, 1];
 export default function Hero() {
   return (
     <section id="home" className="relative border-b border-line bg-white">
-      <div className="mx-auto grid w-full max-w-6xl items-center gap-12 px-6 py-24 md:grid-cols-[1.1fr_0.9fr] md:py-32">
+      <div className="mx-auto grid w-full max-w-6xl items-center gap-10 px-6 py-16 md:grid-cols-[1.1fr_0.9fr] md:py-20">
         <div className="max-w-xl">
           <motion.span
             initial={{ opacity: 0, y: 12 }}
