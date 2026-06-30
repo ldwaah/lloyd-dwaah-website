@@ -34,6 +34,7 @@ export const nav = [...menuNav];
 export const home = {
   eyebrow: "Lloyd Dwaah",
   since: "Since 2020",
+  nameReveal: "My name is Lloyd",
   ethosStatement:
     "I believe that great leadership creates environments where people can flourish.",
   cta: { label: "Explore my work", href: "/ventures" },
@@ -332,6 +333,7 @@ export const ventures = {
       status: "Live",
       role: "Founder",
       impact: "Education, awareness and practical support for people living with MS",
+      href: "https://redefiningms.co.uk",
       description:
         "A platform dedicated to documenting life with Multiple Sclerosis while providing education, awareness, support and practical resources.",
     },

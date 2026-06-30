@@ -2,8 +2,25 @@ import { contact, meta } from "../data/site.js";
 import { EmailIcon, LinkedInIcon, SocialIconLink } from "./SocialIcons.jsx";
 import Reveal from "./Reveal.jsx";
 
-export default function SiteFooter() {
+export default function SiteFooter({ minimal = false }) {
   const year = new Date().getFullYear();
+
+  if (minimal) {
+    return (
+      <footer id="contact" className="relative z-10 border-t border-line">
+        <div className="section-pad-tight mx-auto flex justify-center py-12 md:py-14">
+          <div className="flex items-center gap-4">
+            <SocialIconLink href={`mailto:${contact.email}`} label="Email Lloyd Dwaah">
+              <EmailIcon />
+            </SocialIconLink>
+            <SocialIconLink href={contact.linkedin} label="Lloyd Dwaah on LinkedIn" external>
+              <LinkedInIcon />
+            </SocialIconLink>
+          </div>
+        </div>
+      </footer>
+    );
+  }
 
   return (
     <footer id="contact" className="relative z-10 border-t border-line">

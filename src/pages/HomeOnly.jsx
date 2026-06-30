@@ -3,10 +3,10 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import Scene3D from "../components/Scene3D.jsx";
 import SiteNav from "../components/SiteNav.jsx";
 import SiteFooter from "../components/SiteFooter.jsx";
-import Reveal, { RevealStagger } from "../components/Reveal.jsx";
+import Reveal from "../components/Reveal.jsx";
 import HomeScrollLayers from "../components/HomeScrollLayers.jsx";
 import Preloader, { hasSeenHomePreloader } from "../components/Preloader.jsx";
-import { meta, home, ethos } from "../data/site.js";
+import { home, ethos } from "../data/site.js";
 import { prefersReducedMotion } from "../lib/input.js";
 
 function ScrollChevron() {
@@ -79,36 +79,26 @@ export default function HomeOnly() {
       >
         <SiteNav transparent />
 
-        {/* Image-first installation hero — no text until scroll */}
         <section id="home" className="relative min-h-screen">
           {!scrolled && !showPreloader && <ScrollChevron />}
         </section>
 
-        {/* Revealed on scroll */}
         <section className="relative border-t border-line/30 bg-hq-deep/80 backdrop-blur-sm">
-          <div className="section-pad mx-auto max-w-4xl text-center">
-            <Reveal y={20}>
-              <p className="text-[11px] font-bold uppercase tracking-[0.28em] text-accent/70">
-                {meta.name}
-              </p>
+          <div className="section-pad mx-auto flex min-h-[55vh] max-w-4xl flex-col justify-center text-center md:min-h-[60vh]">
+            <Reveal y={28}>
+              <h2 className="font-serif text-statement text-ink text-balance">{home.nameReveal}</h2>
             </Reveal>
-            <Reveal delay={0.08} y={36}>
-              <h1 className="mt-8 font-serif text-statement text-ink text-balance">
-                {home.ethosStatement}
-              </h1>
-            </Reveal>
-            <RevealStagger className="mt-12 flex flex-wrap items-center justify-center gap-4" stagger={0.1}>
-              <a href={home.cta.href} className="btn-primary">
-                {home.cta.label}
-              </a>
-              <a href={home.secondary.href} className="btn-ghost">
-                {home.secondary.label}
-              </a>
-            </RevealStagger>
           </div>
         </section>
 
-        {/* Core principles */}
+        <section className="relative border-t border-line/30 bg-hq-deep/80 backdrop-blur-sm">
+          <div className="section-pad mx-auto flex min-h-[55vh] max-w-4xl flex-col justify-center text-center md:min-h-[60vh]">
+            <Reveal y={32}>
+              <p className="font-serif text-statement text-ink text-balance">{home.ethosStatement}</p>
+            </Reveal>
+          </div>
+        </section>
+
         <section
           id="principles"
           className="relative border-t border-line bg-hq-deep/90 backdrop-blur-sm"
@@ -149,7 +139,7 @@ export default function HomeOnly() {
           </div>
         </section>
 
-        <SiteFooter />
+        <SiteFooter minimal />
       </motion.div>
     </div>
   );
