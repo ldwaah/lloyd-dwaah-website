@@ -21,19 +21,20 @@ const damp = THREE.MathUtils.damp;
 //  The portrait exists inside this scene. Camera, lights and particles
 //  all respond to the cursor; the camera glides as the page scrolls.
 // =====================================================================
-export default function Scene3D() {
+export default function Scene3D({ variant = "default" }) {
   const pointer = usePointerRef();
   const scroll = useScrollRef();
   const [mobile] = useState(isMobile);
   const reduced = prefersReducedMotion();
+  const hero = variant === "hero";
 
   return (
-    <div className="pointer-events-none fixed inset-0 z-0">
+    <div className={`pointer-events-none fixed inset-0 z-0 ${hero ? "h-screen" : ""}`}>
       <Canvas
         shadows={false}
         dpr={mobile ? [1, 1.4] : [1, 1.9]}
         gl={{ antialias: true, alpha: false, powerPreference: "high-performance" }}
-        camera={{ position: [0, 0.3, 6], fov: 38 }}
+        camera={{ position: [0, 0, hero ? 5.2 : 6], fov: hero ? 48 : 38 }}
         onCreated={({ scene }) => {
           scene.background = new THREE.Color("#203140");
           scene.fog = new THREE.FogExp2("#16242f", 0.045);
@@ -45,10 +46,11 @@ export default function Scene3D() {
           <StudioEnvironment />
           <LightShafts />
 
-          <PortraitStage pointer={pointer} scroll={scroll} mobile={mobile} />
+          <PortraitStage pointer={pointer} scroll={scroll} mobile={mobile} hero={hero} />
 
-          {/* The field you travel through as you scroll */}
-          <TravelField scroll={scroll} pointer={pointer} mobile={mobile} />
+          {!hero && (
+            <TravelField scroll={scroll} pointer={pointer} mobile={mobile} />
+          )}
           <Particles pointer={pointer} count={mobile ? 280 : 700} />
           <Floor />
         </Suspense>
@@ -56,7 +58,7 @@ export default function Scene3D() {
         {!mobile && (
           <EffectComposer disableNormalPass>
             <Bloom mipmapBlur luminanceThreshold={0.55} luminanceSmoothing={0.2} intensity={0.7} />
-            <Vignette eskil={false} offset={0.25} darkness={0.85} />
+            <Vignette eskil={false} offset={0.25} darkness={hero ? 0.55 : 0.85} />
           </EffectComposer>
         )}
         <AdaptiveDpr pixelated />
@@ -124,7 +126,7 @@ function StudioEnvironment() {
 }
 
 // ---- The portrait, sitting on glass, in 3D space --------------------------
-function PortraitStage({ pointer, scroll, mobile }) {
+function PortraitStage({ pointer, scroll, mobile, hero }) {
   const [ready, setReady] = useState(false);
   useEffect(() => {
     if (avatarConfig.mode === "glb") return; // handled separately if you add a GLB
@@ -135,37 +137,39 @@ function PortraitStage({ pointer, scroll, mobile }) {
   }, []);
 
   return ready ? (
-    <Suspense fallback={<PortraitPlaceholder pointer={pointer} scroll={scroll} mobile={mobile} />}>
-      <TexturedPortrait pointer={pointer} scroll={scroll} mobile={mobile} />
+    <Suspense fallback={<PortraitPlaceholder pointer={pointer} scroll={scroll} mobile={mobile} hero={hero} />}>
+      <TexturedPortrait pointer={pointer} scroll={scroll} mobile={mobile} hero={hero} />
     </Suspense>
   ) : (
-    <PortraitPlaceholder pointer={pointer} scroll={scroll} mobile={mobile} />
+    <PortraitPlaceholder pointer={pointer} scroll={scroll} mobile={mobile} hero={hero} />
   );
 }
 
-function usePortraitMotion(group, { pointer, scroll, mobile }) {
+function usePortraitMotion(group, { pointer, scroll, mobile, hero }) {
   useFrame((state, dt) => {
     const g = group.current;
     if (!g) return;
     const p = pointer.current;
     const sp = scroll.current;
-    const targetX = mobile ? 0 : 1.75;
-    const targetY = (mobile ? 1.15 : 0.15) - sp * 5; // rises and exits on scroll
+    const targetX = hero ? 0 : mobile ? 0 : 1.75;
+    const targetY = hero ? 0 : (mobile ? 1.15 : 0.15) - sp * 5;
     g.position.x = damp(g.position.x, targetX, 3, dt);
     g.position.y = damp(g.position.y, targetY, 3, dt);
-    g.rotation.y = damp(g.rotation.y, p.x * 0.32, 3, dt);
-    g.rotation.x = damp(g.rotation.x, -p.y * 0.2, 3, dt);
+    g.rotation.y = damp(g.rotation.y, p.x * (hero ? 0.18 : 0.32), 3, dt);
+    g.rotation.x = damp(g.rotation.x, -p.y * (hero ? 0.12 : 0.2), 3, dt);
     const breathe = 1 + Math.sin(state.clock.elapsedTime * 0.8) * 0.008;
-    const baseScale = props.mobile ? 0.78 : 1;
-    if (!g.userData.breatheApplied) {
+    const baseScale = hero ? (mobile ? 1.15 : 1.35) : mobile ? 0.78 : 1;
+    if (!g.userData.breatheApplied || g.userData.heroMode !== hero) {
       g.userData.baseScale = baseScale;
       g.userData.breatheApplied = true;
+      g.userData.heroMode = hero;
     }
     const s = (g.userData.baseScale || baseScale) * breathe;
     g.scale.set(s, s, s);
 
-    // Fade the portrait out once we leave the hero.
-    const fade = THREE.MathUtils.clamp(1 - (sp - 0.04) * 6, 0, 1);
+    const fade = hero
+      ? THREE.MathUtils.clamp(1 - sp * 8, 0, 1)
+      : THREE.MathUtils.clamp(1 - (sp - 0.04) * 6, 0, 1);
     g.traverse((o) => {
       if (o.material) {
         if (o.userData.base === undefined) o.userData.base = o.material.opacity ?? 1;
@@ -185,13 +189,13 @@ function TexturedPortrait(props) {
   usePortraitMotion(group, props);
 
   const aspect = tex.image ? tex.image.width / tex.image.height : 0.82;
-  const h = 3.3;
+  const h = props.hero ? (props.mobile ? 5.8 : 7.2) : 3.3;
   const w = h * aspect;
 
   return (
-    <group ref={group} position={[1.75, 0.15, 0]}>
-      <Float speed={1.1} rotationIntensity={0.18} floatIntensity={0.45}>
-        <PortraitFrame w={w} h={h}>
+    <group ref={group} position={[0, 0, 0]}>
+      <Float speed={1.1} rotationIntensity={props.hero ? 0.08 : 0.18} floatIntensity={props.hero ? 0.25 : 0.45}>
+        <PortraitFrame w={w} h={h} minimal={props.hero}>
           <mesh position={[0, 0, 0.11]}>
             <planeGeometry args={[w, h]} />
             <meshBasicMaterial map={tex} transparent toneMapped={false} />
@@ -205,12 +209,12 @@ function TexturedPortrait(props) {
 function PortraitPlaceholder(props) {
   const group = useRef();
   usePortraitMotion(group, props);
-  const w = 2.6;
-  const h = 3.3;
+  const w = props.hero ? (props.mobile ? 4.2 : 5.2) : 2.6;
+  const h = props.hero ? (props.mobile ? 5.8 : 7.2) : 3.3;
   return (
-    <group ref={group} position={[1.75, 0.15, 0]}>
-      <Float speed={1.1} rotationIntensity={0.18} floatIntensity={0.45}>
-        <PortraitFrame w={w} h={h}>
+    <group ref={group} position={[0, 0, 0]}>
+      <Float speed={1.1} rotationIntensity={props.hero ? 0.08 : 0.18} floatIntensity={props.hero ? 0.25 : 0.45}>
+        <PortraitFrame w={w} h={h} minimal={props.hero}>
           <mesh position={[0, 0, 0.11]}>
             <planeGeometry args={[w, h]} />
             <meshStandardMaterial color="#0e1424" roughness={0.4} metalness={0.2} emissive="#0a1a26" />
@@ -226,7 +230,10 @@ function PortraitPlaceholder(props) {
 }
 
 // Shared glass backing + glowing edge for the portrait.
-function PortraitFrame({ w, h, children }) {
+function PortraitFrame({ w, h, children, minimal = false }) {
+  if (minimal) {
+    return <group>{children}</group>;
+  }
   return (
     <group>
       {/* Glass backing panel with real depth */}

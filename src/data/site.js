@@ -17,12 +17,16 @@ export const avatarConfig = {
 };
 
 // ---- Navigation -----------------------------------------------------------
-export const nav = [
+export const menuNav = [
   { label: "Home", href: "/" },
-  { label: "Ethos", href: "/#principles" },
   { label: "Experience", href: "/experience.html" },
   { label: "Ventures", href: "/ventures.html" },
   { label: "Publications", href: "/publications.html" },
+];
+
+/** @deprecated use menuNav for overlay; footer handles contact */
+export const nav = [
+  ...menuNav,
   { label: "Contact", href: "#contact" },
 ];
 
