@@ -401,7 +401,7 @@ export const publications = {
       slug: "a-way-with-words",
       title: "A Way With Words",
       kind: "Anthology",
-      status: "",
+      status: "Available now",
       amazon: "https://www.amazon.co.uk/way-words-Lloyd-T-Dwaah/dp/1985038226",
       description:
         "A collection exploring voice, rhetoric and the power of language.",

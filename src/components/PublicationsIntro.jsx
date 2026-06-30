@@ -6,9 +6,9 @@ const SESSION_KEY = "lloyd-publications-intro-seen";
 const INTRO_VIDEO = "/assets/publications/intro.mp4";
 const INTRO_POSTER = "/assets/publications/intro-poster.jpg";
 /** Start crossfade this many seconds before the video ends */
-const FADE_LEAD_S = 0.75;
-const EXIT_MS = 900;
-const MAX_MS = 10000;
+const FADE_LEAD_S = 0.5;
+const EXIT_MS = 550;
+const MAX_MS = 9000;
 
 const ease = [0.22, 1, 0.36, 1];
 
@@ -66,7 +66,12 @@ export default function PublicationsIntro({ onComplete, onFadeStart }) {
           initial={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: EXIT_MS / 1000, ease }}
-          className="fixed inset-0 z-[250] flex items-center justify-center bg-[#203140]"
+          className="fixed inset-0 z-[250] overflow-hidden bg-[#203140]"
+          style={{
+            width: "100vw",
+            height: "100dvh",
+            minHeight: "100vh",
+          }}
           role="dialog"
           aria-modal="true"
           aria-label="Publications introduction"
@@ -82,13 +87,14 @@ export default function PublicationsIntro({ onComplete, onFadeStart }) {
             onTimeUpdate={handleTimeUpdate}
             onEnded={beginCrossfade}
             onError={beginCrossfade}
-            className="h-full w-full object-cover object-center"
+            className="pointer-events-none absolute left-1/2 top-1/2 h-full w-full min-h-full min-w-full -translate-x-1/2 -translate-y-1/2 object-cover"
+            style={{ objectPosition: "center center" }}
           />
 
           <button
             type="button"
             onClick={beginCrossfade}
-            className="absolute bottom-8 right-8 text-[10px] font-light uppercase tracking-[0.22em] text-ink/45 transition-colors duration-300 hover:text-accent"
+            className="absolute bottom-[max(2rem,env(safe-area-inset-bottom))] right-[max(2rem,env(safe-area-inset-right))] text-[10px] font-light uppercase tracking-[0.22em] text-ink/45 transition-colors duration-300 hover:text-accent"
           >
             Skip
           </button>

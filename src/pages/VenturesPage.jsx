@@ -246,9 +246,13 @@ export default function VenturesPage() {
   return (
     <PageShell ambient="ventures">
       <section className="section-pad pb-12 md:pb-16">
-        <Reveal>
+        <Reveal y={20}>
           <span className="eyebrow">{ventures.eyebrow}</span>
+        </Reveal>
+        <Reveal delay={0.08} y={40}>
           <h1 className="mt-8 max-w-4xl font-serif text-display text-ink">{ventures.heading}</h1>
+        </Reveal>
+        <Reveal delay={0.16} y={28}>
           <p className="mt-8 max-w-2xl text-xl leading-relaxed text-muted">{ventures.intro}</p>
         </Reveal>
       </section>

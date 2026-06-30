@@ -3,8 +3,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { avatarConfig } from "../data/site.js";
 import { prefersReducedMotion } from "../lib/input.js";
 
-const MIN_MS = 1200;
-const MAX_MS = 4200;
+const MIN_MS = 550;
+const MAX_MS = 2800;
 const SESSION_KEY = "lloyd-home-preloaded";
 
 const ease = [0.22, 1, 0.36, 1];
@@ -97,7 +97,7 @@ export default function Preloader({ active, sceneReady, onComplete }) {
           key="preloader"
           initial={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: "-100%" }}
-          transition={{ duration: 0.85, ease }}
+          transition={{ duration: 0.55, ease }}
           className="fixed inset-0 z-[300] flex flex-col items-center justify-center bg-[#203140]"
           role="status"
           aria-live="polite"
@@ -106,7 +106,7 @@ export default function Preloader({ active, sceneReady, onComplete }) {
           <motion.div
             initial={{ opacity: 0, y: 12, scale: 0.96 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
-            transition={{ duration: 0.9, ease }}
+            transition={{ duration: 0.45, ease }}
             className="flex flex-col items-center"
           >
             <span className="relative grid h-[4.5rem] w-[4.5rem] place-items-center md:h-20 md:w-20">
@@ -126,7 +126,7 @@ export default function Preloader({ active, sceneReady, onComplete }) {
             <motion.p
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ delay: 0.35, duration: 0.7, ease }}
+              transition={{ delay: 0.12, duration: 0.4, ease }}
               className="mt-8 font-sans text-[11px] font-light uppercase tracking-[0.38em] text-ink/70"
             >
               Loading Lloyd

@@ -74,12 +74,26 @@ export default function ExperiencePage() {
   return (
     <PageShell ambient="experience">
       <section className="section-pad pb-16">
-        <Reveal>
+        <Reveal y={20}>
           <span className="eyebrow">{experience.eyebrow}</span>
+        </Reveal>
+        <Reveal delay={0.08} y={40}>
           <h1 className="mt-8 max-w-4xl font-serif text-display text-ink text-balance">
             {experience.heading}
           </h1>
+        </Reveal>
+        <Reveal delay={0.16} y={28}>
           <p className="mt-8 max-w-2xl text-xl leading-relaxed text-muted">{experience.intro}</p>
+        </Reveal>
+        <Reveal delay={0.22} y={24}>
+          <div className="mt-12 max-w-3xl overflow-hidden rounded-2xl border border-line shadow-lift">
+            <img
+              src="/assets/experience/coaching-hero.jpg"
+              alt="Lloyd Dwaah coaching and mentoring"
+              className="aspect-[16/10] w-full object-cover object-[center_20%]"
+              loading="lazy"
+            />
+          </div>
         </Reveal>
       </section>
 

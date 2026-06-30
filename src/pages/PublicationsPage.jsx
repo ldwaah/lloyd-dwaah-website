@@ -112,7 +112,7 @@ function BookOnShelf({ book, index, order }) {
 function Shelf({ books, label }) {
   return (
     <div className="relative">
-      <Reveal y={12}>
+      <Reveal y={16}>
       <p className="mb-8 text-[10px] font-light uppercase tracking-[0.28em] text-muted/50">
         {label}
       </p>
@@ -157,7 +157,7 @@ export default function PublicationsPage() {
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: contentVisible ? 1 : 0 }}
-        transition={{ duration: 1, ease }}
+        transition={{ duration: 0.65, ease }}
         aria-hidden={!contentVisible}
       >
         <section className="relative min-h-[55vh] w-full overflow-hidden md:min-h-[62vh]">
@@ -169,11 +169,15 @@ export default function PublicationsPage() {
           />
           <div className="absolute inset-0 bg-gradient-to-t from-hq-darker via-hq-darker/55 to-hq-darker/15" />
           <div className="relative flex min-h-[55vh] flex-col justify-end section-pad pb-14 md:min-h-[62vh] md:pb-20">
-            <Reveal>
+            <Reveal y={20}>
               <span className="eyebrow">{publications.eyebrow}</span>
+            </Reveal>
+            <Reveal delay={0.08} y={36}>
               <h1 className="mt-8 max-w-3xl font-serif text-display text-ink">
                 {publications.heading}
               </h1>
+            </Reveal>
+            <Reveal delay={0.16} y={28}>
               <p className="mt-8 max-w-2xl text-xl leading-relaxed text-muted">
                 {publications.intro}
               </p>

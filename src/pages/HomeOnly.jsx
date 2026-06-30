@@ -87,10 +87,12 @@ export default function HomeOnly() {
         {/* Revealed on scroll */}
         <section className="relative border-t border-line/30 bg-hq-deep/80 backdrop-blur-sm">
           <div className="section-pad mx-auto max-w-4xl text-center">
-            <Reveal>
+            <Reveal y={20}>
               <p className="text-[11px] font-bold uppercase tracking-[0.28em] text-accent/70">
                 {meta.name}
               </p>
+            </Reveal>
+            <Reveal delay={0.08} y={36}>
               <h1 className="mt-8 font-serif text-statement text-ink text-balance">
                 {home.ethosStatement}
               </h1>
@@ -112,8 +114,10 @@ export default function HomeOnly() {
           className="relative border-t border-line bg-hq-deep/90 backdrop-blur-sm"
         >
           <div className="section-pad mx-auto max-w-4xl">
-            <Reveal>
+            <Reveal y={20}>
               <span className="eyebrow">{ethos.principlesHeading}</span>
+            </Reveal>
+            <Reveal delay={0.1} y={32}>
               <h2 className="mt-8 font-serif text-hero text-ink">{ethos.principlesIntro}</h2>
             </Reveal>
 
