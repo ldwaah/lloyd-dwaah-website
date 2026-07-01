@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { avatarConfig } from "../data/site.js";
+import { prefersReducedMotion } from "../lib/input.js";
 import { resetScrollPosition } from "../lib/scrollReset.js";
 
 const MIN_MS = 550;
