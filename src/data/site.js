@@ -21,7 +21,6 @@ export const linkedInUrl = "https://www.linkedin.com/in/lloyd-dwaah-026531268";
 
 /** Full-screen overlay menu */
 export const menuNav = [
-  { label: "Home", href: "/" },
   { label: "Experience", href: "/experience" },
   { label: "Ventures", href: "/ventures" },
   { label: "Publications", href: "/publications" },
