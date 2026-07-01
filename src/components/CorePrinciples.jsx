@@ -15,13 +15,6 @@ export const SUNGLASSES_BASE_ASSETS = [
 /** @deprecated Use SUNGLASSES_BASE_ASSETS — kept for any external imports */
 export const HIGGSFIELD_SUNGLASSES_SLOT = SUNGLASSES_BASE_ASSETS[SUNGLASSES_BASE_ASSETS.length - 1];
 
-export function sunglassesLensAssets(principleId) {
-  return [
-    `/assets/principles/sunglasses-lens-${principleId}.webp`,
-    `/assets/principles/sunglasses-lens-${principleId}.png`,
-  ];
-}
-
 /** Lens positions tuned to sunglasses.svg / front-on Higgsfield frame (2:1). */
 const LENS_LAYOUT = {
   left: { left: "13.5%", top: "19%", width: "34%", height: "46%" },
@@ -93,11 +86,7 @@ function CssLensPair({ shadeSwatch }) {
   );
 }
 
-function PrincipleLensLayer({ principle, isActive }) {
-  const lensCandidates = sunglassesLensAssets(principle.id);
-  const { src, onError, exhausted } = useCascadeImage(lensCandidates, principle.id);
-  const useLensImage = !exhausted && src;
-
+function ShadeLensLayer({ shadeSwatch, isActive }) {
   return (
     <div
       className="pointer-events-none absolute inset-0 transition-opacity ease-in-out"
@@ -107,30 +96,20 @@ function PrincipleLensLayer({ principle, isActive }) {
       }}
       aria-hidden={!isActive}
     >
-      {useLensImage ? (
-        <img
-          src={src}
-          alt=""
-          className="absolute inset-0 h-full w-full object-contain"
-          onError={onError}
-        />
-      ) : (
-        <CssLensPair shadeSwatch={principle.shadeSwatch} />
-      )}
+      <CssLensPair shadeSwatch={shadeSwatch} />
     </div>
   );
 }
 
 function SunglassesVisual({ principles, activeId }) {
   const { src: baseSrc, onError: onBaseError } = useCascadeImage(SUNGLASSES_BASE_ASSETS);
-  const active = principles.find((p) => p.id === activeId) ?? principles[0];
 
   return (
     <div
-      className="relative mx-auto mt-10 flex w-full max-w-md items-center justify-center"
+      className="relative mx-auto flex w-full max-w-md items-center justify-center"
       data-higgsfield-slot="sunglasses-visual"
       role="img"
-      aria-label={`Sunglasses with ${active.shadeLabel} lenses`}
+      aria-label="Sunglasses"
     >
       <div
         className="relative aspect-[2/1] w-full max-w-sm overflow-hidden rounded-xl"
@@ -147,9 +126,9 @@ function SunglassesVisual({ principles, activeId }) {
 
         <div className="absolute inset-0">
           {principles.map((principle) => (
-            <PrincipleLensLayer
+            <ShadeLensLayer
               key={principle.id}
-              principle={principle}
+              shadeSwatch={principle.shadeSwatch}
               isActive={principle.id === activeId}
             />
           ))}
@@ -179,8 +158,7 @@ function CarouselArrow({ direction, onClick, disabled }) {
   );
 }
 
-/** Apple-style glass lens swatch for the shade picker. */
-function GlassSwatch({ principle, isActive }) {
+function GlassSwatch({ shadeSwatch, isActive }) {
   return (
     <span
       className={`flex h-8 w-8 items-center justify-center rounded-full border transition-[border-color,box-shadow] duration-300 ${
@@ -192,7 +170,7 @@ function GlassSwatch({ principle, isActive }) {
       <span
         className="relative h-5 w-5 overflow-hidden rounded-full transition-transform duration-300"
         style={{
-          background: principle.shadeSwatch,
+          background: shadeSwatch,
           boxShadow:
             "inset 0 1px 2px rgba(255,255,255,0.45), inset 0 -1px 2px rgba(0,0,0,0.22), 0 1px 2px rgba(0,0,0,0.18)",
           transform: isActive ? "scale(1.05)" : "scale(1)",
@@ -250,7 +228,7 @@ function ShadeCarousel({ principles, activeId, onSelect }) {
           ref={trackRef}
           className="flex min-w-0 flex-1 snap-x snap-mandatory gap-4 overflow-x-auto scroll-smooth px-1 py-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
         >
-          {principles.map((principle) => {
+          {principles.map((principle, index) => {
             const isActive = principle.id === activeId;
             return (
               <button
@@ -258,17 +236,10 @@ function ShadeCarousel({ principles, activeId, onSelect }) {
                 type="button"
                 onClick={() => onSelect(principle.id)}
                 aria-pressed={isActive}
-                aria-label={`${principle.title}, ${principle.shadeLabel}`}
-                className="group flex shrink-0 snap-center flex-col items-center gap-2 px-1"
+                aria-label={`Shade ${index + 1}`}
+                className="group flex shrink-0 snap-center px-1"
               >
-                <GlassSwatch principle={principle} isActive={isActive} />
-                <span
-                  className={`max-w-[5.5rem] text-center text-[10px] leading-tight tracking-[0.02em] transition-colors duration-300 ${
-                    isActive ? "text-ink" : "text-muted/55 group-hover:text-muted/80"
-                  }`}
-                >
-                  {principle.shadeLabel}
-                </span>
+                <GlassSwatch shadeSwatch={principle.shadeSwatch} isActive={isActive} />
               </button>
             );
           })}
@@ -280,34 +251,12 @@ function ShadeCarousel({ principles, activeId, onSelect }) {
           onClick={() => selectIndex(activeIndex + 1)}
         />
       </div>
-
-      <p className="mt-4 text-center text-[13px] font-medium tracking-[-0.01em] text-ink/90">
-        {principles[activeIndex]?.title}
-      </p>
     </div>
-  );
-}
-
-function PrincipleContent({ principle }) {
-  return (
-    <article className="mx-auto mt-10 max-w-2xl text-center" aria-live="polite">
-      <span className="text-[10px] font-light uppercase tracking-[0.28em] text-accent/55">
-        {principle.no}
-      </span>
-      <h3 className="mt-4 font-serif text-2xl text-ink md:text-3xl">{principle.title}</h3>
-      <p className="mt-6 text-base leading-relaxed text-body md:text-lg md:leading-8">
-        {principle.body || principle.summary}
-      </p>
-      <p className="mt-6 text-[10px] font-light uppercase tracking-[0.16em] text-muted/55">
-        {principle.tags.join(" · ")}
-      </p>
-    </article>
   );
 }
 
 export default function CorePrinciples() {
   const [activeId, setActiveId] = useState(DEFAULT_ID);
-  const active = ethos.principles.find((p) => p.id === activeId) ?? ethos.principles[0];
 
   return (
     <section id="principles" className="relative z-10 overflow-hidden border-t border-line bg-hq-deep">
@@ -321,18 +270,13 @@ export default function CorePrinciples() {
       />
 
       <div className="section-pad relative mx-auto max-w-4xl text-center">
-        <span className="eyebrow eyebrow-center mx-auto max-w-fit">{ethos.principlesHeading}</span>
-        <h2 className="mt-8 font-serif text-hero text-ink text-balance">{ethos.principlesIntro}</h2>
+        <SunglassesVisual principles={ethos.principles} activeId={activeId} />
 
         <ShadeCarousel
           principles={ethos.principles}
           activeId={activeId}
           onSelect={setActiveId}
         />
-
-        <SunglassesVisual principles={ethos.principles} activeId={activeId} />
-
-        <PrincipleContent principle={active} />
       </div>
     </section>
   );
