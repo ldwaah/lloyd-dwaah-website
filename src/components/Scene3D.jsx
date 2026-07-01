@@ -61,16 +61,14 @@ export default function Scene3D({ variant = "default", onPortraitReady }) {
           {!hero && (
             <TravelField scroll={scroll} pointer={pointer} mobile={mobile} />
           )}
-          <Particles pointer={pointer} count={mobile ? 280 : 700} />
+          <Particles pointer={pointer} count={700} />
           <Floor />
         </Suspense>
 
-        {!mobile && (
-          <EffectComposer disableNormalPass>
-            <Bloom mipmapBlur luminanceThreshold={0.55} luminanceSmoothing={0.2} intensity={0.7} />
-            <Vignette eskil={false} offset={0.25} darkness={hero ? 0.55 : 0.85} />
-          </EffectComposer>
-        )}
+        <EffectComposer disableNormalPass>
+          <Bloom mipmapBlur luminanceThreshold={0.55} luminanceSmoothing={0.2} intensity={0.7} />
+          <Vignette eskil={false} offset={0.25} darkness={hero ? 0.55 : 0.85} />
+        </EffectComposer>
         <AdaptiveDpr pixelated />
       </Canvas>
     </div>
@@ -284,7 +282,7 @@ function PortraitFrame({ w, h, children, minimal = false }) {
 function TravelField({ scroll, pointer, mobile }) {
   const group = useRef();
   const panels = useMemo(() => {
-    const count = mobile ? 7 : 14;
+    const count = 14;
     const seeded = [];
     for (let i = 0; i < count; i++) {
       const side = i % 2 === 0 ? -1 : 1;
