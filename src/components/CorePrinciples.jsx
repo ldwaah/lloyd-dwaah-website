@@ -255,8 +255,22 @@ function ShadeCarousel({ principles, activeId, onSelect }) {
   );
 }
 
+function ActivePrincipleTitle({ principle }) {
+  return (
+    <h2
+      key={principle.id}
+      className="mx-auto mt-12 max-w-3xl font-serif text-hero text-ink text-balance"
+      aria-live="polite"
+    >
+      {principle.title}
+    </h2>
+  );
+}
+
 export default function CorePrinciples() {
   const [activeId, setActiveId] = useState(DEFAULT_ID);
+  const active =
+    ethos.principles.find((p) => p.id === activeId) ?? ethos.principles[0];
 
   return (
     <section id="principles" className="relative z-10 overflow-hidden border-t border-line bg-hq-deep">
@@ -277,6 +291,8 @@ export default function CorePrinciples() {
           activeId={activeId}
           onSelect={setActiveId}
         />
+
+        <ActivePrincipleTitle principle={active} />
       </div>
     </section>
   );
