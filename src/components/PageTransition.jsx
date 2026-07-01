@@ -19,13 +19,13 @@ export default function PageTransition() {
 
     const root = document.getElementById("root");
     if (root) {
-      gsap.fromTo(root, { scale: 1.015, opacity: 0.94 }, { scale: 1, opacity: 1, duration: 0.42, ease });
+      gsap.fromTo(root, { scale: 1.01, opacity: 0.96 }, { scale: 1, opacity: 1, duration: 0.28, ease });
     }
 
     const timer = window.setTimeout(() => {
       clearPageEnterTransition();
       setPhase("idle");
-    }, 400);
+    }, 280);
 
     return () => window.clearTimeout(timer);
   }, [phase]);
@@ -56,7 +56,7 @@ export default function PageTransition() {
               : { y: 0 }
           }
           exit={{ y: "-100%" }}
-          transition={{ duration: 0.38, ease }}
+          transition={{ duration: 0.26, ease }}
           className="pointer-events-none fixed inset-0 z-[400] bg-[#203140]"
           aria-hidden="true"
         >

@@ -118,11 +118,10 @@ export default function HeroPortrait({ src, onReady }) {
             preload="auto"
             disablePictureInPicture
             disableRemotePlayback
-            className="brand-video hero-portrait-video pointer-events-none absolute inset-0 h-full w-full object-contain object-top transition-opacity duration-700 ease-out"
+            controlsList="nodownload nofullscreen noremoteplayback"
+            className="brand-video hero-portrait-video pointer-events-none absolute inset-0 h-full w-full object-contain object-top transition-opacity duration-500 ease-out"
             style={{
               opacity: videoPlaying ? 1 : 0,
-              visibility: videoPlaying ? "visible" : "hidden",
-              clipPath: videoPlaying ? "none" : "inset(100%)",
               ...portraitMaskStyle,
             }}
           />

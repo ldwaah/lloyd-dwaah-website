@@ -40,18 +40,16 @@ export function zoomFromNavLink(anchor, onComplete) {
     width: window.innerWidth,
     height: window.innerHeight,
     borderRadius: 0,
-    duration: 0.26,
+    duration: 0.18,
     ease,
     onComplete: () => {
+      onComplete();
       gsap.to(labelEl, {
-        scale: 1.06,
+        scale: 1.04,
         opacity: 0,
-        duration: 0.1,
+        duration: 0.06,
         ease: "power2.in",
-        onComplete: () => {
-          overlay.remove();
-          onComplete();
-        },
+        onComplete: () => overlay.remove(),
       });
     },
   });

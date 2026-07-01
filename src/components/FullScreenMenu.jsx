@@ -75,9 +75,9 @@ function MenuNavLink({ item, index, open, onClose }) {
       y: "0%",
       opacity: 1,
       rotateX: 0,
-      duration: 0.36,
-      stagger: 0.014,
-      delay: 0.04 + index * 0.045,
+      duration: 0.26,
+      stagger: 0.009,
+      delay: 0.02 + index * 0.028,
       ease: [0.22, 1, 0.36, 1],
     });
 
@@ -103,7 +103,7 @@ function MenuNavLink({ item, index, open, onClose }) {
       e.preventDefault();
       onClose();
       zoomFromNavLink(anchor, () => {
-        navigateWithTransition(anchor.href, { delay: 30 });
+        navigateWithTransition(anchor.href, { delay: 0 });
       });
       return;
     }
@@ -205,7 +205,7 @@ export default function FullScreenMenu({ open, onClose }) {
           initial={{ opacity: 0, scale: 0.98 }}
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 0.99 }}
-          transition={{ duration: 0.3, ease }}
+          transition={{ duration: 0.22, ease }}
           className="fixed inset-0 z-[200]"
         >
           <motion.button
@@ -214,7 +214,7 @@ export default function FullScreenMenu({ open, onClose }) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.28, ease }}
+            transition={{ duration: 0.2, ease }}
             onClick={onClose}
             className="absolute inset-0 bg-hq/75 backdrop-blur-md"
           />
@@ -242,7 +242,7 @@ export default function FullScreenMenu({ open, onClose }) {
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 8 }}
-              transition={{ delay: 0.22, duration: 0.38, ease }}
+              transition={{ delay: 0.12, duration: 0.26, ease }}
               className="pointer-events-auto absolute inset-x-0 bottom-10 flex justify-center gap-4 md:bottom-12"
             >
               <SocialIconLink href={`mailto:${contact.email}`} label="Email Lloyd Dwaah">
