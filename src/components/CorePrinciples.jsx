@@ -12,11 +12,21 @@ function trimSummary(text, maxSentences = 2) {
   return sentences.slice(0, maxSentences).join(" ").trim();
 }
 
+function principleExcerpt(principle) {
+  return trimSummary(principle.body || principle.summary, 2);
+}
+
+/** Prevent click-focus from scrolling the page (Lenis + pinned ScrollTriggers). */
+function preventFocusScroll(event) {
+  event.preventDefault();
+}
+
 function CarouselArrow({ direction, onClick, label }) {
   return (
     <button
       type="button"
       onClick={onClick}
+      onMouseDown={preventFocusScroll}
       aria-label={label}
       className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-line/70 text-muted/80 transition-colors hover:border-line hover:text-ink md:h-10 md:w-10"
     >
@@ -44,6 +54,7 @@ function DotIndicators({ count, activeIndex, onSelect }) {
             aria-selected={isActive}
             aria-label={`Go to principle ${index + 1} of ${count}`}
             onClick={() => onSelect(index)}
+            onMouseDown={preventFocusScroll}
             className={`h-1 rounded-full transition-all duration-300 ${
               isActive ? "w-5 bg-accent/60" : "w-1 bg-line hover:bg-muted/50"
             }`}
@@ -59,7 +70,7 @@ function PrincipleContent({ principle }) {
     <>
       <h3 className="font-serif text-statement text-ink text-balance">{principle.title}</h3>
       <p className="mx-auto mt-4 max-w-lg text-pretty text-base leading-relaxed text-body md:text-lg">
-        {trimSummary(principle.summary)}
+        {principleExcerpt(principle)}
       </p>
     </>
   );
@@ -141,7 +152,8 @@ export default function CorePrinciples() {
             />
 
             <div
-              className="relative min-h-[9.5rem] w-full max-w-xl touch-pan-y"
+              className="relative min-h-[14rem] w-full max-w-xl touch-pan-y md:min-h-[12rem]"
+              style={{ overflowAnchor: "none" }}
               onTouchStart={onTouchStart}
               onTouchEnd={onTouchEnd}
               aria-live="polite"
@@ -152,14 +164,14 @@ export default function CorePrinciples() {
                   <PrincipleContent principle={active} />
                 </div>
               ) : (
-                <AnimatePresence mode="wait">
+                <AnimatePresence initial={false}>
                   <motion.div
                     key={active.id}
-                    initial={{ opacity: 0, y: 14 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -10 }}
-                    transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-                    className="px-2"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
+                    className="absolute inset-x-0 top-0 px-2"
                   >
                     <PrincipleContent principle={active} />
                   </motion.div>
