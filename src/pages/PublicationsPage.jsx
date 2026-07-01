@@ -2,10 +2,12 @@ import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import PageShell from "../components/PageShell.jsx";
 import Reveal from "../components/Reveal.jsx";
+import TrailerModal from "../components/TrailerModal.jsx";
 import PublicationsIntro, {
   shouldPlayPublicationsIntro,
 } from "../components/PublicationsIntro.jsx";
 import { publications, featuredBookSlugs } from "../data/site.js";
+import { getYouTubeId } from "../lib/youtube.js";
 
 const AUTHOR_HERO = "/assets/publications/author-hero.webp";
 const ease = [0.22, 1, 0.36, 1];
@@ -21,7 +23,7 @@ const featuredBooks = featuredBookSlugs.map((slug) =>
   publications.books.find((book) => book.slug === slug)
 ).filter(Boolean);
 
-function BookOnShelf({ book, index, order }) {
+function BookOnShelf({ book, index, order, onTrailerOpen }) {
   const isUnavailable = book.status === "Not Available";
   const spineColor = SPINE_COLORS[index % SPINE_COLORS.length];
 
@@ -89,14 +91,13 @@ function BookOnShelf({ book, index, order }) {
           </a>
         )}
         {book.trailer && (
-          <a
-            href={book.trailer}
-            target="_blank"
-            rel="noopener noreferrer"
+          <button
+            type="button"
+            onClick={() => onTrailerOpen?.(book)}
             className="btn-primary w-full px-4 py-2.5 text-xs"
           >
             View Trailer
-          </a>
+          </button>
         )}
       </div>
 
@@ -113,7 +114,7 @@ function BookOnShelf({ book, index, order }) {
   );
 }
 
-function Shelf({ books, label }) {
+function Shelf({ books, label, onTrailerOpen }) {
   return (
     <div className="relative">
       <Reveal y={16}>
@@ -123,7 +124,7 @@ function Shelf({ books, label }) {
       </Reveal>
       <div className="relative grid grid-cols-2 gap-10 sm:grid-cols-2 md:grid-cols-4 md:gap-8">
         {books.map((book, i) => (
-          <BookOnShelf key={book.slug} book={book} index={i} order={i + 1} />
+          <BookOnShelf key={book.slug} book={book} index={i} order={i + 1} onTrailerOpen={onTrailerOpen} />
         ))}
       </div>
       <Reveal delay={0.15} y={16}>
@@ -137,6 +138,16 @@ function Shelf({ books, label }) {
 export default function PublicationsPage() {
   const [playIntro, setPlayIntro] = useState(false);
   const [contentVisible, setContentVisible] = useState(false);
+  const [activeTrailer, setActiveTrailer] = useState(null);
+
+  const openTrailer = (book) => {
+    const videoId = getYouTubeId(book.trailer);
+    if (videoId) {
+      setActiveTrailer({ title: book.title, videoId });
+    }
+  };
+
+  const closeTrailer = () => setActiveTrailer(null);
 
   useEffect(() => {
     if (shouldPlayPublicationsIntro()) {
@@ -148,6 +159,12 @@ export default function PublicationsPage() {
 
   return (
     <PageShell ambient="publications">
+      <TrailerModal
+        open={!!activeTrailer}
+        onClose={closeTrailer}
+        title={activeTrailer?.title}
+        videoId={activeTrailer?.videoId}
+      />
       {playIntro && (
         <PublicationsIntro
           onFadeStart={() => setContentVisible(true)}
@@ -193,7 +210,7 @@ export default function PublicationsPage() {
           <div className="section-pad mx-auto max-w-6xl">
             <div className="mb-20 flex items-end gap-8">
               <div className="flex-1">
-                <Shelf books={featuredBooks} label="The collection" />
+                <Shelf books={featuredBooks} label="The collection" onTrailerOpen={openTrailer} />
               </div>
             </div>
 
