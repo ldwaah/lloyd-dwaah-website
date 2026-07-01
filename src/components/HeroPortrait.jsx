@@ -24,6 +24,9 @@ const portraitMaskStyle = {
   WebkitMaskPosition: "center top",
 };
 
+const canUsePortraitVideo = () =>
+  !prefersReducedMotion() && Boolean(avatarConfig.video);
+
 export default function HeroPortrait({ src, onReady }) {
   const stageRef = useRef(null);
   const portraitRef = useRef(null);
@@ -31,9 +34,8 @@ export default function HeroPortrait({ src, onReady }) {
   const washRef = useRef(null);
   const pointer = usePointerRef();
   const readyNotified = useRef(false);
-  const [videoVisible, setVideoVisible] = useState(false);
-
-  const enableVideo = !prefersReducedMotion() && Boolean(avatarConfig.video);
+  const [videoPlaying, setVideoPlaying] = useState(false);
+  const [mountVideo, setMountVideo] = useState(canUsePortraitVideo);
 
   useEffect(() => {
     const notify = () => {
@@ -85,6 +87,83 @@ export default function HeroPortrait({ src, onReady }) {
     return () => cancelAnimationFrame(frame);
   }, [pointer]);
 
+  useEffect(() => {
+    if (!mountVideo) return undefined;
+
+    const video = videoRef.current;
+    if (!video) return undefined;
+
+    let cancelled = false;
+    let playAttempts = 0;
+    const MAX_PLAY_ATTEMPTS = 6;
+
+    const armInlineAutoplay = () => {
+      video.muted = true;
+      video.defaultMuted = true;
+      video.playsInline = true;
+      video.setAttribute("muted", "");
+      video.setAttribute("playsinline", "");
+      video.setAttribute("webkit-playsinline", "");
+    };
+
+    const dropVideo = () => {
+      if (cancelled) return;
+      setMountVideo(false);
+      setVideoPlaying(false);
+    };
+
+    const tryPlay = () => {
+      if (cancelled || !video) return;
+      playAttempts += 1;
+      armInlineAutoplay();
+
+      const playPromise = video.play();
+      if (!playPromise) return;
+
+      playPromise
+        .then(() => {
+          if (!cancelled) setVideoPlaying(true);
+        })
+        .catch(() => {
+          if (cancelled) return;
+          if (playAttempts >= MAX_PLAY_ATTEMPTS) dropVideo();
+        });
+    };
+
+    const onPlaying = () => {
+      if (!cancelled) setVideoPlaying(true);
+    };
+
+    const onCanPlay = () => tryPlay();
+    const onLoadedData = () => tryPlay();
+    const onVisibility = () => {
+      if (document.visibilityState === "visible" && video.paused) tryPlay();
+    };
+
+    armInlineAutoplay();
+    video.addEventListener("playing", onPlaying);
+    video.addEventListener("canplay", onCanPlay);
+    video.addEventListener("loadeddata", onLoadedData);
+    document.addEventListener("visibilitychange", onVisibility);
+    window.addEventListener("pageshow", onVisibility);
+
+    tryPlay();
+
+    const failTimer = window.setTimeout(() => {
+      if (!cancelled && video.paused) dropVideo();
+    }, 2800);
+
+    return () => {
+      cancelled = true;
+      window.clearTimeout(failTimer);
+      video.removeEventListener("playing", onPlaying);
+      video.removeEventListener("canplay", onCanPlay);
+      video.removeEventListener("loadeddata", onLoadedData);
+      document.removeEventListener("visibilitychange", onVisibility);
+      window.removeEventListener("pageshow", onVisibility);
+    };
+  }, [mountVideo]);
+
   return (
     <div
       className="pointer-events-none absolute inset-0 z-0 flex items-start justify-center overflow-hidden px-5 pb-28 pt-14 md:px-10 md:pb-36 md:pt-16"
@@ -102,22 +181,24 @@ export default function HeroPortrait({ src, onReady }) {
           alt=""
           decoding="async"
           className="block max-h-[min(70svh,640px)] max-w-full object-contain object-top md:max-h-[min(76svh,720px)]"
-          style={{ opacity: enableVideo && videoVisible ? 0 : 1 }}
+          style={{ opacity: videoPlaying ? 0 : 1 }}
         />
-        {enableVideo && (
+        {mountVideo && (
           <video
             ref={videoRef}
             src={avatarConfig.video}
-            poster={avatarConfig.videoPoster}
             autoPlay
             muted
             loop
             playsInline
-            onCanPlay={() => setVideoVisible(true)}
-            onLoadedData={() => setVideoVisible(true)}
-            className="pointer-events-none absolute inset-0 h-full w-full object-contain object-top transition-opacity duration-700 ease-out"
+            preload="auto"
+            disablePictureInPicture
+            disableRemotePlayback
+            className="hero-portrait-video pointer-events-none absolute inset-0 h-full w-full object-contain object-top transition-opacity duration-700 ease-out"
             style={{
-              opacity: videoVisible ? 1 : 0,
+              opacity: videoPlaying ? 1 : 0,
+              visibility: videoPlaying ? "visible" : "hidden",
+              clipPath: videoPlaying ? "none" : "inset(100%)",
               ...portraitMaskStyle,
             }}
           />

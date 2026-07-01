@@ -191,4 +191,19 @@
       opacity: 1;
     }
   }
+
+  /* Hero portrait ambient video — never show native play UI (iOS Safari) */
+  .hero-portrait-video {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .hero-portrait-video::-webkit-media-controls,
+  .hero-portrait-video::-webkit-media-controls-enclosure,
+  .hero-portrait-video::-webkit-media-controls-start-playback-button,
+  .hero-portrait-video::-webkit-media-controls-overlay-play-button {
+    display: none !important;
+    -webkit-appearance: none;
+    opacity: 0;
+    pointer-events: none;
+  }
 }
