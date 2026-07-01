@@ -12,27 +12,45 @@ function LinkedInIcon({ className = "h-5 w-5" }) {
   );
 }
 
-export default function SiteNav() {
+export default function SiteNav({ overlay = false }) {
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
     <>
-      <header className="sticky top-0 z-[200] border-b border-line/40 bg-hq-deep/95 backdrop-blur-md">
-        <nav className="relative mx-auto flex max-w-7xl items-center px-6 py-4 md:px-10 md:py-5">
-          <StackedLogo className="shrink-0" />
+      <header
+        className={
+          overlay
+            ? "absolute inset-x-0 top-0 z-20 bg-transparent"
+            : "sticky top-0 z-[200] border-b border-line/40 bg-hq-deep/95 backdrop-blur-md"
+        }
+      >
+        <nav className="relative mx-auto flex max-w-7xl items-center px-6 py-5 md:px-10 md:py-6">
+          <StackedLogo
+            className={`shrink-0 ${overlay ? "drop-shadow-[0_1px_12px_rgba(0,0,0,0.45)]" : ""}`}
+          />
 
-          <a
-            href={linkedInUrl}
-            target="_blank"
-            rel="noreferrer"
-            aria-label="Lloyd Dwaah on LinkedIn"
-            className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-ink transition-colors duration-300 hover:text-accent"
-          >
-            <LinkedInIcon />
-          </a>
+          {!overlay && (
+            <a
+              href={linkedInUrl}
+              target="_blank"
+              rel="noreferrer"
+              aria-label="Lloyd Dwaah on LinkedIn"
+              className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-ink transition-colors duration-300 hover:text-accent"
+            >
+              <LinkedInIcon />
+            </a>
+          )}
 
           <div className="ml-auto shrink-0">
-            <MenuToggle open={menuOpen} onClick={() => setMenuOpen((prev) => !prev)} />
+            <MenuToggle
+              open={menuOpen}
+              onClick={() => setMenuOpen((prev) => !prev)}
+              className={
+                overlay
+                  ? "border-ink/35 bg-hq/25 backdrop-blur-sm shadow-[0_8px_32px_rgba(0,0,0,0.25)]"
+                  : ""
+              }
+            />
           </div>
         </nav>
       </header>

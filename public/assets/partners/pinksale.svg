@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 80" fill="none" aria-hidden="true">
+  <circle cx="36" cy="40" r="20" fill="#FFFFFF"/>
+  <ellipse cx="36" cy="36" rx="8" ry="6" fill="#203140"/>
+  <circle cx="32" cy="34" r="2" fill="#FFFFFF"/>
+  <circle cx="40" cy="34" r="2" fill="#FFFFFF"/>
+  <ellipse cx="36" cy="42" rx="5" ry="3" fill="#203140"/>
+  <text x="68" y="47" fill="#FFFFFF" font-family="Inter, system-ui, sans-serif" font-size="22" font-weight="700" letter-spacing="-0.01em">PinkSale</text>
+</svg>

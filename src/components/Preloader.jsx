@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { avatarConfig } from "../data/site.js";
-import { prefersReducedMotion } from "../lib/input.js";
+import { resetScrollPosition } from "../lib/scrollReset.js";
 
 const MIN_MS = 550;
 const MAX_MS = 2800;
@@ -64,7 +64,7 @@ export default function Preloader({ active, sceneReady, onComplete }) {
       imageReady = true;
       tryExit();
     };
-    img.src = avatarConfig.image;
+    img.src = avatarConfig.portraitSvg || avatarConfig.image;
 
     const minTimer = window.setTimeout(() => {
       minElapsed = true;
@@ -93,6 +93,7 @@ export default function Preloader({ active, sceneReady, onComplete }) {
   useEffect(() => {
     if (!active || visible) return undefined;
     const timer = window.setTimeout(() => {
+      resetScrollPosition();
       markHomePreloaderSeen();
       onComplete();
     }, 650);
@@ -103,6 +104,7 @@ export default function Preloader({ active, sceneReady, onComplete }) {
 
   return (
     <AnimatePresence onExitComplete={() => {
+      resetScrollPosition();
       markHomePreloaderSeen();
       document.body.style.overflow = "";
       onComplete();
@@ -128,7 +130,7 @@ export default function Preloader({ active, sceneReady, onComplete }) {
               <span className="absolute inset-0 rounded-full bg-accent/15 blur-xl" />
               <span className="relative grid h-full w-full place-items-center overflow-hidden rounded-full border border-accent/25 bg-hq-deep/80 ring-1 ring-white/10">
                 <img
-                  src={avatarConfig.image}
+                  src={avatarConfig.portraitSvg || avatarConfig.image}
                   alt=""
                   className="h-full w-full object-cover object-[center_20%]"
                 />

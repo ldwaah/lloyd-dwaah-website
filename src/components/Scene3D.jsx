@@ -13,6 +13,7 @@ import { EffectComposer, Bloom, Vignette } from "@react-three/postprocessing";
 import * as THREE from "three";
 import { avatarConfig } from "../data/site.js";
 import { usePointerRef, useScrollRef, isMobile, prefersReducedMotion } from "../lib/input.js";
+import { heroScrollState } from "../lib/heroScroll.js";
 
 const damp = THREE.MathUtils.damp;
 
@@ -21,12 +22,14 @@ const damp = THREE.MathUtils.damp;
 //  The portrait exists inside this scene. Camera, lights and particles
 //  all respond to the cursor; the camera glides as the page scrolls.
 // =====================================================================
-export default function Scene3D({ variant = "default", onPortraitReady }) {
+export default function Scene3D({ variant = "default", onPortraitReady, useHeroScroll = false }) {
   const pointer = usePointerRef();
   const scroll = useScrollRef();
   const [mobile] = useState(isMobile);
   const reduced = prefersReducedMotion();
   const hero = variant === "hero";
+
+  const readScroll = () => (useHeroScroll ? heroScrollState.current : scroll.current);
 
   return (
     <div
@@ -45,23 +48,23 @@ export default function Scene3D({ variant = "default", onPortraitReady }) {
         }}
       >
         <Suspense fallback={null}>
-          <CameraRig pointer={pointer} scroll={scroll} reduced={reduced} />
-          <Lighting pointer={pointer} scroll={scroll} />
+          <CameraRig pointer={pointer} readScroll={readScroll} reduced={reduced} hero={hero} />
+          <Lighting pointer={pointer} readScroll={readScroll} hero={hero} />
           <StudioEnvironment />
-          <LightShafts />
+          <LightShafts scrollReader={readScroll} hero={hero} />
 
           <PortraitStage
             pointer={pointer}
-            scroll={scroll}
+            readScroll={readScroll}
             mobile={mobile}
             hero={hero}
             onPortraitReady={onPortraitReady}
           />
 
           {!hero && (
-            <TravelField scroll={scroll} pointer={pointer} mobile={mobile} />
+            <TravelField readScroll={readScroll} pointer={pointer} mobile={mobile} />
           )}
-          <Particles pointer={pointer} count={mobile ? 280 : 700} />
+          <Particles pointer={pointer} readScroll={readScroll} count={mobile ? 280 : 700} hero={hero} />
           <Floor />
         </Suspense>
 
@@ -78,44 +81,56 @@ export default function Scene3D({ variant = "default", onPortraitReady }) {
 }
 
 // ---- Camera: parallax with cursor + glide on scroll -----------------------
-function CameraRig({ pointer, scroll, reduced }) {
+function CameraRig({ pointer, readScroll, reduced, hero }) {
   useFrame((state, dt) => {
     const p = pointer.current;
-    const sp = scroll.current;
+    const sp = readScroll();
     const k = reduced ? 0.15 : 1;
-    // Gentle lateral drift as you move between sections (like passing rooms)
     const sway = Math.sin(sp * Math.PI * 2) * 0.5 * k;
-    const tx = p.x * 0.7 * k + sway;
-    const ty = 0.3 + p.y * 0.45 * k - sp * 0.6;
-    const tz = 6 + sp * 2.4; // glide back through the space
+    const heroPull = hero ? sp : 0;
+    const tx = p.x * (hero ? 0.55 : 0.7) * k + sway;
+    const ty = (hero ? 0.15 : 0.3) + p.y * 0.45 * k - heroPull * 0.85;
+    const tz = (hero ? 5.2 : 6) + heroPull * 2.8 + sp * (hero ? 0 : 2.4);
     state.camera.position.x = damp(state.camera.position.x, tx, 3, dt);
     state.camera.position.y = damp(state.camera.position.y, ty, 3, dt);
     state.camera.position.z = damp(state.camera.position.z, tz, 4, dt);
-    state.camera.lookAt(0, 0.1 - sp * 0.6, 0);
-    state.camera.rotation.z += sway * 0.03; // subtle cinematic roll, after lookAt
+    state.camera.fov = damp(state.camera.fov, hero ? 48 - heroPull * 6 : 38, 3, dt);
+    state.camera.updateProjectionMatrix();
+    state.camera.lookAt(0, 0.1 - heroPull * 0.45 - sp * (hero ? 0 : 0.6), 0);
+    state.camera.rotation.z += sway * 0.03;
   });
   return null;
 }
 
-// ---- Lighting: a key light that follows the cursor ------------------------
-function Lighting({ pointer, scroll }) {
+function Lighting({ pointer, readScroll, hero }) {
   const key = useRef();
   const rim = useRef();
+  const fill = useRef();
   useFrame((state, dt) => {
     const p = pointer.current;
-    const sp = scroll.current;
+    const sp = readScroll();
+    const heroPull = hero ? sp : 0;
     if (key.current) {
-      key.current.position.x = damp(key.current.position.x, p.x * 5, 4, dt);
-      key.current.position.y = damp(key.current.position.y, 1 + p.y * 4 - sp * 3, 4, dt);
+      key.current.position.x = damp(key.current.position.x, p.x * 5 + heroPull * 2, 4, dt);
+      key.current.position.y = damp(key.current.position.y, 1 + p.y * 4 - heroPull * 2.5, 4, dt);
+      key.current.intensity = damp(key.current.intensity, 60 - heroPull * 18, 3, dt);
     }
     if (rim.current) {
-      // The rim light sweeps across as you travel between sections.
-      rim.current.position.x = damp(rim.current.position.x, Math.sin(sp * Math.PI * 2) * 7, 3, dt);
+      rim.current.position.x = damp(
+        rim.current.position.x,
+        Math.sin(sp * Math.PI * 2) * 7 + heroPull * 3,
+        3,
+        dt
+      );
+      rim.current.intensity = damp(rim.current.intensity, 28 + heroPull * 22, 3, dt);
+    }
+    if (fill.current) {
+      fill.current.intensity = damp(fill.current.intensity, 0.35 + heroPull * 0.25, 3, dt);
     }
   });
   return (
     <>
-      <ambientLight intensity={0.35} />
+      <ambientLight ref={fill} intensity={0.35} />
       <pointLight ref={key} position={[2, 3, 4]} intensity={60} distance={18} decay={1.6} color="#bfeaff" />
       <pointLight ref={rim} position={[-6, -1, 2]} intensity={28} distance={16} decay={1.8} color="#2bb8e6" />
       <directionalLight position={[3, 5, 2]} intensity={0.4} color="#ffffff" />
@@ -136,7 +151,7 @@ function StudioEnvironment() {
 }
 
 // ---- The portrait, sitting on glass, in 3D space --------------------------
-function PortraitStage({ pointer, scroll, mobile, hero, onPortraitReady }) {
+function PortraitStage({ pointer, readScroll, mobile, hero, onPortraitReady }) {
   const [ready, setReady] = useState(false);
   const notified = useRef(false);
 
@@ -155,28 +170,31 @@ function PortraitStage({ pointer, scroll, mobile, hero, onPortraitReady }) {
   }, [ready, onPortraitReady]);
 
   return ready ? (
-    <Suspense fallback={<PortraitPlaceholder pointer={pointer} scroll={scroll} mobile={mobile} hero={hero} />}>
-      <TexturedPortrait pointer={pointer} scroll={scroll} mobile={mobile} hero={hero} />
+    <Suspense fallback={<PortraitPlaceholder pointer={pointer} readScroll={readScroll} mobile={mobile} hero={hero} />}>
+      <TexturedPortrait pointer={pointer} readScroll={readScroll} mobile={mobile} hero={hero} />
     </Suspense>
   ) : (
-    <PortraitPlaceholder pointer={pointer} scroll={scroll} mobile={mobile} hero={hero} />
+    <PortraitPlaceholder pointer={pointer} readScroll={readScroll} mobile={mobile} hero={hero} />
   );
 }
 
-function usePortraitMotion(group, { pointer, scroll, mobile, hero }) {
+function usePortraitMotion(group, { pointer, readScroll, mobile, hero }) {
   useFrame((state, dt) => {
     const g = group.current;
     if (!g) return;
     const p = pointer.current;
-    const sp = scroll.current;
-    const targetX = hero ? 0 : mobile ? 0 : 1.75;
-    const targetY = hero ? 0 : (mobile ? 1.15 : 0.15) - sp * 5;
+    const sp = readScroll();
+    const heroPull = hero ? sp : 0;
+    const targetX = hero ? p.x * 0.35 : mobile ? 0 : 1.75;
+    const targetY = hero ? p.y * 0.2 - heroPull * 0.35 : (mobile ? 1.15 : 0.15) - sp * 5;
+    const targetZ = hero ? heroPull * 0.65 : 0;
     g.position.x = damp(g.position.x, targetX, 3, dt);
     g.position.y = damp(g.position.y, targetY, 3, dt);
-    g.rotation.y = damp(g.rotation.y, p.x * (hero ? 0.18 : 0.32), 3, dt);
-    g.rotation.x = damp(g.rotation.x, -p.y * (hero ? 0.12 : 0.2), 3, dt);
+    g.position.z = damp(g.position.z, targetZ, 3, dt);
+    g.rotation.y = damp(g.rotation.y, p.x * (hero ? 0.22 : 0.32) + heroPull * 0.08, 3, dt);
+    g.rotation.x = damp(g.rotation.x, -p.y * (hero ? 0.14 : 0.2) - heroPull * 0.04, 3, dt);
     const breathe = 1 + Math.sin(state.clock.elapsedTime * 0.8) * 0.008;
-    const baseScale = hero ? (mobile ? 1.15 : 1.35) : mobile ? 0.78 : 1;
+    const baseScale = hero ? (mobile ? 1.15 : 1.35 + heroPull * 0.12) : mobile ? 0.78 : 1;
     if (!g.userData.breatheApplied || g.userData.heroMode !== hero) {
       g.userData.baseScale = baseScale;
       g.userData.breatheApplied = true;
@@ -186,8 +204,8 @@ function usePortraitMotion(group, { pointer, scroll, mobile, hero }) {
     g.scale.set(s, s, s);
 
     const fade = hero
-      ? THREE.MathUtils.clamp(1 - sp * 8, 0, 1)
-      : THREE.MathUtils.clamp(1 - (sp - 0.04) * 6, 0, 1);
+      ? THREE.MathUtils.clamp(1 - heroPull * 0.55, 0.35, 1)
+      : THREE.MathUtils.clamp(1 - (sp - 0.04) * 6, 0.35, 1);
     g.traverse((o) => {
       if (o.material) {
         if (o.userData.base === undefined) o.userData.base = o.material.opacity ?? 1;
@@ -195,7 +213,7 @@ function usePortraitMotion(group, { pointer, scroll, mobile, hero }) {
         o.material.opacity = o.userData.base * fade;
       }
     });
-    g.visible = fade > 0.01;
+    g.visible = fade > 0.05;
   });
 }
 
@@ -281,7 +299,7 @@ function PortraitFrame({ w, h, children, minimal = false }) {
 // The whole field translates toward the camera as the page scrolls, so the
 // panels stream past at different depths. This is what turns scrolling into
 // "moving through a space" rather than down a page.
-function TravelField({ scroll, pointer, mobile }) {
+function TravelField({ readScroll, pointer, mobile }) {
   const group = useRef();
   const panels = useMemo(() => {
     const count = mobile ? 7 : 14;
@@ -305,7 +323,7 @@ function TravelField({ scroll, pointer, mobile }) {
   useFrame((state, dt) => {
     const g = group.current;
     if (!g) return;
-    const sp = scroll.current;
+    const sp = readScroll();
     const p = pointer.current;
     // Stream the field toward the camera as you scroll.
     g.position.z = damp(g.position.z, sp * 16, 3, dt);
@@ -344,7 +362,8 @@ function TravelField({ scroll, pointer, mobile }) {
 }
 
 // ---- Volumetric light shafts (read as god rays through the bloom pass) -----
-function LightShafts() {
+function LightShafts({ scrollReader, hero }) {
+  const group = useRef();
   const shafts = useMemo(
     () => [
       { p: [-2.5, 2, -6], r: 0.5, s: [1.2, 16, 1] },
@@ -353,8 +372,20 @@ function LightShafts() {
     ],
     []
   );
+
+  useFrame((state, dt) => {
+    if (!group.current || !hero || !scrollReader) return;
+    const sp = scrollReader();
+    group.current.rotation.z = damp(group.current.rotation.z, sp * 0.12, 3, dt);
+    group.current.children.forEach((mesh, i) => {
+      if (mesh.material) {
+        mesh.material.opacity = 0.04 + sp * 0.06 + i * 0.01;
+      }
+    });
+  });
+
   return (
-    <group>
+    <group ref={group}>
       {shafts.map((sh, i) => (
         <mesh key={i} position={sh.p} rotation={[0, 0, sh.r]} scale={sh.s}>
           <planeGeometry args={[1, 1]} />
@@ -373,7 +404,7 @@ function LightShafts() {
 }
 
 // ---- Particle field reacting to the cursor --------------------------------
-function Particles({ pointer, count }) {
+function Particles({ pointer, readScroll, count, hero }) {
   const ref = useRef();
   const positions = useMemo(() => {
     const arr = new Float32Array(count * 3);
@@ -389,9 +420,14 @@ function Particles({ pointer, count }) {
     const g = ref.current;
     if (!g) return;
     const p = pointer.current;
-    g.rotation.y += dt * 0.02;
+    const sp = readScroll();
+    g.rotation.y += dt * (0.02 + (hero ? sp * 0.04 : 0));
     g.position.x = damp(g.position.x, p.x * 0.5, 2, dt);
-    g.position.y = damp(g.position.y, p.y * 0.4, 2, dt);
+    g.position.y = damp(g.position.y, p.y * 0.4 - (hero ? sp * 0.8 : 0), 2, dt);
+    g.position.z = damp(g.position.z, hero ? sp * 1.2 : 0, 2, dt);
+    if (g.material) {
+      g.material.opacity = hero ? 0.35 + (1 - sp) * 0.35 : 0.55;
+    }
   });
 
   return (

@@ -11,6 +11,7 @@ export const meta = {
 export const avatarConfig = {
   mode: "image",
   image: "/assets/lloyd-avatar.webp",
+  portraitSvg: "/assets/lloyd-portrait.svg",
   video: "/assets/lloyd-avatar.mp4",
   glb: "/models/lloyd-head.glb",
   tilt: 8,
@@ -38,6 +39,60 @@ export const home = {
     "I believe that great leadership creates environments where people can flourish.",
   cta: { label: "Explore my work", href: "/ventures" },
   secondary: { label: "What I believe", href: "#principles" },
+};
+
+export const organisations = {
+  eyebrow: "Organisations worked with",
+  items: [
+    {
+      id: "chainlink",
+      name: "Chainlink",
+      logo: "/assets/partners/chainlink.svg",
+      url: "https://chain.link",
+      width: 168,
+    },
+    {
+      id: "transak",
+      name: "Transak",
+      logo: "/assets/partners/transak.svg",
+      url: "https://transak.com",
+      width: 132,
+    },
+    {
+      id: "herbalife",
+      name: "Herbalife Nutrition",
+      logo: "/assets/partners/herbalife.svg",
+      url: "https://www.herbalife.com",
+      width: 196,
+    },
+    {
+      id: "rehab-borough",
+      name: "The Rehab Borough",
+      logo: "/assets/partners/rehab-borough.svg",
+      width: 210,
+    },
+    {
+      id: "hacken",
+      name: "Hacken",
+      logo: "/assets/partners/hacken.svg",
+      url: "https://hacken.io",
+      width: 128,
+    },
+    {
+      id: "pinksale",
+      name: "Pinksale",
+      logo: "/assets/partners/pinksale.svg",
+      url: "https://www.pinksale.finance",
+      width: 148,
+    },
+    {
+      id: "daos-fun",
+      name: "Daos.fun",
+      logo: "/assets/partners/daos-fun.svg",
+      url: "https://daos.fun",
+      width: 132,
+    },
+  ],
 };
 
 export const highlights = {
@@ -96,13 +151,18 @@ export const ethos = {
     },
   ],
   principlesHeading: "Core principles",
-  principlesIntro: "That shape how I lead and build",
+  principlesIntro: "How I lead and build",
   principles: [
     {
       id: "leadership",
       no: "01",
       title: "Leadership & Strategy",
+      shadeLabel: "Polarized grey",
+      shadeSwatch:
+        "linear-gradient(145deg, #8a9199 0%, #c5cad0 38%, #5f6670 72%, #3f4650 100%)",
       summary: "Building organisations and the cultures that carry them.",
+      body:
+        "Building organisations and the cultures that carry them. I lead multidisciplinary teams with a clear focus on operational strategy and long-term organisational development. Strong cultures are not accidents; they are designed, protected and renewed.",
       detail:
         "Leading organisations, managing multidisciplinary teams, and shaping operational strategy and organisational development.",
       tags: ["Organisational development", "Operational strategy", "Team leadership", "Culture building"],
@@ -111,7 +171,12 @@ export const ethos = {
       id: "education",
       no: "02",
       title: "Education",
+      shadeLabel: "Crystal",
+      shadeSwatch:
+        "linear-gradient(160deg, rgba(235,245,255,0.95) 0%, rgba(190,210,230,0.55) 45%, rgba(140,165,190,0.35) 100%)",
       summary: "Designing learning for those the system often leaves behind.",
+      body:
+        "Designing learning for those the system often leaves behind. My work spans Alternative Provision leadership, behaviour strategy, safeguarding and curriculum development. Inclusion and school improvement only succeed when every learner is seen as capable of growth.",
       detail:
         "Alternative Provision leadership, behaviour strategy, safeguarding, curriculum development, inclusion and school improvement.",
       tags: ["Alternative Provision", "Behaviour strategy", "Safeguarding", "Curriculum", "Inclusion"],
@@ -120,7 +185,12 @@ export const ethos = {
       id: "coaching",
       no: "03",
       title: "Coaching & Mentoring",
+      shadeLabel: "Gradient brown",
+      shadeSwatch:
+        "linear-gradient(180deg, #a67c52 0%, #d4b896 42%, #7a5c3a 78%, #4a3524 100%)",
       summary: "Developing people through structured coaching and mentoring.",
+      body:
+        "Developing people through structured coaching and mentoring. I work with staff, leaders and young people to build confidence, accountability and lasting capability. Good coaching turns potential into practice, one conversation at a time.",
       detail:
         "Developing staff, leaders and young people through structured coaching, mentoring and personal development.",
       tags: ["Level 5 Coaching & Mentoring", "Working towards QTS", "Safeguarding"],
@@ -129,7 +199,12 @@ export const ethos = {
       id: "sport",
       no: "04",
       title: "Sports & Community Development",
+      shadeLabel: "G15 green",
+      shadeSwatch:
+        "linear-gradient(145deg, #2f4f44 0%, #4d6f5e 40%, #1e3a30 75%, #142820 100%)",
       summary: "Using sports to develop leadership, discipline and growth.",
+      body:
+        "Using sports to develop leadership, discipline and growth. I have managed sports facilities, led academies and built youth programmes that reach beyond the pitch. Community sport works when structure, standards and belonging are held together.",
       detail:
         "Managing sports facilities, leading sports academies and developing youth sports programmes and community initiatives.",
       tags: ["Sports academies", "Youth programmes", "Community initiatives"],
@@ -138,7 +213,12 @@ export const ethos = {
       id: "technology",
       no: "05",
       title: "Emerging Technologies",
+      shadeLabel: "Bronze",
+      shadeSwatch:
+        "linear-gradient(145deg, #9a7048 0%, #d4a574 35%, #8b5e2e 68%, #5c3d1e 100%)",
       summary: "Building and scaling products across AI, Web3 and DeFi.",
+      body:
+        "Building and scaling products across AI, Web3 and DeFi. Since 2020 I have worked on blockchain, decentralised finance and artificial intelligence, including multi-million-pound DeFi protocols. Technology should solve real problems, not chase novelty for its own sake.",
       detail:
         "Since 2020, working across Web3, blockchain, decentralised finance and artificial intelligence, including multi-million-dollar DeFi protocols.",
       tags: ["Artificial Intelligence", "Web3", "Blockchain", "DeFi", "Product Operations"],
@@ -147,7 +227,12 @@ export const ethos = {
       id: "writing",
       no: "06",
       title: "Writing & Personal Development",
+      shadeLabel: "Smoke",
+      shadeSwatch:
+        "linear-gradient(145deg, #5c636c 0%, #8b939c 38%, #454b54 72%, #2a2f36 100%)",
       summary: "Where leadership, resilience and purpose meet.",
+      body:
+        "Where leadership, resilience and purpose meet. As a law graduate and author, I explore identity, character and human potential through published work. Writing is how I make sense of experience and offer something useful back to others.",
       detail:
         "As a law graduate and author, exploring identity, character, resilience and human potential through published work.",
       tags: ["Author", "Law graduate", "Leadership", "Resilience", "Identity"],
@@ -328,6 +413,7 @@ export const ventures = {
       logo: "/assets/redefiningms-logo.png",
       logoFit: "cover",
       title: "RedefiningMS.co.uk",
+      displayTitle: "Redefining MS",
       field: "Health · Community",
       status: "Live",
       role: "Founder",

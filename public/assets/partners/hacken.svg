@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 80" fill="none" aria-hidden="true">
+  <g transform="translate(14 14) scale(0.22)">
+    <path fill="#FFFFFF" d="M224 0V48H208V0H192V48H176V0H160V48H80V0H64V48V64H224V80H208H192H48V0H32V80H16V0H0V80V96V176H16V128H32V176H48V128H64V176H80V128H160V176H176V128V112H48H32H16V96H32H48H192V176H208V96H224V176H240V96V80V64V48V0H224Z"/>
+  </g>
+  <text x="72" y="47" fill="#FFFFFF" font-family="Inter, system-ui, sans-serif" font-size="22" font-weight="700" letter-spacing="0.12em">HACKEN</text>
+</svg>

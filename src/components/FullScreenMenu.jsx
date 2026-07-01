@@ -6,6 +6,7 @@ import { StackedLogo } from "./BrandMark.jsx";
 import MenuToggle from "./MenuToggle.jsx";
 import TopographicLines from "./TopographicLines.jsx";
 import { scrollToTarget } from "../lib/scroll.js";
+import { navigateWithTransition, isInternalNavLink } from "../lib/pageTransition.js";
 import { EmailIcon, LinkedInIcon, SocialIconLink } from "./SocialIcons.jsx";
 
 const ease = [0.22, 1, 0.36, 1];
@@ -58,6 +59,14 @@ function handleNavClick(e, href, onClose) {
     requestAnimationFrame(() => {
       scrollToTarget("#principles", { offset: -72 });
     });
+    return;
+  }
+
+  const anchor = e.currentTarget;
+  if (anchor instanceof HTMLAnchorElement && isInternalNavLink(anchor)) {
+    e.preventDefault();
+    onClose();
+    navigateWithTransition(anchor.href);
     return;
   }
 

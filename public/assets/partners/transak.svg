@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 80" fill="none" aria-hidden="true">
+  <circle cx="36" cy="40" r="22" fill="#FFFFFF"/>
+  <path fill="#203140" d="M36 26.5 24.5 38h7.5v11h8V38h7.5L36 26.5Z"/>
+  <text x="68" y="47" fill="#FFFFFF" font-family="Inter, system-ui, sans-serif" font-size="22" font-weight="600" letter-spacing="-0.02em">Transak</text>
+</svg>

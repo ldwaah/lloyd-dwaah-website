@@ -130,6 +130,32 @@
     perspective: 1000px;
   }
 
+  .page-enter {
+    animation: page-enter 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  .partner-marquee {
+    @apply relative w-full overflow-hidden;
+  }
+
+  .partner-marquee-track {
+    @apply flex w-max items-center gap-12 md:gap-16;
+    animation: partner-marquee 42s linear infinite;
+  }
+
+  .partner-marquee:hover .partner-marquee-track {
+    animation-play-state: paused;
+  }
+
+  @keyframes partner-marquee {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-50%);
+    }
+  }
+
   @media (prefers-reduced-motion: reduce) {
     *,
     *::before,

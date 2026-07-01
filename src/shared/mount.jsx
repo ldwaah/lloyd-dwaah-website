@@ -1,16 +1,33 @@
+import { useEffect } from "react";
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { SmoothScrollProvider } from "../components/SmoothScroll.jsx";
+import PageTransition from "../components/PageTransition.jsx";
+import { initPageTransitionLinks } from "../lib/pageTransition.js";
+import { resetScrollPosition, enableManualScrollRestoration } from "../lib/scrollReset.js";
 import "../index.css";
 
-// Every page entry mounts through here, so wrapping once enables Lenis
-// smooth scrolling site-wide. It's desktop-only and self-disables for
-// touch / reduced-motion inside the provider — nothing changes visually.
+if (typeof window !== "undefined") {
+  enableManualScrollRestoration();
+  resetScrollPosition();
+}
+
+function MotionShell({ children }) {
+  useEffect(() => {
+    initPageTransitionLinks(document);
+  }, []);
+
+  return children;
+}
+
 export function mount(Page) {
   ReactDOM.createRoot(document.getElementById("root")).render(
     <React.StrictMode>
       <SmoothScrollProvider>
-        <Page />
+        <MotionShell>
+          <PageTransition />
+          <Page />
+        </MotionShell>
       </SmoothScrollProvider>
     </React.StrictMode>
   );
