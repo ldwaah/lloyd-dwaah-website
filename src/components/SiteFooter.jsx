@@ -7,7 +7,7 @@ export default function SiteFooter({ minimal = false }) {
 
   if (minimal) {
     return (
-      <footer id="contact" className="relative z-10 border-t border-line">
+      <footer id="contact" className="relative z-10 border-t border-line bg-hq-deep">
         <div className="section-pad-tight mx-auto flex justify-center py-12 md:py-14">
           <div className="flex items-center gap-4">
             <SocialIconLink href={`mailto:${contact.email}`} label="Email Lloyd Dwaah">
@@ -23,7 +23,7 @@ export default function SiteFooter({ minimal = false }) {
   }
 
   return (
-    <footer id="contact" className="relative z-10 border-t border-line">
+    <footer id="contact" className="relative z-10 border-t border-line bg-hq-deep">
       <div className="section-pad-tight mx-auto max-w-3xl text-center">
         <Reveal>
           <span className="eyebrow eyebrow-center">{contact.eyebrow}</span>

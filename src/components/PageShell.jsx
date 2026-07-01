@@ -8,7 +8,9 @@ export default function PageShell({ children, ambient = "default" }) {
       <AmbientBackground variant={ambient} />
       <SiteNav />
       <main className="relative z-10">{children}</main>
-      <SiteFooter />
+      <div className="relative z-10 shrink-0 bg-hq-deep">
+        <SiteFooter />
+      </div>
     </div>
   );
 }

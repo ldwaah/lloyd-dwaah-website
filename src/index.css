@@ -16,8 +16,9 @@
     scroll-behavior: auto !important;
   }
 
-  html.lenis.lenis-stopped {
-    overflow: hidden;
+  html.lenis,
+  html.lenis body {
+    height: auto;
   }
 
   html.lenis.lenis-smooth [data-lenis-prevent] {
