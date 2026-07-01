@@ -47,7 +47,7 @@ export const highlights = {
     {
       value: "6",
       label: "Core disciplines",
-      detail: "Leadership, education, coaching, sport, technology and writing",
+      detail: "Leadership, education, coaching, sports, technology and writing",
     },
     {
       value: "3",
@@ -80,7 +80,7 @@ export const ethos = {
     "creates environments where",
     "people can flourish.",
   ],
-  body: "Whether through education, coaching, sport, writing or technology, my purpose is to build systems, experiences and opportunities that help people realise their potential.",
+  body: "Whether through education, coaching, sports, writing or technology, my purpose is to build systems, experiences and opportunities that help people realise their potential.",
   beliefs: [
     {
       title: "People before structures",
@@ -128,10 +128,10 @@ export const ethos = {
     {
       id: "sport",
       no: "04",
-      title: "Sport & Community Development",
-      summary: "Using sport to develop leadership, discipline and growth.",
+      title: "Sports & Community Development",
+      summary: "Using sports to develop leadership, discipline and growth.",
       detail:
-        "Managing sports facilities, leading sports academies and developing youth sport programmes and community initiatives.",
+        "Managing sports facilities, leading sports academies and developing youth sports programmes and community initiatives.",
       tags: ["Sports academies", "Youth programmes", "Community initiatives"],
     },
     {
@@ -158,9 +158,9 @@ export const ethos = {
 // ---- 3. EXPERIENCE --------------------------------------------------------
 export const experience = {
   eyebrow: "Experience",
-  heading: "A journey across education, sport and technology.",
+  heading: "A journey across education, sports and technology.",
   intro:
-    "From law and publishing to sport academies, decentralised finance and alternative provision leadership. Work shaped by building environments where people flourish.",
+    "From law and publishing to sports academies, decentralised finance and alternative provision leadership. Work shaped by building environments where people flourish.",
   spotlight: {
     eyebrow: "Coaching & Mentoring",
     title: "Teaching and developing people",
@@ -193,12 +193,12 @@ export const experience = {
     {
       id: "sport-youth",
       year: "2018 onwards",
-      title: "Sport, Coaching & Youth Development",
+      title: "Sports, Coaching & Youth Development",
       role: "Sports Centre · Private Academy",
       summary:
         "Managed a sports centre, coaching and mentoring young people, running a private academy and an online tuition programme to support their learning.",
       detail:
-        "Partnerships with Herbalife Nutrition and RehabBorough supported young people's health and performance. Built pathways into post-16 education rooted in sport, discipline and personal growth.",
+        "Partnerships with Herbalife Nutrition and RehabBorough supported young people's health and performance. Built pathways into post-16 education rooted in sports, discipline and personal growth.",
     },
     {
       id: "law-books",
@@ -215,7 +215,7 @@ export const experience = {
     label: "My Holistic CV",
     heading: "My Holistic CV",
     intro:
-      "A fuller view of roles, ventures and commitments across education, sport, technology and community. Dates verified from LinkedIn where listed.",
+      "A fuller view of roles, ventures and commitments across education, sports, technology and community. Dates verified from LinkedIn where listed.",
     source: "https://www.linkedin.com/in/lloyd-dwaah-026531268",
     entries: [
       {

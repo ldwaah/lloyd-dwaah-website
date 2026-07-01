@@ -168,5 +168,5 @@ The head now rotates toward the cursor, lit by the same studio environment.
 
 ---
 
-Built to grow alongside the work — across leadership, education, sport, technology
+Built to grow alongside the work — across leadership, education, sports, technology
 and writing.

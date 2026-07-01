@@ -19,7 +19,7 @@ export default function Footer() {
             </Link>
             <p className="mt-4 text-sm leading-relaxed text-muted">
               Building environments where people can flourish across education,
-              sport, technology, coaching and writing.
+              sports, technology, coaching and writing.
             </p>
           </div>
 
