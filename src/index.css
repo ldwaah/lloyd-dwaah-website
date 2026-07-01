@@ -192,11 +192,16 @@
     }
   }
 
-  /* Hero portrait ambient video — never show native play UI (iOS Safari) */
+  /* Branded inline videos — never show native play UI (iOS Safari) */
+  .brand-video,
   .hero-portrait-video {
     -webkit-tap-highlight-color: transparent;
   }
 
+  .brand-video::-webkit-media-controls,
+  .brand-video::-webkit-media-controls-enclosure,
+  .brand-video::-webkit-media-controls-start-playback-button,
+  .brand-video::-webkit-media-controls-overlay-play-button,
   .hero-portrait-video::-webkit-media-controls,
   .hero-portrait-video::-webkit-media-controls-enclosure,
   .hero-portrait-video::-webkit-media-controls-start-playback-button,

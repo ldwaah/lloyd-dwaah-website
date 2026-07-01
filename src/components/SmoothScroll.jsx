@@ -34,14 +34,14 @@ export function SmoothScrollProvider({ children }) {
     const touch = isTouchDevice();
 
     const lenis = new Lenis({
-      lerp: touch ? 0.14 : 0.11,
-      duration: touch ? 0.55 : 0.6,
+      lerp: touch ? 0.18 : 0.14,
+      duration: touch ? 0.72 : 0.78,
       easing: (t) => Math.min(1, 1.001 - 2 ** (-10 * t)),
       smoothWheel: true,
       syncTouch: touch,
-      syncTouchLerp: touch ? 0.18 : 0.12,
-      touchMultiplier: touch ? 1.1 : 1,
-      wheelMultiplier: touch ? 1 : 1.05,
+      syncTouchLerp: touch ? 0.22 : 0.16,
+      touchMultiplier: touch ? 0.82 : 1,
+      wheelMultiplier: touch ? 1 : 0.72,
       content: document.body,
       autoResize: true,
     });

@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { prefersReducedMotion } from "../lib/input.js";
+import { useInlineAutoplayVideo } from "../lib/useInlineAutoplayVideo.js";
 import { refreshScrollTriggersNow } from "../lib/gsap.js";
 import { resetScrollPosition } from "../lib/scrollReset.js";
 
@@ -26,7 +27,6 @@ export function markPublicationsIntroSeen() {
 }
 
 export default function PublicationsIntro({ onComplete, onFadeStart }) {
-  const videoRef = useRef(null);
   const fadeStarted = useRef(false);
   const [visible, setVisible] = useState(true);
 
@@ -36,6 +36,10 @@ export default function PublicationsIntro({ onComplete, onFadeStart }) {
     onFadeStart?.();
     setVisible(false);
   };
+
+  const { videoRef, playing, mounted } = useInlineAutoplayVideo({
+    enabled: !prefersReducedMotion(),
+  });
 
   const handleTimeUpdate = () => {
     const video = videoRef.current;
@@ -84,20 +88,36 @@ export default function PublicationsIntro({ onComplete, onFadeStart }) {
           aria-modal="true"
           aria-label="Publications introduction"
         >
-          <video
-            ref={videoRef}
-            src={INTRO_VIDEO}
-            poster={INTRO_POSTER}
-            muted
-            playsInline
-            autoPlay
-            preload="auto"
-            onTimeUpdate={handleTimeUpdate}
-            onEnded={beginCrossfade}
-            onError={beginCrossfade}
+          <img
+            src={INTRO_POSTER}
+            alt=""
+            aria-hidden="true"
             className="pointer-events-none absolute left-1/2 top-1/2 h-full w-full min-h-full min-w-full -translate-x-1/2 -translate-y-1/2 object-cover"
             style={{ objectPosition: "center center" }}
           />
+
+          {mounted && (
+            <video
+              ref={videoRef}
+              src={INTRO_VIDEO}
+              muted
+              playsInline
+              autoPlay
+              preload="auto"
+              disablePictureInPicture
+              disableRemotePlayback
+              onTimeUpdate={handleTimeUpdate}
+              onEnded={beginCrossfade}
+              onError={beginCrossfade}
+              className="brand-video pointer-events-none absolute left-1/2 top-1/2 h-full w-full min-h-full min-w-full -translate-x-1/2 -translate-y-1/2 object-cover transition-opacity duration-500 ease-out"
+              style={{
+                objectPosition: "center center",
+                opacity: playing ? 1 : 0,
+                visibility: playing ? "visible" : "hidden",
+                clipPath: playing ? "none" : "inset(100%)",
+              }}
+            />
+          )}
 
           <button
             type="button"

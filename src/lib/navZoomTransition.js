@@ -40,13 +40,13 @@ export function zoomFromNavLink(anchor, onComplete) {
     width: window.innerWidth,
     height: window.innerHeight,
     borderRadius: 0,
-    duration: 0.34,
+    duration: 0.26,
     ease,
     onComplete: () => {
       gsap.to(labelEl, {
         scale: 1.06,
         opacity: 0,
-        duration: 0.14,
+        duration: 0.1,
         ease: "power2.in",
         onComplete: () => {
           overlay.remove();

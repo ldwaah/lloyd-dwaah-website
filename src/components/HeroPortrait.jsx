@@ -1,6 +1,7 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { heroScrollState } from "../lib/heroScroll.js";
 import { usePointerRef, prefersReducedMotion, isTouchDevice } from "../lib/input.js";
+import { useInlineAutoplayVideo } from "../lib/useInlineAutoplayVideo.js";
 import { avatarConfig } from "../data/site.js";
 import HeroTexture from "./HeroTexture.jsx";
 import HeroCursorField from "./HeroCursorField.jsx";
@@ -30,12 +31,12 @@ const canUsePortraitVideo = () =>
 export default function HeroPortrait({ src, onReady }) {
   const stageRef = useRef(null);
   const portraitRef = useRef(null);
-  const videoRef = useRef(null);
   const washRef = useRef(null);
   const pointer = usePointerRef();
   const readyNotified = useRef(false);
-  const [videoPlaying, setVideoPlaying] = useState(false);
-  const [mountVideo, setMountVideo] = useState(canUsePortraitVideo);
+  const { videoRef, playing: videoPlaying, mounted: mountVideo } = useInlineAutoplayVideo({
+    enabled: canUsePortraitVideo(),
+  });
 
   useEffect(() => {
     const notify = () => {
@@ -87,83 +88,6 @@ export default function HeroPortrait({ src, onReady }) {
     return () => cancelAnimationFrame(frame);
   }, [pointer]);
 
-  useEffect(() => {
-    if (!mountVideo) return undefined;
-
-    const video = videoRef.current;
-    if (!video) return undefined;
-
-    let cancelled = false;
-    let playAttempts = 0;
-    const MAX_PLAY_ATTEMPTS = 6;
-
-    const armInlineAutoplay = () => {
-      video.muted = true;
-      video.defaultMuted = true;
-      video.playsInline = true;
-      video.setAttribute("muted", "");
-      video.setAttribute("playsinline", "");
-      video.setAttribute("webkit-playsinline", "");
-    };
-
-    const dropVideo = () => {
-      if (cancelled) return;
-      setMountVideo(false);
-      setVideoPlaying(false);
-    };
-
-    const tryPlay = () => {
-      if (cancelled || !video) return;
-      playAttempts += 1;
-      armInlineAutoplay();
-
-      const playPromise = video.play();
-      if (!playPromise) return;
-
-      playPromise
-        .then(() => {
-          if (!cancelled) setVideoPlaying(true);
-        })
-        .catch(() => {
-          if (cancelled) return;
-          if (playAttempts >= MAX_PLAY_ATTEMPTS) dropVideo();
-        });
-    };
-
-    const onPlaying = () => {
-      if (!cancelled) setVideoPlaying(true);
-    };
-
-    const onCanPlay = () => tryPlay();
-    const onLoadedData = () => tryPlay();
-    const onVisibility = () => {
-      if (document.visibilityState === "visible" && video.paused) tryPlay();
-    };
-
-    armInlineAutoplay();
-    video.addEventListener("playing", onPlaying);
-    video.addEventListener("canplay", onCanPlay);
-    video.addEventListener("loadeddata", onLoadedData);
-    document.addEventListener("visibilitychange", onVisibility);
-    window.addEventListener("pageshow", onVisibility);
-
-    tryPlay();
-
-    const failTimer = window.setTimeout(() => {
-      if (!cancelled && video.paused) dropVideo();
-    }, 2800);
-
-    return () => {
-      cancelled = true;
-      window.clearTimeout(failTimer);
-      video.removeEventListener("playing", onPlaying);
-      video.removeEventListener("canplay", onCanPlay);
-      video.removeEventListener("loadeddata", onLoadedData);
-      document.removeEventListener("visibilitychange", onVisibility);
-      window.removeEventListener("pageshow", onVisibility);
-    };
-  }, [mountVideo]);
-
   return (
     <div
       className="pointer-events-none absolute inset-0 z-0 flex items-start justify-center overflow-hidden px-5 pb-28 pt-14 md:px-10 md:pb-36 md:pt-16"
@@ -194,7 +118,7 @@ export default function HeroPortrait({ src, onReady }) {
             preload="auto"
             disablePictureInPicture
             disableRemotePlayback
-            className="hero-portrait-video pointer-events-none absolute inset-0 h-full w-full object-contain object-top transition-opacity duration-700 ease-out"
+            className="brand-video hero-portrait-video pointer-events-none absolute inset-0 h-full w-full object-contain object-top transition-opacity duration-700 ease-out"
             style={{
               opacity: videoPlaying ? 1 : 0,
               visibility: videoPlaying ? "visible" : "hidden",
