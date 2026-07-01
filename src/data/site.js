@@ -198,7 +198,7 @@ export const experience = {
       summary:
         "Managed a sports centre, coaching and mentoring young people, running a private academy and an online tuition programme to support their learning.",
       detail:
-        "Partnerships with Herbalife and a physiotherapy company supported young people's health and performance. Built pathways into post-16 education rooted in sport, discipline and personal growth.",
+        "Partnerships with Herbalife Nutrition and RehabBorough supported young people's health and performance. Built pathways into post-16 education rooted in sport, discipline and personal growth.",
     },
     {
       id: "law-books",
