@@ -1,6 +1,7 @@
 import Scene3D from "../components/Scene3D.jsx";
 import SiteNav from "../components/SiteNav.jsx";
 import SiteFooter from "../components/SiteFooter.jsx";
+import Reveal from "../components/Reveal.jsx";
 import { avatarConfig, home, ethos } from "../data/site.js";
 import { isMobile, isTouchDevice, prefersReducedMotion } from "../lib/input.js";
 
@@ -48,39 +49,42 @@ export default function HomeOnly() {
 
       {/* Ethos */}
       <section className="relative z-10 border-t border-line bg-hq-deep">
-        <div className="section-pad mx-auto flex min-h-[70svh] max-w-4xl flex-col justify-center text-center">
+        <Reveal y={20} className="section-pad mx-auto flex min-h-[70svh] max-w-4xl flex-col justify-center text-center">
           <p className="font-serif text-statement text-ink text-balance">{home.ethosStatement}</p>
-        </div>
+        </Reveal>
       </section>
 
       {/* Core principles */}
       <section id="principles" className="relative z-10 border-t border-line bg-hq-deep">
         <div className="section-pad mx-auto max-w-4xl">
-          <span className="eyebrow">{ethos.principlesHeading}</span>
-          <h2 className="mt-8 font-serif text-hero text-ink">{ethos.principlesIntro}</h2>
+          <Reveal y={20}>
+            <span className="eyebrow">{ethos.principlesHeading}</span>
+          </Reveal>
+          <Reveal delay={0.08} y={24}>
+            <h2 className="mt-8 font-serif text-hero text-ink">{ethos.principlesIntro}</h2>
+          </Reveal>
 
           <div className="mt-20 space-y-0">
-            {ethos.principles.map((principle) => (
-              <article
-                key={principle.id}
-                className="group border-t border-line py-10 transition-colors duration-500 hover:bg-white/[0.02] md:py-14"
-              >
-                <div className="flex flex-col gap-4 md:flex-row md:items-start md:gap-12">
-                  <span className="font-serif text-sm tracking-widest text-accent/50">
-                    {principle.no}
-                  </span>
-                  <div className="flex-1">
-                    <h3 className="font-serif text-2xl text-ink md:text-3xl">{principle.title}</h3>
-                    <p className="mt-3 text-lg text-muted">{principle.summary}</p>
-                    <p className="mt-0 max-h-0 overflow-hidden text-base leading-relaxed text-body opacity-0 transition-all duration-500 group-hover:mt-4 group-hover:max-h-40 group-hover:opacity-100">
-                      {principle.detail}
-                    </p>
-                    <p className="mt-4 text-[10px] font-light uppercase tracking-[0.18em] text-muted/70 opacity-0 transition-opacity duration-500 group-hover:opacity-100">
-                      {principle.tags.join(" · ")}
-                    </p>
+            {ethos.principles.map((principle, index) => (
+              <Reveal key={principle.id} delay={index * 0.06} y={20}>
+                <article className="group border-t border-line py-10 transition-colors duration-500 hover:bg-white/[0.02] md:py-14">
+                  <div className="flex flex-col gap-4 md:flex-row md:items-start md:gap-12">
+                    <span className="font-serif text-sm tracking-widest text-accent/50">
+                      {principle.no}
+                    </span>
+                    <div className="flex-1">
+                      <h3 className="font-serif text-2xl text-ink md:text-3xl">{principle.title}</h3>
+                      <p className="mt-3 text-lg text-muted">{principle.summary}</p>
+                      <p className="mt-0 max-h-0 overflow-hidden text-base leading-relaxed text-body opacity-0 transition-all duration-500 group-hover:mt-4 group-hover:max-h-40 group-hover:opacity-100">
+                        {principle.detail}
+                      </p>
+                      <p className="mt-4 text-[10px] font-light uppercase tracking-[0.18em] text-muted/70 opacity-0 transition-opacity duration-500 group-hover:opacity-100">
+                        {principle.tags.join(" · ")}
+                      </p>
+                    </div>
                   </div>
-                </div>
-              </article>
+                </article>
+              </Reveal>
             ))}
           </div>
         </div>
