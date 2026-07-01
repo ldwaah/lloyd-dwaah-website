@@ -1,153 +1,26 @@
 import { useCallback, useEffect, useRef, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 import { ethos } from "../data/site.js";
+import { prefersReducedMotion } from "../lib/input.js";
 
-const DEFAULT_ID = "leadership";
+const principles = ethos.principles;
+const SWIPE_THRESHOLD = 48;
 
-/** Higgsfield slot — matte black double-bridge frame, front-on, navy backdrop. */
-export const SUNGLASSES_BACKGROUND = "#16242f";
-
-export const SUNGLASSES_BASE_ASSETS = [
-  "/assets/principles/sunglasses-base.webp",
-  "/assets/principles/sunglasses-base.png",
-  "/assets/principles/sunglasses.svg",
-];
-
-/** @deprecated Use SUNGLASSES_BASE_ASSETS — kept for any external imports */
-export const HIGGSFIELD_SUNGLASSES_SLOT = SUNGLASSES_BASE_ASSETS[SUNGLASSES_BASE_ASSETS.length - 1];
-
-/** Lens positions tuned to sunglasses.svg / front-on Higgsfield frame (2:1). */
-const LENS_LAYOUT = {
-  left: { left: "13.5%", top: "19%", width: "34%", height: "46%" },
-  right: { left: "52.5%", top: "19%", width: "34%", height: "46%" },
-};
-
-const LENS_CROSSFADE_MS = 650;
-
-function useCascadeImage(candidates, resetKey) {
-  const [index, setIndex] = useState(0);
-  const exhausted = index >= candidates.length;
-
-  const onError = useCallback(() => {
-    setIndex((current) => current + 1);
-  }, []);
-
-  useEffect(() => {
-    setIndex(0);
-  }, [resetKey ?? candidates.join("|")]);
-
-  return {
-    src: exhausted ? null : candidates[index],
-    onError,
-    exhausted,
-  };
+function trimSummary(text, maxSentences = 2) {
+  const sentences = text.match(/[^.!?]+[.!?]+/g);
+  if (!sentences || sentences.length <= maxSentences) return text;
+  return sentences.slice(0, maxSentences).join(" ").trim();
 }
 
-function GlassReflection() {
-  return (
-    <>
-      <span
-        className="pointer-events-none absolute inset-0 opacity-75"
-        style={{
-          background:
-            "linear-gradient(135deg, rgba(255,255,255,0.5) 0%, transparent 38%, rgba(0,0,0,0.14) 100%)",
-        }}
-        aria-hidden="true"
-      />
-      <span
-        className="pointer-events-none absolute left-[12%] top-[10%] h-[28%] w-[22%] rounded-full opacity-35 blur-[1px]"
-        style={{ background: "linear-gradient(160deg, rgba(255,255,255,0.85), transparent)" }}
-        aria-hidden="true"
-      />
-    </>
-  );
-}
-
-function CssLensPair({ shadeSwatch }) {
-  return (
-    <>
-      {(["left", "right"]).map((side) => (
-        <div
-          key={side}
-          className="absolute overflow-hidden"
-          style={{
-            ...LENS_LAYOUT[side],
-            borderRadius: "48% / 42%",
-            boxShadow: "inset 0 2px 8px rgba(0,0,0,0.35), inset 0 -1px 4px rgba(255,255,255,0.08)",
-          }}
-        >
-          <div
-            className="absolute inset-0"
-            style={{ background: shadeSwatch, opacity: 0.9 }}
-          />
-          <GlassReflection />
-        </div>
-      ))}
-    </>
-  );
-}
-
-function ShadeLensLayer({ shadeSwatch, isActive }) {
-  return (
-    <div
-      className="pointer-events-none absolute inset-0 transition-opacity ease-in-out"
-      style={{
-        opacity: isActive ? 1 : 0,
-        transitionDuration: `${LENS_CROSSFADE_MS}ms`,
-      }}
-      aria-hidden={!isActive}
-    >
-      <CssLensPair shadeSwatch={shadeSwatch} />
-    </div>
-  );
-}
-
-function SunglassesVisual({ principles, activeId }) {
-  const { src: baseSrc, onError: onBaseError } = useCascadeImage(SUNGLASSES_BASE_ASSETS);
-
-  return (
-    <div
-      className="relative mx-auto flex w-full max-w-md items-center justify-center"
-      data-higgsfield-slot="sunglasses-visual"
-      role="img"
-      aria-label="Sunglasses"
-    >
-      <div
-        className="relative aspect-[2/1] w-full max-w-sm overflow-hidden rounded-xl"
-        style={{ backgroundColor: SUNGLASSES_BACKGROUND }}
-      >
-        {baseSrc ? (
-          <img
-            src={baseSrc}
-            alt=""
-            className="absolute inset-0 h-full w-full object-contain"
-            onError={onBaseError}
-          />
-        ) : null}
-
-        <div className="absolute inset-0">
-          {principles.map((principle) => (
-            <ShadeLensLayer
-              key={principle.id}
-              shadeSwatch={principle.shadeSwatch}
-              isActive={principle.id === activeId}
-            />
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function CarouselArrow({ direction, onClick, disabled }) {
+function CarouselArrow({ direction, onClick, label }) {
   return (
     <button
       type="button"
       onClick={onClick}
-      disabled={disabled}
-      aria-label={direction === "left" ? "Previous shade" : "Next shade"}
-      className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-line/70 text-muted/70 transition-colors hover:border-line hover:text-ink disabled:pointer-events-none disabled:opacity-25"
+      aria-label={label}
+      className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-line/70 text-muted/80 transition-colors hover:border-line hover:text-ink md:h-10 md:w-10"
     >
-      <svg viewBox="0 0 16 16" className="h-3 w-3" fill="none" stroke="currentColor" strokeWidth="1.5">
+      <svg viewBox="0 0 16 16" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="1.5">
         {direction === "left" ? (
           <path d="M10 3 5 8l5 5" strokeLinecap="round" strokeLinejoin="round" />
         ) : (
@@ -158,122 +31,94 @@ function CarouselArrow({ direction, onClick, disabled }) {
   );
 }
 
-function GlassSwatch({ shadeSwatch, isActive }) {
+function DotIndicators({ count, activeIndex, onSelect }) {
   return (
-    <span
-      className={`flex h-8 w-8 items-center justify-center rounded-full border transition-[border-color,box-shadow] duration-300 ${
-        isActive
-          ? "border-white/55 shadow-[0_0_0_1px_rgba(255,255,255,0.2)]"
-          : "border-line/45 group-hover:border-line/70"
-      }`}
-    >
-      <span
-        className="relative h-5 w-5 overflow-hidden rounded-full transition-transform duration-300"
-        style={{
-          background: shadeSwatch,
-          boxShadow:
-            "inset 0 1px 2px rgba(255,255,255,0.45), inset 0 -1px 2px rgba(0,0,0,0.22), 0 1px 2px rgba(0,0,0,0.18)",
-          transform: isActive ? "scale(1.05)" : "scale(1)",
-        }}
-      >
-        <span
-          className="pointer-events-none absolute inset-0 rounded-full opacity-70"
-          style={{
-            background:
-              "linear-gradient(135deg, rgba(255,255,255,0.55) 0%, transparent 42%, rgba(0,0,0,0.12) 100%)",
-          }}
-          aria-hidden="true"
-        />
-      </span>
-    </span>
-  );
-}
-
-function ShadeCarousel({ principles, activeId, onSelect }) {
-  const trackRef = useRef(null);
-  const activeIndex = principles.findIndex((p) => p.id === activeId);
-
-  const scrollToIndex = (index) => {
-    const track = trackRef.current;
-    const item = track?.children[index];
-    if (item) {
-      item.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
-    }
-  };
-
-  const selectIndex = (index) => {
-    const clamped = Math.max(0, Math.min(principles.length - 1, index));
-    onSelect(principles[clamped].id);
-    scrollToIndex(clamped);
-  };
-
-  useEffect(() => {
-    scrollToIndex(activeIndex);
-  }, [activeIndex]);
-
-  return (
-    <div className="mx-auto mt-10 max-w-xl">
-      <p className="text-center text-[11px] font-medium tracking-[0.14em] text-muted/75">
-        Select shade
-      </p>
-
-      <div className="mt-4 flex items-center gap-3">
-        <CarouselArrow
-          direction="left"
-          disabled={activeIndex <= 0}
-          onClick={() => selectIndex(activeIndex - 1)}
-        />
-
-        <div
-          ref={trackRef}
-          className="flex min-w-0 flex-1 snap-x snap-mandatory gap-4 overflow-x-auto scroll-smooth px-1 py-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-        >
-          {principles.map((principle, index) => {
-            const isActive = principle.id === activeId;
-            return (
-              <button
-                key={principle.id}
-                type="button"
-                onClick={() => onSelect(principle.id)}
-                aria-pressed={isActive}
-                aria-label={`Shade ${index + 1}`}
-                className="group flex shrink-0 snap-center px-1"
-              >
-                <GlassSwatch shadeSwatch={principle.shadeSwatch} isActive={isActive} />
-              </button>
-            );
-          })}
-        </div>
-
-        <CarouselArrow
-          direction="right"
-          disabled={activeIndex >= principles.length - 1}
-          onClick={() => selectIndex(activeIndex + 1)}
-        />
-      </div>
+    <div className="mt-10 flex justify-center gap-2" role="tablist" aria-label="Principle slides">
+      {Array.from({ length: count }, (_, index) => {
+        const isActive = index === activeIndex;
+        return (
+          <button
+            key={index}
+            type="button"
+            role="tab"
+            aria-selected={isActive}
+            aria-label={`Go to principle ${index + 1} of ${count}`}
+            onClick={() => onSelect(index)}
+            className={`h-1 rounded-full transition-all duration-300 ${
+              isActive ? "w-5 bg-accent/60" : "w-1 bg-line hover:bg-muted/50"
+            }`}
+          />
+        );
+      })}
     </div>
   );
 }
 
-function ActivePrincipleTitle({ principle }) {
+function PrincipleContent({ principle }) {
   return (
-    <h2
-      key={principle.id}
-      className="mx-auto mt-12 max-w-3xl font-serif text-hero text-ink text-balance"
-      aria-live="polite"
-    >
-      {principle.title}
-    </h2>
+    <>
+      <h3 className="font-serif text-statement text-ink text-balance">{principle.title}</h3>
+      <p className="mx-auto mt-4 max-w-lg text-pretty text-base leading-relaxed text-body md:text-lg">
+        {trimSummary(principle.summary)}
+      </p>
+    </>
   );
 }
 
 export default function CorePrinciples() {
-  const [activeId, setActiveId] = useState(DEFAULT_ID);
-  const active =
-    ethos.principles.find((p) => p.id === activeId) ?? ethos.principles[0];
+  const [activeIndex, setActiveIndex] = useState(0);
+  const touchStartX = useRef(null);
+  const sectionRef = useRef(null);
+  const reduced = prefersReducedMotion();
+
+  const goTo = useCallback((index) => {
+    const len = principles.length;
+    setActiveIndex(((index % len) + len) % len);
+  }, []);
+
+  const goPrev = useCallback(() => goTo(activeIndex - 1), [activeIndex, goTo]);
+  const goNext = useCallback(() => goTo(activeIndex + 1), [activeIndex, goTo]);
+
+  useEffect(() => {
+    const onKeyDown = (event) => {
+      if (!sectionRef.current?.contains(document.activeElement) && document.activeElement !== document.body) {
+        return;
+      }
+      if (event.key === "ArrowLeft") {
+        event.preventDefault();
+        goPrev();
+      } else if (event.key === "ArrowRight") {
+        event.preventDefault();
+        goNext();
+      }
+    };
+
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [goPrev, goNext]);
+
+  const onTouchStart = (event) => {
+    touchStartX.current = event.touches[0].clientX;
+  };
+
+  const onTouchEnd = (event) => {
+    if (touchStartX.current === null) return;
+    const delta = event.changedTouches[0].clientX - touchStartX.current;
+    if (delta > SWIPE_THRESHOLD) goPrev();
+    else if (delta < -SWIPE_THRESHOLD) goNext();
+    touchStartX.current = null;
+  };
+
+  const active = principles[activeIndex];
 
   return (
-    <section id="principles" className="relative z-10 overflow-hidden border-t border-line bg-hq-deep">
+    <section
+      id="principles"
+      ref={sectionRef}
+      className="relative z-10 overflow-hidden border-t border-line bg-hq-deep"
+      aria-roledescription="carousel"
+      aria-label={ethos.principlesHeading}
+    >
       <div
         className="pointer-events-none absolute inset-0 opacity-40"
         aria-hidden="true"
@@ -284,15 +129,53 @@ export default function CorePrinciples() {
       />
 
       <div className="section-pad relative mx-auto max-w-4xl text-center">
-        <SunglassesVisual principles={ethos.principles} activeId={activeId} />
+        <span className="eyebrow eyebrow-center mx-auto max-w-fit">{ethos.principlesHeading}</span>
+        <h2 className="mt-6 font-serif text-hero text-ink text-balance">{ethos.principlesIntro}</h2>
 
-        <ShadeCarousel
-          principles={ethos.principles}
-          activeId={activeId}
-          onSelect={setActiveId}
-        />
+        <div className="mt-14 md:mt-20">
+          <div className="flex items-center justify-center gap-4 md:gap-8">
+            <CarouselArrow
+              direction="left"
+              onClick={goPrev}
+              label={`Previous principle: ${principles[(activeIndex - 1 + principles.length) % principles.length].title}`}
+            />
 
-        <ActivePrincipleTitle principle={active} />
+            <div
+              className="relative min-h-[9.5rem] w-full max-w-xl touch-pan-y"
+              onTouchStart={onTouchStart}
+              onTouchEnd={onTouchEnd}
+              aria-live="polite"
+              aria-atomic="true"
+            >
+              {reduced ? (
+                <div className="px-2">
+                  <PrincipleContent principle={active} />
+                </div>
+              ) : (
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={active.id}
+                    initial={{ opacity: 0, y: 14 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+                    className="px-2"
+                  >
+                    <PrincipleContent principle={active} />
+                  </motion.div>
+                </AnimatePresence>
+              )}
+            </div>
+
+            <CarouselArrow
+              direction="right"
+              onClick={goNext}
+              label={`Next principle: ${principles[(activeIndex + 1) % principles.length].title}`}
+            />
+          </div>
+
+          <DotIndicators count={principles.length} activeIndex={activeIndex} onSelect={goTo} />
+        </div>
       </div>
     </section>
   );
