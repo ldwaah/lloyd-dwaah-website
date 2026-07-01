@@ -33,7 +33,6 @@ export default function PageWithPreloader({ children, variant = "page", sceneRea
         variant={variant}
         sceneReady={sceneReady}
         onComplete={() => {
-          resetScrollPosition();
           setPreloaderActive(false);
           setBooted(true);
           requestAnimationFrame(() => refreshScrollTriggersNow());

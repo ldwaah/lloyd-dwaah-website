@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { gsap, ScrollTrigger } from "../lib/gsap.js";
 import {
   shouldAnimateScroll,
@@ -7,6 +7,7 @@ import {
 } from "../lib/gsap.js";
 import { ethos } from "../data/site.js";
 import { prefersReducedMotion } from "../lib/input.js";
+import { getScrollOffset } from "../lib/scrollReset.js";
 
 const principles = ethos.principles;
 const SWIPE_THRESHOLD = 48;
@@ -88,6 +89,7 @@ function DotIndicators({ count, activeIndex, onSelect }) {
 export default function CorePrinciples() {
   const [activeIndex, setActiveIndex] = useState(0);
   const touchStartX = useRef(null);
+  const lockedScrollY = useRef(null);
   const sectionRef = useRef(null);
   const headerBlockRef = useRef(null);
   const carouselRef = useRef(null);
@@ -114,8 +116,21 @@ export default function CorePrinciples() {
 
   const navigateTo = useCallback((index) => {
     cancelScheduledScrollRefresh();
+    lockedScrollY.current = getScrollOffset();
     setActiveIndex(wrapIndex(index));
   }, []);
+
+  useLayoutEffect(() => {
+    if (lockedScrollY.current === null) return;
+    const y = lockedScrollY.current;
+    lockedScrollY.current = null;
+    const lenis = window.__lenis;
+    if (lenis) {
+      lenis.scrollTo(y, { immediate: true });
+    } else {
+      window.scrollTo(0, y);
+    }
+  }, [activeIndex]);
 
   const goPrev = useCallback(() => navigateTo(activeIndex - 1), [activeIndex, navigateTo]);
   const goNext = useCallback(() => navigateTo(activeIndex + 1), [activeIndex, navigateTo]);

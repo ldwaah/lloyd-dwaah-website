@@ -10,6 +10,7 @@
   html {
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
+    overscroll-behavior: none;
   }
 
   html.lenis.lenis-smooth {
@@ -28,6 +29,7 @@
   body {
     @apply bg-hq text-body font-sans;
     overflow-x: hidden;
+    overscroll-behavior: none;
   }
 
   /* Sitewide film-grain — fine fractal noise via soft-light so it reads as

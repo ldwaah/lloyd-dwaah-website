@@ -1,37 +1,37 @@
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
-const DEBOUNCE_MS = 200;
-const HEIGHT_THRESHOLD = 12;
-const SCROLL_DRIFT_THRESHOLD = 2;
+const DEBOUNCE_MS = 250;
+const HEIGHT_THRESHOLD = 24;
 
 let refreshTimer = null;
 let lastBodyHeight = 0;
+let userScrolling = false;
+let scrollIdleTimer = null;
 
-function getScrollY() {
-  if (window.__lenis) return window.__lenis.scroll;
-  return window.scrollY;
+function isUserScrolling() {
+  if (userScrolling) return true;
+  const lenis = window.__lenis;
+  return !!lenis?.isScrolling;
 }
 
-function setScrollY(y) {
-  if (window.__lenis) {
-    window.__lenis.scrollTo(y, { immediate: true });
-  } else {
-    window.scrollTo(0, y);
-  }
+export function markUserScrolling() {
+  userScrolling = true;
+  if (scrollIdleTimer) clearTimeout(scrollIdleTimer);
+  scrollIdleTimer = window.setTimeout(() => {
+    scrollIdleTimer = null;
+    userScrolling = false;
+  }, 180);
 }
 
 function runScrollRefresh({ resizeLenis = true } = {}) {
-  const savedScroll = getScrollY();
+  if (isUserScrolling()) return;
 
   if (resizeLenis && window.__lenis) {
     window.__lenis.resize();
   }
 
-  ScrollTrigger.refresh();
-
-  if (Math.abs(getScrollY() - savedScroll) > SCROLL_DRIFT_THRESHOLD) {
-    setScrollY(savedScroll);
-  }
+  // Safe refresh — recalculate triggers without forcing scroll position.
+  ScrollTrigger.refresh(true);
 }
 
 /**
@@ -68,5 +68,10 @@ export function cancelScheduledScrollRefresh() {
   if (refreshTimer) {
     clearTimeout(refreshTimer);
     refreshTimer = null;
+  }
+  if (scrollIdleTimer) {
+    clearTimeout(scrollIdleTimer);
+    scrollIdleTimer = null;
+    userScrolling = false;
   }
 }

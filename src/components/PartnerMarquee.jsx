@@ -70,8 +70,8 @@ export default function PartnerMarquee() {
           end: "+=65%",
           pin,
           pinSpacing: true,
-          scrub: 0.45,
-          anticipatePin: 1,
+          scrub: 0.55,
+          anticipatePin: 0,
           invalidateOnRefresh: true,
         },
       });

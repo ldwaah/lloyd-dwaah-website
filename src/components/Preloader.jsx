@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { avatarConfig } from "../data/site.js";
 import { prefersReducedMotion } from "../lib/input.js";
-import { resetScrollPosition } from "../lib/scrollReset.js";
 import { splitElementChars } from "../lib/splitText.js";
 
 const HOME_MIN_MS = 1200;
@@ -175,7 +174,6 @@ export default function Preloader({ active, sceneReady, onComplete, variant = "h
   useEffect(() => {
     if (!active || visible) return undefined;
     const timer = window.setTimeout(() => {
-      resetScrollPosition();
       document.body.style.overflow = "";
       finish.current();
     }, 80);
@@ -183,9 +181,14 @@ export default function Preloader({ active, sceneReady, onComplete, variant = "h
   }, [active, visible]);
 
   useEffect(() => {
-    if (!active || !visible) return;
+    if (!active || !visible) return undefined;
+
+    const lenis = window.__lenis;
+    lenis?.stop();
     document.body.style.overflow = "hidden";
+
     return () => {
+      lenis?.start();
       document.body.style.overflow = "";
     };
   }, [active, visible]);

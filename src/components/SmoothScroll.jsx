@@ -6,9 +6,9 @@ import "lenis/dist/lenis.css";
 import { isTouchDevice, prefersReducedMotion } from "../lib/input.js";
 import { resetScrollPosition, enableManualScrollRestoration } from "../lib/scrollReset.js";
 import {
-  scheduleScrollRefresh,
   refreshScrollTriggersNow,
   cancelScheduledScrollRefresh,
+  markUserScrolling,
 } from "../lib/scrollRefresh.js";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -34,40 +34,21 @@ export function SmoothScrollProvider({ children }) {
     const touch = isTouchDevice();
 
     const lenis = new Lenis({
-      lerp: touch ? 0.18 : 0.14,
-      duration: touch ? 0.72 : 0.78,
+      lerp: touch ? 0.16 : 0.12,
       easing: (t) => Math.min(1, 1.001 - 2 ** (-10 * t)),
       smoothWheel: true,
-      syncTouch: touch,
-      syncTouchLerp: touch ? 0.22 : 0.16,
-      touchMultiplier: touch ? 0.82 : 1,
-      wheelMultiplier: touch ? 1 : 0.72,
-      content: document.body,
+      syncTouch: false,
+      touchMultiplier: 1,
+      wheelMultiplier: touch ? 1 : 0.85,
+      overscroll: false,
       autoResize: true,
     });
 
     lenisRef.current = lenis;
     window.__lenis = lenis;
 
-    ScrollTrigger.scrollerProxy(document.documentElement, {
-      scrollTop(value) {
-        if (arguments.length) {
-          lenis.scrollTo(value, { immediate: true });
-        }
-        return lenis.scroll;
-      },
-      getBoundingClientRect() {
-        return {
-          top: 0,
-          left: 0,
-          width: window.innerWidth,
-          height: window.innerHeight,
-        };
-      },
-      pinType: document.body.style.transform ? "transform" : "fixed",
-    });
-
     const onScroll = () => {
+      markUserScrolling();
       ScrollTrigger.update();
       window.dispatchEvent(new Event("scroll"));
     };
@@ -86,21 +67,14 @@ export function SmoothScrollProvider({ children }) {
     requestAnimationFrame(onLayoutReady);
     window.addEventListener("load", onLayoutReady);
 
-    const resizeObserver = new ResizeObserver(() => {
-      scheduleScrollRefresh();
-    });
-    resizeObserver.observe(document.body);
-
     return () => {
       window.removeEventListener("load", onLayoutReady);
       cancelScheduledScrollRefresh();
       lenis.off("scroll", onScroll);
-      resizeObserver.disconnect();
       gsap.ticker.remove(lenisRaf);
       lenis.destroy();
       lenisRef.current = null;
       window.__lenis = null;
-      ScrollTrigger.scrollerProxy(document.documentElement, {});
       document.body.style.overflow = "";
     };
   }, []);
