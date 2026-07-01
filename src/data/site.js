@@ -13,6 +13,7 @@ export const avatarConfig = {
   image: "/assets/lloyd-avatar.webp",
   portraitSvg: "/assets/lloyd-portrait.svg",
   video: "/assets/lloyd-avatar.mp4",
+  videoPoster: "/assets/lloyd-portrait.svg",
   glb: "/models/lloyd-head.glb",
   tilt: 8,
 };
@@ -157,7 +158,7 @@ export const ethos = {
       id: "leadership",
       no: "01",
       title: "Leadership & Strategy",
-      shadeLabel: "Polarized grey",
+      shadeLabel: "Polarised grey",
       shadeSwatch:
         "linear-gradient(145deg, #8a9199 0%, #c5cad0 38%, #5f6670 72%, #3f4650 100%)",
       summary: "Building organisations and the cultures that carry them.",

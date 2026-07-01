@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 import { gsap, ScrollTrigger } from "../lib/gsap.js";
-import { shouldAnimateScroll, refreshScrollTriggers } from "../lib/gsap.js";
+import { shouldAnimateScroll, scheduleScrollRefresh } from "../lib/gsap.js";
 import { prefersReducedMotion } from "../lib/input.js";
 
 export function LogoChip({ venture, className = "" }) {
@@ -158,7 +158,7 @@ export default function VentureFlyingLogos({ dockRefs, sectionRefs, slotRefs, it
         logos.forEach((_, index) => {
           if (statesRef.current[index] === "docked") setDocked(index);
         });
-        ScrollTrigger.refresh();
+        scheduleScrollRefresh({ force: true });
       };
 
       window.addEventListener("resize", onRefresh);
@@ -173,7 +173,7 @@ export default function VentureFlyingLogos({ dockRefs, sectionRefs, slotRefs, it
 
     return () => {
       ctx.revert();
-      refreshScrollTriggers();
+      scheduleScrollRefresh({ force: true });
     };
   }, [dockRefs, sectionRefs, slotRefs, items.length]);
 

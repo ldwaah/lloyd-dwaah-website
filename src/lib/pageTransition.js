@@ -32,7 +32,7 @@ export function isInternalNavLink(anchor) {
   return path.startsWith("/");
 }
 
-export function navigateWithTransition(href, { delay = 480 } = {}) {
+export function navigateWithTransition(href, { delay = 360 } = {}) {
   if (prefersReducedMotion()) {
     window.location.href = href;
     return;

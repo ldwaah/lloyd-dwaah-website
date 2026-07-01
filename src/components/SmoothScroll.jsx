@@ -5,6 +5,11 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import "lenis/dist/lenis.css";
 import { isTouchDevice, prefersReducedMotion } from "../lib/input.js";
 import { resetScrollPosition, enableManualScrollRestoration } from "../lib/scrollReset.js";
+import {
+  scheduleScrollRefresh,
+  refreshScrollTriggersNow,
+  cancelScheduledScrollRefresh,
+} from "../lib/scrollRefresh.js";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -29,13 +34,14 @@ export function SmoothScrollProvider({ children }) {
     const touch = isTouchDevice();
 
     const lenis = new Lenis({
-      duration: touch ? 0.9 : 0.8,
+      lerp: touch ? 0.14 : 0.11,
+      duration: touch ? 0.55 : 0.6,
       easing: (t) => Math.min(1, 1.001 - 2 ** (-10 * t)),
       smoothWheel: true,
       syncTouch: touch,
-      syncTouchLerp: 0.08,
-      touchMultiplier: 1.35,
-      wheelMultiplier: touch ? 1 : 1.2,
+      syncTouchLerp: touch ? 0.18 : 0.12,
+      touchMultiplier: touch ? 1.1 : 1,
+      wheelMultiplier: touch ? 1 : 1.05,
       content: document.body,
       autoResize: true,
     });
@@ -73,23 +79,21 @@ export function SmoothScrollProvider({ children }) {
     gsap.ticker.add(lenisRaf);
     gsap.ticker.lagSmoothing(0);
 
-    const refreshScroll = () => {
-      resetScrollPosition();
-      lenis.resize();
-      ScrollTrigger.refresh();
+    const onLayoutReady = () => {
+      refreshScrollTriggersNow();
     };
 
-    requestAnimationFrame(refreshScroll);
-    window.addEventListener("load", refreshScroll);
+    requestAnimationFrame(onLayoutReady);
+    window.addEventListener("load", onLayoutReady);
 
     const resizeObserver = new ResizeObserver(() => {
-      lenis.resize();
-      ScrollTrigger.refresh();
+      scheduleScrollRefresh();
     });
     resizeObserver.observe(document.body);
 
     return () => {
-      window.removeEventListener("load", refreshScroll);
+      window.removeEventListener("load", onLayoutReady);
+      cancelScheduledScrollRefresh();
       lenis.off("scroll", onScroll);
       resizeObserver.disconnect();
       gsap.ticker.remove(lenisRaf);

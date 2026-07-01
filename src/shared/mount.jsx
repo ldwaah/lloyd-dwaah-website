@@ -3,6 +3,7 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import { SmoothScrollProvider } from "../components/SmoothScroll.jsx";
 import PageTransition from "../components/PageTransition.jsx";
+import PageWithPreloader from "../components/PageWithPreloader.jsx";
 import { initPageTransitionLinks } from "../lib/pageTransition.js";
 import { resetScrollPosition, enableManualScrollRestoration } from "../lib/scrollReset.js";
 import "../index.css";
@@ -20,13 +21,23 @@ function MotionShell({ children }) {
   return children;
 }
 
-export function mount(Page) {
+export function mount(Page, { preloader = false } = {}) {
+  const Root = preloader
+    ? function PreloadedPage() {
+        return (
+          <PageWithPreloader variant="page">
+            <Page />
+          </PageWithPreloader>
+        );
+      }
+    : Page;
+
   ReactDOM.createRoot(document.getElementById("root")).render(
     <React.StrictMode>
       <SmoothScrollProvider>
         <MotionShell>
           <PageTransition />
-          <Page />
+          <Root />
         </MotionShell>
       </SmoothScrollProvider>
     </React.StrictMode>

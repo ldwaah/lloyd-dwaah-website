@@ -1,12 +1,15 @@
 import { useCallback, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
+import gsap from "gsap";
 import { menuNav, contact } from "../data/site.js";
 import { StackedLogo } from "./BrandMark.jsx";
 import MenuToggle from "./MenuToggle.jsx";
 import TopographicLines from "./TopographicLines.jsx";
 import { scrollToTarget } from "../lib/scroll.js";
 import { navigateWithTransition, isInternalNavLink } from "../lib/pageTransition.js";
+import { zoomFromNavLink } from "../lib/navZoomTransition.js";
+import { splitElementChars, resetSplitChars } from "../lib/splitText.js";
 import { EmailIcon, LinkedInIcon, SocialIconLink } from "./SocialIcons.jsx";
 
 const ease = [0.22, 1, 0.36, 1];
@@ -50,27 +53,92 @@ function ActiveStrike() {
   );
 }
 
-function handleNavClick(e, href, onClose) {
-  const onHome = normalizePath(window.location.pathname) === "/";
+function MenuNavLink({ item, index, open, onClose }) {
+  const labelRef = useRef(null);
+  const linkRef = useRef(null);
 
-  if ((href === "/#principles" || href === "#principles") && onHome) {
-    e.preventDefault();
-    onClose();
-    requestAnimationFrame(() => {
-      scrollToTarget("#principles", { offset: -72 });
+  useEffect(() => {
+    const label = labelRef.current;
+    if (!label) return undefined;
+
+    if (!open) {
+      resetSplitChars(label);
+      label.textContent = item.label;
+      return undefined;
+    }
+
+    resetSplitChars(label);
+    label.textContent = item.label;
+    const chars = splitElementChars(label);
+    gsap.set(chars, { y: "115%", opacity: 0, rotateX: -42, transformOrigin: "50% 100%" });
+    gsap.to(chars, {
+      y: "0%",
+      opacity: 1,
+      rotateX: 0,
+      duration: 0.55,
+      stagger: 0.022,
+      delay: 0.1 + index * 0.09,
+      ease: [0.22, 1, 0.36, 1],
     });
-    return;
-  }
 
-  const anchor = e.currentTarget;
-  if (anchor instanceof HTMLAnchorElement && isInternalNavLink(anchor)) {
-    e.preventDefault();
+    return () => {
+      gsap.killTweensOf(chars);
+    };
+  }, [open, index, item.label]);
+
+  const handleClick = (e) => {
+    const onHome = normalizePath(window.location.pathname) === "/";
+
+    if ((item.href === "/#principles" || item.href === "#principles") && onHome) {
+      e.preventDefault();
+      onClose();
+      requestAnimationFrame(() => {
+        scrollToTarget("#principles", { offset: -72 });
+      });
+      return;
+    }
+
+    const anchor = linkRef.current;
+    if (anchor && isInternalNavLink(anchor)) {
+      e.preventDefault();
+      onClose();
+      zoomFromNavLink(anchor, () => {
+        navigateWithTransition(anchor.href, { delay: 60 });
+      });
+      return;
+    }
+
     onClose();
-    navigateWithTransition(anchor.href);
-    return;
-  }
+  };
 
-  onClose();
+  const active = isActive(item.href);
+
+  return (
+    <li>
+      <a
+        ref={linkRef}
+        href={item.href}
+        onClick={handleClick}
+        className={`group relative inline-block overflow-hidden px-2 py-1 font-sans text-[clamp(2.25rem,8vw,4.75rem)] font-bold uppercase leading-[0.95] tracking-tight transition-colors duration-300 ${
+          active
+            ? "text-ink"
+            : "text-ink/85 hover:text-accent hover:drop-shadow-[0_0_24px_rgba(94,234,255,0.35)]"
+        }`}
+      >
+        <span
+          ref={labelRef}
+          className="relative z-10 inline-block overflow-hidden"
+          style={{ perspective: "600px" }}
+        >
+          {item.label}
+        </span>
+        {active && <ActiveStrike />}
+        {!active && (
+          <span className="pointer-events-none absolute bottom-2 left-1/2 h-[3px] w-0 -translate-x-1/2 bg-accent transition-all duration-500 group-hover:w-[40%]" />
+        )}
+      </a>
+    </li>
+  );
 }
 
 export default function FullScreenMenu({ open, onClose }) {
@@ -113,7 +181,7 @@ export default function FullScreenMenu({ open, onClose }) {
     const timer = window.setTimeout(() => {
       const first = panelRef.current?.querySelector("a[href]");
       first?.focus();
-    }, 120);
+    }, 200);
 
     window.addEventListener("keydown", trapFocus);
 
@@ -134,9 +202,9 @@ export default function FullScreenMenu({ open, onClose }) {
           role="dialog"
           aria-modal="true"
           aria-label="Site navigation"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
+          initial={{ opacity: 0, scale: 0.98 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, scale: 0.99 }}
           transition={{ duration: 0.45, ease }}
           className="fixed inset-0 z-[200]"
         >
@@ -164,40 +232,9 @@ export default function FullScreenMenu({ open, onClose }) {
               aria-label="Main menu"
             >
               <ul className="space-y-1 text-center md:space-y-3">
-                {menuNav.map((item, i) => {
-                  const active = isActive(item.href);
-                  return (
-                    <motion.li
-                      key={item.href}
-                      initial={{ opacity: 0, y: 48 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: 24 }}
-                      transition={{
-                        duration: 0.6,
-                        delay: 0.12 + i * 0.08,
-                        ease,
-                      }}
-                    >
-                      <a
-                        href={item.href}
-                        onClick={(e) => handleNavClick(e, item.href, onClose)}
-                        className={`group relative inline-block overflow-hidden px-2 py-1 font-sans text-[clamp(2.25rem,8vw,4.75rem)] font-bold uppercase leading-[0.95] tracking-tight transition-all duration-300 ${
-                          active
-                            ? "text-ink"
-                            : "text-ink/85 hover:text-accent hover:drop-shadow-[0_0_24px_rgba(94,234,255,0.35)]"
-                        }`}
-                      >
-                        <span className="relative z-10 inline-block transition-transform duration-300 group-hover:scale-[1.02]">
-                          {item.label}
-                        </span>
-                        {active && <ActiveStrike />}
-                        {!active && (
-                          <span className="pointer-events-none absolute bottom-2 left-1/2 h-[3px] w-0 -translate-x-1/2 bg-accent transition-all duration-500 group-hover:w-[40%]" />
-                        )}
-                      </a>
-                    </motion.li>
-                  );
-                })}
+                {menuNav.map((item, i) => (
+                  <MenuNavLink key={item.href} item={item} index={i} open={open} onClose={onClose} />
+                ))}
               </ul>
             </nav>
 

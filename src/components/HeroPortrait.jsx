@@ -1,18 +1,39 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { heroScrollState } from "../lib/heroScroll.js";
 import { usePointerRef, prefersReducedMotion, isTouchDevice } from "../lib/input.js";
+import { avatarConfig } from "../data/site.js";
 import HeroTexture from "./HeroTexture.jsx";
 import HeroCursorField from "./HeroCursorField.jsx";
 
 /**
- * Scroll- and pointer-driven hero portrait from user SVG asset.
- * Layer: texture → cursor field → portrait → wash.
+ * Scroll- and pointer-driven hero portrait.
+ * Layer: texture → cursor field → portrait stage (SVG + optional masked video) → wash.
+ *
+ * Static portrait uses lloyd-portrait.svg (alpha cutout). Ambient video is H.264 without
+ * an alpha channel — it is clipped to the same SVG silhouette so no rectangular frame shows.
  */
+const PORTRAIT_MASK = `url("${avatarConfig.portraitSvg || "/assets/lloyd-portrait.svg"}")`;
+const portraitMaskStyle = {
+  maskImage: PORTRAIT_MASK,
+  WebkitMaskImage: PORTRAIT_MASK,
+  maskSize: "contain",
+  WebkitMaskSize: "contain",
+  maskRepeat: "no-repeat",
+  WebkitMaskRepeat: "no-repeat",
+  maskPosition: "center top",
+  WebkitMaskPosition: "center top",
+};
+
 export default function HeroPortrait({ src, onReady }) {
+  const stageRef = useRef(null);
   const portraitRef = useRef(null);
+  const videoRef = useRef(null);
   const washRef = useRef(null);
   const pointer = usePointerRef();
   const readyNotified = useRef(false);
+  const [videoVisible, setVideoVisible] = useState(false);
+
+  const enableVideo = !prefersReducedMotion() && Boolean(avatarConfig.video);
 
   useEffect(() => {
     const notify = () => {
@@ -36,19 +57,20 @@ export default function HeroPortrait({ src, onReady }) {
     let frame = 0;
 
     const tick = () => {
-      const portrait = portraitRef.current;
+      const stage = stageRef.current;
       const wash = washRef.current;
-      if (portrait && !reduced) {
+      if (stage && !reduced) {
         const sp = heroScrollState.current;
         const p = pointer.current;
-        const parallax = touch ? 0 : 1;
+        const parallax = touch ? 0.35 : 1;
         const scale = 1 + sp * 0.012;
         const y = sp * -10 + p.y * 8 * parallax;
         const x = p.x * 12 * parallax;
         const opacity = Math.max(0.78, 1 - sp * 0.1);
+        const transform = `translate3d(${x}px, ${y}px, 0) scale(${scale})`;
 
-        portrait.style.transform = `translate3d(${x}px, ${y}px, 0) scale(${scale})`;
-        portrait.style.opacity = `${opacity}`;
+        stage.style.transform = transform;
+        stage.style.opacity = `${opacity}`;
       }
 
       if (wash && !reduced) {
@@ -70,15 +92,36 @@ export default function HeroPortrait({ src, onReady }) {
     >
       <HeroTexture />
       <HeroCursorField />
-      <div className="relative z-[2] flex w-full max-w-[min(92vw,680px)] items-start justify-center md:max-w-[min(78vw,760px)]">
+      <div
+        ref={stageRef}
+        className="relative z-[2] inline-flex max-w-[min(92vw,680px)] items-start justify-center will-change-transform md:max-w-[min(78vw,760px)]"
+      >
         <img
           ref={portraitRef}
           src={src}
           alt=""
           decoding="async"
-          className="max-h-[min(70svh,640px)] max-w-full object-contain object-top will-change-transform md:max-h-[min(76svh,720px)]"
-          style={{ opacity: 1 }}
+          className="block max-h-[min(70svh,640px)] max-w-full object-contain object-top md:max-h-[min(76svh,720px)]"
+          style={{ opacity: enableVideo && videoVisible ? 0 : 1 }}
         />
+        {enableVideo && (
+          <video
+            ref={videoRef}
+            src={avatarConfig.video}
+            poster={avatarConfig.videoPoster}
+            autoPlay
+            muted
+            loop
+            playsInline
+            onCanPlay={() => setVideoVisible(true)}
+            onLoadedData={() => setVideoVisible(true)}
+            className="pointer-events-none absolute inset-0 h-full w-full object-contain object-top transition-opacity duration-700 ease-out"
+            style={{
+              opacity: videoVisible ? 1 : 0,
+              ...portraitMaskStyle,
+            }}
+          />
+        )}
       </div>
       <div
         ref={washRef}

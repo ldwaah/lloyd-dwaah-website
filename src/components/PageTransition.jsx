@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import gsap from "gsap";
 import {
   clearPageEnterTransition,
   isPageEnterTransition,
@@ -16,10 +17,15 @@ export default function PageTransition() {
   useEffect(() => {
     if (phase !== "enter") return undefined;
 
+    const root = document.getElementById("root");
+    if (root) {
+      gsap.fromTo(root, { scale: 1.015, opacity: 0.94 }, { scale: 1, opacity: 1, duration: 0.42, ease });
+    }
+
     const timer = window.setTimeout(() => {
       clearPageEnterTransition();
       setPhase("idle");
-    }, 620);
+    }, 400);
 
     return () => window.clearTimeout(timer);
   }, [phase]);
@@ -50,7 +56,7 @@ export default function PageTransition() {
               : { y: 0 }
           }
           exit={{ y: "-100%" }}
-          transition={{ duration: 0.55, ease }}
+          transition={{ duration: 0.38, ease }}
           className="pointer-events-none fixed inset-0 z-[400] bg-[#203140]"
           aria-hidden="true"
         >

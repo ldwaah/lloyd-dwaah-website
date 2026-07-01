@@ -1,40 +1,14 @@
-import { useLayoutEffect, useRef, useState } from "react";
-import { motion, useInView, useReducedMotion } from "framer-motion";
+import { useEffect, useRef } from "react";
+import { useReducedMotion } from "framer-motion";
 import { prefersReducedMotion } from "../lib/input.js";
-import { easeOut } from "../lib/motion.js";
+import { shouldAnimateScroll } from "../lib/gsap.js";
+import {
+  bindScrollReveal,
+  bindScrollRevealLines,
+  bindScrollRevealStagger,
+} from "../lib/scrollReveal.js";
 
 export const REVEAL_DEFAULT_DELAY = 0;
-
-const VIEWPORT = {
-  once: true,
-  amount: 0.1,
-  margin: "0px 0px -60px 0px",
-};
-
-function useRevealReady(ref) {
-  const isInView = useInView(ref, VIEWPORT);
-  const [ready, setReady] = useState(false);
-  const [visibleOnMount, setVisibleOnMount] = useState(false);
-
-  useLayoutEffect(() => {
-    const el = ref.current;
-    if (!el) {
-      setReady(true);
-      return;
-    }
-
-    const { top, bottom } = el.getBoundingClientRect();
-    const viewportCutoff = window.innerHeight - 60;
-    setVisibleOnMount(top < viewportCutoff && bottom > 0);
-    setReady(true);
-  }, []);
-
-  return {
-    ready,
-    revealed: isInView || visibleOnMount,
-    visibleOnMount,
-  };
-}
 
 export default function Reveal({
   children,
@@ -45,64 +19,40 @@ export default function Reveal({
 }) {
   const ref = useRef(null);
   const reducedMotion = useReducedMotion();
-  const { ready, revealed, visibleOnMount } = useRevealReady(ref);
 
-  if (!ready || prefersReducedMotion() || reducedMotion) {
-    return (
-      <div ref={ref} className={className}>
-        {children}
-      </div>
-    );
-  }
+  useEffect(() => {
+    if (!shouldAnimateScroll() || prefersReducedMotion() || reducedMotion) return undefined;
+
+    const el = ref.current;
+    if (!el) return undefined;
+
+    return bindScrollReveal(el, { y, delay, revealDelay });
+  }, [delay, y, revealDelay, reducedMotion]);
 
   return (
-    <motion.div
-      ref={ref}
-      className={className}
-      initial={{ opacity: 1, y: visibleOnMount ? 0 : y }}
-      animate={{ opacity: 1, y: revealed ? 0 : y }}
-      transition={{
-        duration: 0.75,
-        delay: visibleOnMount ? 0 : revealDelay + delay,
-        ease: easeOut,
-      }}
-    >
+    <div ref={ref} className={className}>
       {children}
-    </motion.div>
+    </div>
   );
 }
 
 export function RevealStagger({ children, className = "", stagger = 0.08, y = 20 }) {
   const ref = useRef(null);
   const reducedMotion = useReducedMotion();
-  const { ready, revealed, visibleOnMount } = useRevealReady(ref);
 
-  if (!ready || prefersReducedMotion() || reducedMotion) {
-    return (
-      <div ref={ref} className={className}>
-        {children}
-      </div>
-    );
-  }
+  useEffect(() => {
+    if (!shouldAnimateScroll() || prefersReducedMotion() || reducedMotion) return undefined;
+
+    const el = ref.current;
+    if (!el) return undefined;
+
+    return bindScrollRevealStagger(el, "[data-reveal-item]", { stagger, y });
+  }, [stagger, y, reducedMotion]);
 
   return (
-    <motion.div
-      ref={ref}
-      className={className}
-      initial="hidden"
-      animate={revealed ? "visible" : "hidden"}
-      variants={{
-        hidden: {},
-        visible: {
-          transition: {
-            staggerChildren: stagger,
-            delayChildren: visibleOnMount ? 0 : 0.12,
-          },
-        },
-      }}
-    >
+    <div ref={ref} className={className}>
       {children}
-    </motion.div>
+    </div>
   );
 }
 
@@ -114,73 +64,32 @@ export function RevealStaggerItem({ children, className = "", y = 20 }) {
   }
 
   return (
-    <motion.div
-      className={className}
-      data-reveal-item=""
-      variants={{
-        hidden: { opacity: 1, y },
-        visible: {
-          opacity: 1,
-          y: 0,
-          transition: { duration: 0.7, ease: easeOut },
-        },
-      }}
-    >
+    <div className={className} data-reveal-item="">
       {children}
-    </motion.div>
+    </div>
   );
 }
 
 export function RevealLines({ lines, className = "", lineClassName = "" }) {
   const ref = useRef(null);
   const reducedMotion = useReducedMotion();
-  const { ready, revealed, visibleOnMount } = useRevealReady(ref);
 
-  if (!ready || prefersReducedMotion() || reducedMotion) {
-    return (
-      <div className={className}>
-        {lines.map((line, i) => (
-          <span key={i} className={`block ${lineClassName}`}>
-            {line}
-          </span>
-        ))}
-      </div>
-    );
-  }
+  useEffect(() => {
+    if (!shouldAnimateScroll() || prefersReducedMotion() || reducedMotion) return undefined;
+
+    const el = ref.current;
+    if (!el) return undefined;
+
+    return bindScrollRevealLines(el, "[data-reveal-line]", { y: 16 });
+  }, [reducedMotion]);
 
   return (
-    <motion.div
-      ref={ref}
-      className={className}
-      initial="hidden"
-      animate={revealed ? "visible" : "hidden"}
-      variants={{
-        hidden: {},
-        visible: {
-          transition: {
-            staggerChildren: 0.08,
-            delayChildren: visibleOnMount ? 0 : 0.1,
-          },
-        },
-      }}
-    >
+    <div ref={ref} className={className}>
       {lines.map((line, i) => (
-        <motion.span
-          key={i}
-          data-reveal-line=""
-          className={`block ${lineClassName}`}
-          variants={{
-            hidden: { opacity: 1, y: 16 },
-            visible: {
-              opacity: 1,
-              y: 0,
-              transition: { duration: 0.7, ease: easeOut },
-            },
-          }}
-        >
+        <span key={i} data-reveal-line="" className={`block ${lineClassName}`}>
           {line}
-        </motion.span>
+        </span>
       ))}
-    </motion.div>
+    </div>
   );
 }

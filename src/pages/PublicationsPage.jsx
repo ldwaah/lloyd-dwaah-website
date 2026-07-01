@@ -8,6 +8,7 @@ import PublicationsIntro, {
 } from "../components/PublicationsIntro.jsx";
 import { publications, featuredBookSlugs } from "../data/site.js";
 import { getYouTubeId } from "../lib/youtube.js";
+import { refreshScrollTriggersNow } from "../lib/gsap.js";
 
 const AUTHOR_HERO = "/assets/publications/author-hero.webp";
 const ease = [0.22, 1, 0.36, 1];
@@ -156,6 +157,12 @@ export default function PublicationsPage() {
       setContentVisible(true);
     }
   }, []);
+
+  useEffect(() => {
+    if (!contentVisible) return undefined;
+    requestAnimationFrame(() => refreshScrollTriggersNow());
+    return undefined;
+  }, [contentVisible]);
 
   return (
     <PageShell ambient="publications">

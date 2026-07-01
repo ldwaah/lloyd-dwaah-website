@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { prefersReducedMotion } from "../lib/input.js";
+import { refreshScrollTriggersNow } from "../lib/gsap.js";
+import { resetScrollPosition } from "../lib/scrollReset.js";
 
 const SESSION_KEY = "lloyd-publications-intro-seen";
 const INTRO_VIDEO = "/assets/publications/intro.mp4";
@@ -43,11 +45,14 @@ export default function PublicationsIntro({ onComplete, onFadeStart }) {
   };
 
   useEffect(() => {
+    const lenis = window.__lenis;
+    lenis?.stop();
     document.body.style.overflow = "hidden";
     const maxTimer = window.setTimeout(beginCrossfade, MAX_MS);
 
     return () => {
       window.clearTimeout(maxTimer);
+      lenis?.start();
       document.body.style.overflow = "";
     };
   }, []);
@@ -57,6 +62,9 @@ export default function PublicationsIntro({ onComplete, onFadeStart }) {
       onExitComplete={() => {
         markPublicationsIntroSeen();
         document.body.style.overflow = "";
+        window.__lenis?.start();
+        resetScrollPosition();
+        requestAnimationFrame(() => refreshScrollTriggersNow());
         onComplete?.();
       }}
     >
