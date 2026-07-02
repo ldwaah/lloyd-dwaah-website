@@ -94,12 +94,13 @@ export default function HomeCinematic({ onPortraitReady }) {
           end: heroPinEnd,
           pin: heroPin,
           pinSpacing: true,
-          scrub: mobile ? 0.35 : 0.55,
+          scrub: mobile ? 0.4 : 0.6, // Slightly more scrub for smoother feel
           anticipatePin: 0,
           invalidateOnRefresh: true,
           onUpdate: (self) => setHeroScrollProgress(self.progress),
           onLeave: () => setHeroScrollProgress(1),
           onLeaveBack: () => setHeroScrollProgress(0),
+          onRefresh: (self) => setHeroScrollProgress(self.progress),
         },
       });
 

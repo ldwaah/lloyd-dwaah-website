@@ -61,26 +61,36 @@ export default function HeroPortrait({ src, onReady }) {
     let lastTransform = "";
     let lastOpacity = "";
     let lastWash = "";
+    let smoothY = 0;
+    let smoothScale = 1;
 
     const tick = () => {
       const stage = stageRef.current;
       const wash = washRef.current;
       if (stage && !reduced) {
-        const sp = heroScrollState.current;
+        const sp = heroScrollState.current; // Use smoothed value
         const p = pointer.current;
         const mobile = isMobile();
         const parallax = touch ? 0 : 1;
-        const scale = mobile ? 1 : 1 + sp * 0.11;
-        const y = mobile ? p.y * 4 * parallax : sp * -48 + p.y * 8 * parallax;
+        
+        // Target values
+        const targetScale = mobile ? 1 : 1 + sp * 0.11;
+        const targetY = mobile ? p.y * 4 * parallax : sp * -48 + p.y * 8 * parallax;
         const x = p.x * (mobile ? 6 : 12) * parallax;
+        
+        // Smooth interpolation to prevent jolts
+        const scaleDamp = 0.12;
+        const yDamp = 0.15;
+        smoothScale += (targetScale - smoothScale) * scaleDamp;
+        smoothY += (targetY - smoothY) * yDamp;
+        
         const opacity = mobile
           ? Math.max(0.35, 1 - sp * 0.72)
           : Math.max(0.55, 1 - sp * 0.5);
-        const transform = `translate3d(${x.toFixed(2)}px, ${y.toFixed(2)}px, 0) scale(${scale.toFixed(4)})`;
+        const transform = `translate3d(${x.toFixed(2)}px, ${smoothY.toFixed(2)}px, 0) scale(${smoothScale.toFixed(4)})`;
         const opacityStr = opacity.toFixed(3);
 
-        // Only touch style when values change — idle writes force the
-        // masked video layer to repaint every frame.
+        // Only touch style when values change
         if (transform !== lastTransform) {
           stage.style.transform = transform;
           lastTransform = transform;
