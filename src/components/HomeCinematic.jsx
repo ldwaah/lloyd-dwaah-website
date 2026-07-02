@@ -6,7 +6,7 @@ import HeroPortrait from "./HeroPortrait.jsx";
 import SiteNav from "./SiteNav.jsx";
 import { avatarConfig, home } from "../data/site.js";
 import { setHeroScrollProgress, resetHeroScrollProgress } from "../lib/heroScroll.js";
-import { prefersReducedMotion } from "../lib/input.js";
+import { prefersReducedMotion, isMobile } from "../lib/input.js";
 
 const PORTRAIT = avatarConfig.portraitSvg || avatarConfig.image;
 
@@ -26,7 +26,7 @@ function StaticHero({ onPortraitReady }) {
       <section id="home" className="relative isolate min-h-[100svh] overflow-hidden">
         <HeroPortrait src={PORTRAIT} onReady={onPortraitReady} />
         <SiteNav overlay />
-        <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 bg-gradient-to-t from-hq-deep via-hq-deep/85 to-transparent px-6 pb-10 pt-28 text-center md:px-10 md:pb-14 md:pt-32">
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 bg-gradient-to-t from-hq-deep via-hq-deep/90 to-transparent px-6 pb-10 pt-24 text-center max-md:pt-28 md:px-10 md:pb-14 md:pt-32">
           <p className="font-serif text-statement text-ink text-balance drop-shadow-[0_2px_24px_rgba(0,0,0,0.35)]">
             {home.nameReveal}
           </p>
@@ -81,14 +81,18 @@ export default function HomeCinematic({ onPortraitReady }) {
     const ctx = gsap.context(() => {
       resetHeroScrollProgress();
 
+      const mobile = isMobile();
+      const heroPinEnd = mobile ? "+=62%" : "+=88%";
+      const ethosPinEnd = mobile ? "+=70%" : "+=85%";
+
       const heroTimeline = gsap.timeline({
         scrollTrigger: {
           trigger: heroTrack,
           start: "top top",
-          end: "+=88%",
+          end: heroPinEnd,
           pin: heroPin,
           pinSpacing: true,
-          scrub: 0.55,
+          scrub: mobile ? 0.35 : 0.55,
           anticipatePin: 0,
           invalidateOnRefresh: true,
           onUpdate: (self) => setHeroScrollProgress(self.progress),
@@ -100,12 +104,12 @@ export default function HomeCinematic({ onPortraitReady }) {
       heroTimeline.fromTo(
         heroContent,
         { y: 0, opacity: 1, scale: 1 },
-        { y: -8, opacity: 1, scale: 0.998, ease: "none" },
+        { y: mobile ? -4 : -8, opacity: 1, scale: 0.998, ease: "none" },
         0
       );
       heroTimeline.to(
         heroContent,
-        { y: -22, opacity: 0.94, scale: 0.996, ease: "power1.out" },
+        { y: mobile ? -10 : -22, opacity: 0.94, scale: 0.996, ease: "power1.out" },
         0.55
       );
 
@@ -126,10 +130,10 @@ export default function HomeCinematic({ onPortraitReady }) {
         scrollTrigger: {
           trigger: ethosTrack,
           start: "top top",
-          end: "+=85%",
+          end: ethosPinEnd,
           pin: ethosPin,
           pinSpacing: true,
-          scrub: 0.55,
+          scrub: mobile ? 0.35 : 0.55,
           anticipatePin: 0,
           invalidateOnRefresh: true,
         },
@@ -189,7 +193,7 @@ export default function HomeCinematic({ onPortraitReady }) {
           <SiteNav overlay />
           <div
             ref={heroContentRef}
-            className="pointer-events-none absolute inset-x-0 bottom-0 z-10 bg-gradient-to-t from-hq-deep via-hq-deep/85 to-transparent px-6 pb-10 pt-28 text-center md:px-10 md:pb-14 md:pt-32"
+            className="pointer-events-none absolute inset-x-0 bottom-0 z-20 bg-gradient-to-t from-hq-deep from-25% via-hq-deep/95 to-transparent px-6 pb-10 pt-24 text-center max-md:pt-28 md:px-10 md:pb-14 md:pt-32"
           >
             <p className="font-serif text-statement text-ink text-balance drop-shadow-[0_2px_24px_rgba(0,0,0,0.35)]">
               {home.nameReveal}
@@ -204,10 +208,10 @@ export default function HomeCinematic({ onPortraitReady }) {
         </div>
       </section>
 
-      <section ref={ethosTrackRef} className="relative z-10 border-t border-line bg-hq-deep">
+      <section ref={ethosTrackRef} className="relative z-20 border-t border-line bg-hq-deep">
         <div
           ref={ethosPinRef}
-          className="flex min-h-[100svh] w-full items-center justify-center overflow-hidden px-6 md:px-10"
+          className="flex min-h-[100svh] w-full items-center justify-center overflow-hidden bg-hq-deep px-6 md:px-10"
           style={{ perspective: "800px" }}
         >
           <div

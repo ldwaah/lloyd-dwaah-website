@@ -6,7 +6,7 @@ import {
   cancelScheduledScrollRefresh,
 } from "../lib/gsap.js";
 import { ethos } from "../data/site.js";
-import { prefersReducedMotion } from "../lib/input.js";
+import { prefersReducedMotion, isMobile } from "../lib/input.js";
 import { getScrollOffset } from "../lib/scrollReset.js";
 
 const principles = ethos.principles;
@@ -102,7 +102,7 @@ export default function CorePrinciples() {
 
     gsap.killTweensOf(slide);
 
-    if (reduced || !shouldAnimateScroll()) {
+    if (reduced || !shouldAnimateScroll() || isMobile()) {
       gsap.set(slide, { opacity: 1, y: 0 });
       return;
     }
@@ -124,12 +124,14 @@ export default function CorePrinciples() {
     if (lockedScrollY.current === null) return;
     const y = lockedScrollY.current;
     lockedScrollY.current = null;
+    cancelScheduledScrollRefresh();
     const lenis = window.__lenis;
-    if (lenis) {
+    if (lenis && Math.abs(lenis.scroll - y) > 2) {
       lenis.scrollTo(y, { immediate: true });
-    } else {
+    } else if (!lenis) {
       window.scrollTo(0, y);
     }
+    requestAnimationFrame(() => ScrollTrigger.update());
   }, [activeIndex]);
 
   const goPrev = useCallback(() => navigateTo(activeIndex - 1), [activeIndex, navigateTo]);
@@ -271,7 +273,7 @@ export default function CorePrinciples() {
             />
 
             <div
-              className="relative min-h-[15rem] w-full max-w-xl touch-pan-y md:min-h-[13rem]"
+              className="relative min-h-[18rem] w-full max-w-xl touch-pan-y md:min-h-[15rem]"
               style={{ overflowAnchor: "none", contain: "layout style" }}
               onTouchStart={onTouchStart}
               onTouchEnd={onTouchEnd}

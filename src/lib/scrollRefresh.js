@@ -20,18 +20,31 @@ export function markUserScrolling() {
   scrollIdleTimer = window.setTimeout(() => {
     scrollIdleTimer = null;
     userScrolling = false;
-  }, 180);
+  }, 400);
 }
 
 function runScrollRefresh({ resizeLenis = true } = {}) {
   if (isUserScrolling()) return;
 
+  const scrollY = window.__lenis?.scroll ?? window.scrollY;
+
   if (resizeLenis && window.__lenis) {
     window.__lenis.resize();
   }
 
-  // Safe refresh — recalculate triggers without forcing scroll position.
+  // Safe refresh — never force-reset scroll position (avoids snap-to-top at page bottom).
   ScrollTrigger.refresh(true);
+
+  if (window.__lenis) {
+    const maxScroll = Math.max(
+      0,
+      document.documentElement.scrollHeight - window.innerHeight
+    );
+    const clamped = Math.min(scrollY, maxScroll);
+    if (Math.abs(window.__lenis.scroll - clamped) > 2) {
+      window.__lenis.scrollTo(clamped, { immediate: true });
+    }
+  }
 }
 
 /**

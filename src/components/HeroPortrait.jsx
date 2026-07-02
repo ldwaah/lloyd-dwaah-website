@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 import { heroScrollState } from "../lib/heroScroll.js";
-import { usePointerRef, prefersReducedMotion, isTouchDevice } from "../lib/input.js";
+import { usePointerRef, prefersReducedMotion, isTouchDevice, isMobile } from "../lib/input.js";
 import { useInlineAutoplayVideo } from "../lib/useInlineAutoplayVideo.js";
 import { avatarConfig } from "../data/site.js";
 import HeroTexture from "./HeroTexture.jsx";
@@ -65,11 +65,14 @@ export default function HeroPortrait({ src, onReady }) {
       if (stage && !reduced) {
         const sp = heroScrollState.current;
         const p = pointer.current;
-        const parallax = touch ? 0.35 : 1;
-        const scale = 1 + sp * 0.012;
-        const y = sp * -10 + p.y * 8 * parallax;
-        const x = p.x * 12 * parallax;
-        const opacity = Math.max(0.78, 1 - sp * 0.1);
+        const mobile = isMobile();
+        const parallax = touch ? 0 : 1;
+        const scale = mobile ? 1 : 1 + sp * 0.012;
+        const y = mobile ? p.y * 4 * parallax : sp * -10 + p.y * 8 * parallax;
+        const x = p.x * (mobile ? 6 : 12) * parallax;
+        const opacity = mobile
+          ? Math.max(0.35, 1 - sp * 0.72)
+          : Math.max(0.78, 1 - sp * 0.1);
         const transform = `translate3d(${x}px, ${y}px, 0) scale(${scale})`;
 
         stage.style.transform = transform;
@@ -78,7 +81,8 @@ export default function HeroPortrait({ src, onReady }) {
 
       if (wash && !reduced) {
         const sp = heroScrollState.current;
-        wash.style.opacity = `${Math.min(0.5, 0.3 + sp * 0.15)}`;
+        const mobile = isMobile();
+        wash.style.opacity = `${mobile ? Math.min(0.65, 0.42 + sp * 0.28) : Math.min(0.5, 0.3 + sp * 0.15)}`;
       }
 
       frame = requestAnimationFrame(tick);
@@ -90,21 +94,21 @@ export default function HeroPortrait({ src, onReady }) {
 
   return (
     <div
-      className="pointer-events-none absolute inset-0 z-0 flex items-start justify-center overflow-hidden px-5 pb-28 pt-14 md:px-10 md:pb-36 md:pt-16"
+      className="pointer-events-none absolute inset-x-0 top-0 z-0 flex items-end justify-center overflow-hidden px-5 pb-2 pt-12 max-md:bottom-[44%] md:inset-0 md:items-start md:pb-28 md:pt-14 md:px-10 md:pb-36 md:pt-16"
       aria-hidden="true"
     >
       <HeroTexture />
       <HeroCursorField />
       <div
         ref={stageRef}
-        className="relative z-[2] inline-flex max-w-[min(92vw,680px)] items-start justify-center will-change-transform md:max-w-[min(78vw,760px)]"
+        className="relative z-[2] inline-flex max-w-[min(78vw,420px)] items-end justify-center will-change-transform md:max-w-[min(78vw,760px)] md:items-start"
       >
         <img
           ref={portraitRef}
           src={src}
           alt=""
           decoding="async"
-          className="block max-h-[min(70svh,640px)] max-w-full object-contain object-top md:max-h-[min(76svh,720px)]"
+          className="block max-h-[min(42svh,320px)] max-w-full object-contain object-bottom md:max-h-[min(76svh,720px)] md:object-top"
           style={{ opacity: videoPlaying ? 0 : 1 }}
         />
         {mountVideo && (
@@ -119,7 +123,7 @@ export default function HeroPortrait({ src, onReady }) {
             disablePictureInPicture
             disableRemotePlayback
             controlsList="nodownload nofullscreen noremoteplayback"
-            className="brand-video hero-portrait-video pointer-events-none absolute inset-0 h-full w-full object-contain object-top transition-opacity duration-500 ease-out"
+            className="brand-video hero-portrait-video pointer-events-none absolute inset-0 h-full w-full object-contain object-bottom transition-opacity duration-500 ease-out md:object-top"
             style={{
               opacity: videoPlaying ? 1 : 0,
               ...portraitMaskStyle,

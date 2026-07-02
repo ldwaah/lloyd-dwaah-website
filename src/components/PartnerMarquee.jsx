@@ -3,7 +3,7 @@ import { gsap } from "../lib/gsap.js";
 import { shouldAnimateScroll, refreshScrollTriggersNow, scheduleScrollRefresh } from "../lib/gsap.js";
 import { splitElementWords } from "../lib/splitText.js";
 import { organisations } from "../data/site.js";
-import { prefersReducedMotion } from "../lib/input.js";
+import { prefersReducedMotion, isMobile } from "../lib/input.js";
 
 function PartnerLogo({ partner }) {
   const content = (
@@ -48,7 +48,8 @@ export default function PartnerMarquee() {
   const track = [...organisations.items, ...organisations.items];
 
   useEffect(() => {
-    if (reduced || !shouldAnimateScroll()) return undefined;
+    // Pin + scrub chapter overlaps principles on touch — static layout is stable.
+    if (reduced || !shouldAnimateScroll() || isMobile()) return undefined;
 
     const trackEl = trackRef.current;
     const pin = pinRef.current;
@@ -94,7 +95,7 @@ export default function PartnerMarquee() {
     };
   }, [reduced]);
 
-  const staticLayout = reduced || !shouldAnimateScroll();
+  const staticLayout = reduced || !shouldAnimateScroll() || isMobile();
 
   return (
     <section
