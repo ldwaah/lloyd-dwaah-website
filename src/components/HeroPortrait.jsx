@@ -58,6 +58,9 @@ export default function HeroPortrait({ src, onReady }) {
     const reduced = prefersReducedMotion();
     const touch = isTouchDevice();
     let frame = 0;
+    let lastTransform = "";
+    let lastOpacity = "";
+    let lastWash = "";
 
     const tick = () => {
       const stage = stageRef.current;
@@ -67,22 +70,38 @@ export default function HeroPortrait({ src, onReady }) {
         const p = pointer.current;
         const mobile = isMobile();
         const parallax = touch ? 0 : 1;
-        const scale = mobile ? 1 : 1 + sp * 0.012;
-        const y = mobile ? p.y * 4 * parallax : sp * -10 + p.y * 8 * parallax;
+        const scale = mobile ? 1 : 1 + sp * 0.11;
+        const y = mobile ? p.y * 4 * parallax : sp * -48 + p.y * 8 * parallax;
         const x = p.x * (mobile ? 6 : 12) * parallax;
         const opacity = mobile
           ? Math.max(0.35, 1 - sp * 0.72)
-          : Math.max(0.78, 1 - sp * 0.1);
-        const transform = `translate3d(${x}px, ${y}px, 0) scale(${scale})`;
+          : Math.max(0.55, 1 - sp * 0.5);
+        const transform = `translate3d(${x.toFixed(2)}px, ${y.toFixed(2)}px, 0) scale(${scale.toFixed(4)})`;
+        const opacityStr = opacity.toFixed(3);
 
-        stage.style.transform = transform;
-        stage.style.opacity = `${opacity}`;
+        // Only touch style when values change — idle writes force the
+        // masked video layer to repaint every frame.
+        if (transform !== lastTransform) {
+          stage.style.transform = transform;
+          lastTransform = transform;
+        }
+        if (opacityStr !== lastOpacity) {
+          stage.style.opacity = opacityStr;
+          lastOpacity = opacityStr;
+        }
       }
 
       if (wash && !reduced) {
         const sp = heroScrollState.current;
         const mobile = isMobile();
-        wash.style.opacity = `${mobile ? Math.min(0.65, 0.42 + sp * 0.28) : Math.min(0.5, 0.3 + sp * 0.15)}`;
+        const washOpacity = (mobile
+          ? Math.min(0.65, 0.42 + sp * 0.28)
+          : Math.min(0.82, 0.3 + sp * 0.55)
+        ).toFixed(3);
+        if (washOpacity !== lastWash) {
+          wash.style.opacity = washOpacity;
+          lastWash = washOpacity;
+        }
       }
 
       frame = requestAnimationFrame(tick);

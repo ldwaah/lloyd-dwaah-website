@@ -132,5 +132,6 @@ export default function PublicationsIntro({ onComplete, onFadeStart }) {
 }
 
 export function shouldPlayPublicationsIntro() {
-  return !prefersReducedMotion() && !hasSeenPublicationsIntro();
+  // Plays on every visit (owner preference); reduced motion still skips it.
+  return !prefersReducedMotion();
 }

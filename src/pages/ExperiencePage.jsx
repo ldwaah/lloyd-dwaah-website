@@ -3,7 +3,7 @@ import { gsap } from "../lib/gsap.js";
 import { shouldAnimateScroll, refreshScrollTriggersNow } from "../lib/gsap.js";
 import PageShell from "../components/PageShell.jsx";
 import HolisticCVModal from "../components/HolisticCVModal.jsx";
-import Reveal from "../components/Reveal.jsx";
+import Reveal, { RevealHeading } from "../components/Reveal.jsx";
 import { experience } from "../data/site.js";
 import { prefersReducedMotion } from "../lib/input.js";
 
@@ -77,9 +77,9 @@ function CoachingSpotlight({ spotlight }) {
           <p className="text-[10px] font-light uppercase tracking-[0.28em] text-accent/80">
             {spotlight.eyebrow}
           </p>
-          <h2 className="mt-4 max-w-xl font-serif text-hero text-ink text-balance">
+          <RevealHeading className="mt-4 max-w-xl font-serif text-hero text-ink text-balance">
             {spotlight.title}
-          </h2>
+          </RevealHeading>
           <p className="mt-4 max-w-lg text-base leading-relaxed text-muted md:text-lg">
             {spotlight.summary}
           </p>
@@ -92,7 +92,7 @@ function CoachingSpotlight({ spotlight }) {
 function TimelineContent({ entry, index }) {
   return (
     <div className={`relative grid items-center gap-12 md:grid-cols-2 ${index % 2 === 1 ? "md:direction-rtl" : ""}`}>
-      <div className={index % 2 === 1 ? "md:order-2 md:text-right" : ""}>
+      <div data-milestone-col className={index % 2 === 1 ? "md:order-2 md:text-right" : ""}>
         <p className="text-[11px] font-light uppercase tracking-[0.25em] text-accent/70">
           {entry.year}
         </p>
@@ -100,7 +100,10 @@ function TimelineContent({ entry, index }) {
         <p className="mt-4 text-lg text-accent/80">{entry.role}</p>
       </div>
 
-      <div className={`glass-panel rounded-2xl p-8 md:p-10 ${index % 2 === 1 ? "md:order-1" : ""}`}>
+      <div
+        data-milestone-col
+        className={`glass-panel rounded-2xl p-8 md:p-10 ${index % 2 === 1 ? "md:order-1" : ""}`}
+      >
         <p className="text-lg leading-relaxed text-body text-pretty">{entry.summary}</p>
         <p className="mt-6 text-base leading-relaxed text-muted">{entry.detail}</p>
       </div>
@@ -119,21 +122,73 @@ function TimelineMilestone({ entry, index, total }) {
     if (!el) return undefined;
 
     const ctx = gsap.context(() => {
+      const inner = el.querySelector("[data-milestone-inner]");
+      const cols = el.querySelectorAll("[data-milestone-col]");
+      const num = el.querySelector("[data-milestone-num]");
+
+      // Enter: rise into place as the milestone approaches centre stage.
       gsap.fromTo(
-        el,
-        { y: 32, scale: 0.99 },
+        inner,
+        { y: 84, opacity: 0.15 },
         {
           y: 0,
-          scale: 1,
+          opacity: 1,
           ease: "none",
           scrollTrigger: {
             trigger: el,
-            start: "start end",
-            end: "center center",
+            start: "top 92%",
+            end: "top 50%",
             scrub: 0.45,
           },
         }
       );
+
+      // Exit: drift up and recede so the next milestone takes the stage.
+      gsap.fromTo(
+        inner,
+        { y: 0, opacity: 1 },
+        {
+          y: -64,
+          opacity: 0.2,
+          ease: "none",
+          immediateRender: false,
+          scrollTrigger: {
+            trigger: el,
+            start: "bottom 42%",
+            end: "bottom 4%",
+            scrub: 0.45,
+          },
+        }
+      );
+
+      // Depth: the two columns traverse at different rates.
+      if (cols.length === 2) {
+        const range = {
+          trigger: el,
+          start: "top bottom",
+          end: "bottom top",
+          scrub: 0.5,
+        };
+        gsap.fromTo(cols[0], { y: 26 }, { y: -26, ease: "none", scrollTrigger: { ...range } });
+        gsap.fromTo(cols[1], { y: 56 }, { y: -56, ease: "none", scrollTrigger: { ...range } });
+      }
+
+      if (num) {
+        gsap.fromTo(
+          num,
+          { yPercent: 42 },
+          {
+            yPercent: -42,
+            ease: "none",
+            scrollTrigger: {
+              trigger: el,
+              start: "top bottom",
+              end: "bottom top",
+              scrub: 0.6,
+            },
+          }
+        );
+      }
     }, ref);
 
     return () => ctx.revert();
@@ -154,9 +209,21 @@ function TimelineMilestone({ entry, index, total }) {
       ref={ref}
       className="relative min-h-[70vh] flex flex-col justify-center py-16 md:min-h-[80vh]"
     >
+      <span
+        data-milestone-num
+        aria-hidden="true"
+        className={`pointer-events-none absolute top-1/2 hidden -translate-y-1/2 select-none font-serif text-[11rem] leading-none text-ink/[0.035] md:block lg:text-[15rem] ${
+          index % 2 === 1 ? "left-0" : "right-0"
+        }`}
+      >
+        {String(index + 1).padStart(2, "0")}
+      </span>
+
       <div className="absolute left-0 top-1/2 hidden h-px w-full -translate-y-1/2 bg-gradient-to-r from-transparent via-accent/20 to-transparent md:block" />
 
-      <TimelineContent entry={entry} index={index} />
+      <div data-milestone-inner className="relative">
+        <TimelineContent entry={entry} index={index} />
+      </div>
 
       {index < total - 1 && (
         <div className="absolute bottom-0 left-1/2 hidden h-16 w-px -translate-x-1/2 bg-gradient-to-b from-accent/30 to-transparent md:block" />
@@ -207,11 +274,13 @@ export default function ExperiencePage() {
         <Reveal revealDelay={0.24} y={20}>
           <span className="eyebrow">{experience.eyebrow}</span>
         </Reveal>
-        <Reveal revealDelay={0.24} delay={0.12} y={40}>
-          <h1 className="mt-8 max-w-4xl font-serif text-display text-ink text-balance">
-            {experience.heading}
-          </h1>
-        </Reveal>
+        <RevealHeading
+          as="h1"
+          delay={0.15}
+          className="mt-8 max-w-4xl font-serif text-display text-ink text-balance"
+        >
+          {experience.heading}
+        </RevealHeading>
         <Reveal revealDelay={0.24} delay={0.24} y={28}>
           <p className="mt-8 max-w-2xl text-xl leading-relaxed text-muted">{experience.intro}</p>
         </Reveal>

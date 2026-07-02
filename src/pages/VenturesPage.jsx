@@ -1,6 +1,6 @@
 import { useRef } from "react";
 import PageShell from "../components/PageShell.jsx";
-import Reveal from "../components/Reveal.jsx";
+import Reveal, { RevealHeading } from "../components/Reveal.jsx";
 import VentureFlyingLogos, { LogoChip, VentureSection } from "../components/VentureLogoJourney.jsx";
 import { ventures } from "../data/site.js";
 import { prefersReducedMotion } from "../lib/input.js";
@@ -81,16 +81,21 @@ export default function VenturesPage() {
         <Reveal revealDelay={0.24} y={16}>
           <span className="eyebrow">{ventures.eyebrow}</span>
         </Reveal>
-        <Reveal revealDelay={0.24} delay={0.12} y={32}>
-          <h1 className="mt-6 max-w-4xl font-serif text-display text-ink md:max-w-[62%]">
-            {ventures.heading}
-          </h1>
-        </Reveal>
-        <Reveal revealDelay={0.24} delay={0.24} y={24}>
-          <p className="mt-5 max-w-2xl font-serif text-2xl text-accent/90 md:text-3xl md:max-w-[55%]">
-            {ventures.intro}
-          </p>
-        </Reveal>
+        <RevealHeading
+          as="h1"
+          delay={0.15}
+          className="mt-6 max-w-4xl font-serif text-display text-ink max-md:pr-28 md:max-w-[62%]"
+        >
+          {ventures.heading}
+        </RevealHeading>
+        <RevealHeading
+          as="p"
+          delay={0.35}
+          skew={false}
+          className="mt-5 max-w-2xl font-serif text-2xl text-accent/90 max-md:pr-24 md:text-3xl md:max-w-[55%]"
+        >
+          {ventures.intro}
+        </RevealHeading>
         <Reveal revealDelay={0.22} delay={0.32} y={20}>
           <p className="mt-6 max-w-2xl text-lg leading-relaxed text-muted md:max-w-[55%]">
             {ventures.tagline}

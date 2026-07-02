@@ -85,6 +85,14 @@ export default function PartnerMarquee() {
         { opacity: 1, duration: 0.15 },
         0.15
       );
+
+      // Exit handoff: chapter drifts up and recedes before the pin
+      // releases into the footer chapter.
+      chapter.to(
+        [header, marquee],
+        { y: -40, opacity: 0.25, duration: 0.22, ease: "power1.in" },
+        0.78
+      );
     });
 
     requestAnimationFrame(() => refreshScrollTriggersNow());
@@ -95,7 +103,9 @@ export default function PartnerMarquee() {
     };
   }, [reduced]);
 
-  const staticLayout = reduced || !shouldAnimateScroll() || isMobile();
+  // The marquee always drifts (CSS animation); only reduced motion gets the
+  // static grid. The pin+scrub chapter stays desktop-only (see effect above).
+  const staticLayout = reduced || !shouldAnimateScroll();
 
   return (
     <section
@@ -123,7 +133,11 @@ export default function PartnerMarquee() {
       <div ref={trackRef} className={staticLayout ? "" : "relative"}>
         <div
           ref={pinRef}
-          className={staticLayout ? "py-12 md:py-16" : "flex min-h-[70svh] flex-col justify-center py-12 md:py-16"}
+          className={
+            staticLayout || isMobile()
+              ? "py-12 md:py-16"
+              : "flex min-h-[70svh] flex-col justify-center py-12 md:py-16"
+          }
         >
           <div
             ref={headerRef}

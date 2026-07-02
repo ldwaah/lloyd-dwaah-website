@@ -133,6 +133,8 @@ export default function VentureFlyingLogos({ dockRefs, sectionRefs, slotRefs, it
             const endX = slotRect.left + slotRect.width / 2 - size / 2;
             const endY = slotRect.top + slotRect.height / 2 - size / 2;
             const tilt = index === 0 ? -10 : 10;
+            const spin = index === 0 ? -1 : 1;
+            const arc = Math.sin(p * Math.PI);
 
             gsap.set(logo, {
               position: "fixed",
@@ -142,8 +144,11 @@ export default function VentureFlyingLogos({ dockRefs, sectionRefs, slotRefs, it
               height: size,
               scale: 1 - p * 0.36,
               rotationZ: tilt * (1 - p),
-              rotationY: (index === 0 ? -16 : 16) * (1 - p),
-              z: -p * 140,
+              // 3D swoop: the chip yaws hard mid-flight, pitches back, and
+              // dips away in z before settling flat into its slot.
+              rotationY: spin * ((1 - p) * 16 + arc * 58),
+              rotationX: arc * 26,
+              z: -arc * 260,
               transformPerspective: 900,
               autoAlpha: 1,
             });
@@ -198,17 +203,81 @@ export default function VentureFlyingLogos({ dockRefs, sectionRefs, slotRefs, it
 }
 
 export function VentureSection({ venture, index, sectionRef, slotRef, hideLogo = false }) {
+  const localRef = useRef(null);
+
+  useEffect(() => {
+    if (!shouldAnimateScroll() || prefersReducedMotion()) return undefined;
+
+    const el = localRef.current;
+    if (!el) return undefined;
+
+    const ctx = gsap.context(() => {
+      const num = el.querySelector("[data-venture-num]");
+      const rises = el.querySelectorAll("[data-venture-rise]");
+
+      // Chapter number drifts counter to the scroll for depth.
+      if (num) {
+        gsap.fromTo(
+          num,
+          { yPercent: 46, opacity: 0.4 },
+          {
+            yPercent: -46,
+            opacity: 1,
+            ease: "none",
+            scrollTrigger: {
+              trigger: el,
+              start: "top bottom",
+              end: "bottom top",
+              scrub: 0.6,
+            },
+          }
+        );
+      }
+
+      // Content blocks rise into place as the chapter takes the stage.
+      if (rises.length) {
+        gsap.fromTo(
+          rises,
+          { y: 64, opacity: 0.1 },
+          {
+            y: 0,
+            opacity: 1,
+            ease: "power1.out",
+            stagger: 0.08,
+            scrollTrigger: {
+              trigger: el,
+              start: "top 88%",
+              end: "top 42%",
+              scrub: 0.5,
+            },
+          }
+        );
+      }
+    }, el);
+
+    return () => ctx.revert();
+  }, []);
+
+  const setRefs = (node) => {
+    localRef.current = node;
+    if (typeof sectionRef === "function") sectionRef(node);
+  };
+
   return (
     <section
-      ref={sectionRef}
-      className={`relative border-t border-line ${index === 0 ? "min-h-[92vh]" : "min-h-[100vh]"} py-20 md:py-28`}
+      ref={setRefs}
+      className={`relative overflow-hidden border-t border-line/40 ${index === 0 ? "min-h-[92vh]" : "min-h-[100vh]"} py-20 md:py-28`}
       aria-label={venture.title}
     >
-      <div className="relative mx-auto w-full max-w-6xl px-6 md:px-10">
-        <p className="font-serif text-6xl font-light text-ink/[0.04] md:text-8xl" aria-hidden="true">
-          {String(index + 1).padStart(2, "0")}
-        </p>
+      <p
+        data-venture-num
+        className="pointer-events-none absolute right-2 top-8 select-none font-serif text-[8rem] font-light leading-none text-ink/[0.04] md:right-8 md:text-[15rem]"
+        aria-hidden="true"
+      >
+        {String(index + 1).padStart(2, "0")}
+      </p>
 
+      <div className="relative mx-auto w-full max-w-6xl px-6 md:px-10">
         <div className="mt-4 grid items-start gap-12 md:grid-cols-[auto,1fr] md:gap-16">
           <div
             ref={slotRef}
@@ -220,8 +289,8 @@ export function VentureSection({ venture, index, sectionRef, slotRef, hideLogo =
           </div>
 
           <div className="min-w-0">
-            <span className="status-label">{venture.status}</span>
-            <h2 className="mt-5 font-serif text-4xl text-ink md:text-5xl">
+            <span data-venture-rise className="status-label">{venture.status}</span>
+            <h2 data-venture-rise className="mt-5 font-serif text-4xl text-ink md:text-5xl">
               {venture.href ? (
                 <a
                   href={venture.href}
@@ -235,11 +304,11 @@ export function VentureSection({ venture, index, sectionRef, slotRef, hideLogo =
                 venture.displayTitle || venture.title
               )}
             </h2>
-            <p className="mt-3 text-[10px] font-light uppercase tracking-[0.28em] text-accent/60">
+            <p data-venture-rise className="mt-3 text-[10px] font-light uppercase tracking-[0.28em] text-accent/60">
               {venture.field}
             </p>
 
-            <div className="mt-10 space-y-8 border-t border-line/60 pt-8">
+            <div data-venture-rise className="mt-10 space-y-8 border-t border-line/60 pt-8">
               <div className="grid gap-6 sm:grid-cols-2">
                 <div>
                   <p className="meta-label">Role</p>
@@ -255,6 +324,7 @@ export function VentureSection({ venture, index, sectionRef, slotRef, hideLogo =
 
             {venture.href && (
               <a
+                data-venture-rise
                 href={venture.href}
                 target="_blank"
                 rel="noopener noreferrer"

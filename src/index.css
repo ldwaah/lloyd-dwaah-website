@@ -145,6 +145,18 @@
   .text-balance {
     text-wrap: balance;
   }
+
+  /* Masked line reveal — each visual line clips its rising inner span */
+  .reveal-line-mask {
+    display: block;
+    overflow: hidden;
+    padding-block: 0.08em;
+    margin-block: -0.08em;
+  }
+  .reveal-line {
+    display: block;
+    will-change: transform;
+  }
   .text-pretty {
     text-wrap: pretty;
   }

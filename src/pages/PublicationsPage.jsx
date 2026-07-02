@@ -1,14 +1,16 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import PageShell from "../components/PageShell.jsx";
-import Reveal from "../components/Reveal.jsx";
+import Reveal, { RevealHeading } from "../components/Reveal.jsx";
 import TrailerModal from "../components/TrailerModal.jsx";
 import PublicationsIntro, {
   shouldPlayPublicationsIntro,
 } from "../components/PublicationsIntro.jsx";
 import { publications, featuredBookSlugs } from "../data/site.js";
 import { getYouTubeId } from "../lib/youtube.js";
-import { refreshScrollTriggersNow } from "../lib/gsap.js";
+import { refreshScrollTriggersNow, shouldAnimateScroll } from "../lib/gsap.js";
+import { bindParallax } from "../lib/scrollReveal.js";
+import { prefersReducedMotion } from "../lib/input.js";
 
 const AUTHOR_HERO = "/assets/publications/author-hero.webp";
 const ease = [0.22, 1, 0.36, 1];
@@ -29,7 +31,7 @@ function BookOnShelf({ book, index, order, onTrailerOpen }) {
   const spineColor = SPINE_COLORS[index % SPINE_COLORS.length];
 
   return (
-    <Reveal revealDelay={0.2} delay={index * 0.12} y={32} className="h-full">
+    <Reveal revealDelay={0.2} delay={index * 0.12} y={44} rotateY={-12} className="h-full">
     <motion.article
       className="perspective-1000 group relative flex h-full flex-col items-center"
       whileHover={{ zIndex: 20 }}
@@ -140,6 +142,14 @@ export default function PublicationsPage() {
   const [playIntro, setPlayIntro] = useState(false);
   const [contentVisible, setContentVisible] = useState(false);
   const [activeTrailer, setActiveTrailer] = useState(null);
+  const heroImgRef = useRef(null);
+
+  useEffect(() => {
+    if (!contentVisible || !shouldAnimateScroll() || prefersReducedMotion()) return undefined;
+    const img = heroImgRef.current;
+    if (!img) return undefined;
+    return bindParallax(img, { from: -4, to: 4 });
+  }, [contentVisible]);
 
   const openTrailer = (book) => {
     const videoId = getYouTubeId(book.trailer);
@@ -190,21 +200,24 @@ export default function PublicationsPage() {
       >
         <section className="relative min-h-[55vh] w-full overflow-hidden md:min-h-[62vh]">
           <img
+            ref={heroImgRef}
             src={AUTHOR_HERO}
             alt="Lloyd Dwaah writing at his desk in a private study"
-            className="absolute inset-0 h-full w-full object-cover object-[center_35%]"
-            fetchPriority="high"
+            className="absolute inset-x-0 -top-[12%] h-[124%] w-full object-cover object-[center_35%] will-change-transform"
+            fetchpriority="high"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-hq-darker via-hq-darker/55 to-hq-darker/15" />
           <div className="relative flex min-h-[55vh] flex-col justify-end section-pad pb-14 md:min-h-[62vh] md:pb-20">
             <Reveal revealDelay={0.24} y={20}>
               <span className="eyebrow">{publications.eyebrow}</span>
             </Reveal>
-            <Reveal revealDelay={0.24} delay={0.12} y={36}>
-              <h1 className="mt-8 max-w-3xl font-serif text-display text-ink">
-                {publications.heading}
-              </h1>
-            </Reveal>
+            <RevealHeading
+              as="h1"
+              delay={0.15}
+              className="mt-8 max-w-3xl font-serif text-display text-ink"
+            >
+              {publications.heading}
+            </RevealHeading>
             <Reveal revealDelay={0.24} delay={0.24} y={28}>
               <p className="mt-8 max-w-2xl text-xl leading-relaxed text-muted">
                 {publications.intro}

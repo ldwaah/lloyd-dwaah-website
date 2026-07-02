@@ -53,6 +53,7 @@ export default function HomeCinematic({ onPortraitReady }) {
   const heroTrackRef = useRef(null);
   const heroPinRef = useRef(null);
   const heroContentRef = useRef(null);
+  const heroNameRef = useRef(null);
   const heroHintRef = useRef(null);
   const ethosTrackRef = useRef(null);
   const ethosPinRef = useRef(null);
@@ -68,6 +69,7 @@ export default function HomeCinematic({ onPortraitReady }) {
     const heroTrack = heroTrackRef.current;
     const heroPin = heroPinRef.current;
     const heroContent = heroContentRef.current;
+    const heroName = heroNameRef.current;
     const heroHint = heroHintRef.current;
     const ethosTrack = ethosTrackRef.current;
     const ethosPin = ethosPinRef.current;
@@ -101,22 +103,40 @@ export default function HomeCinematic({ onPortraitReady }) {
         },
       });
 
-      heroTimeline.fromTo(
-        heroContent,
-        { y: 0, opacity: 1, scale: 1 },
-        { y: mobile ? -4 : -8, opacity: 1, scale: 0.998, ease: "none" },
-        0
-      );
+      // Act 1: hint dissolves, name drifts up and tracks out as the portrait
+      // scales/darkens (HeroPortrait reads the same progress each frame).
+      if (heroHint) {
+        heroTimeline.to(heroHint, { opacity: 0, y: -26, ease: "power1.out", duration: 0.26 }, 0.04);
+      }
+
+      if (heroName) {
+        // Transform/opacity only — letter-spacing or filter tweens would
+        // force layout/paint on every scrub frame and jank the pin.
+        gsap.set(heroName, { willChange: "transform, opacity", force3D: true });
+        heroTimeline.to(
+          heroName,
+          { scale: 1.05, y: mobile ? -14 : -30, ease: "none", duration: 0.55 },
+          0
+        );
+        // Act 2: name exits upward, stretching slightly as it goes.
+        heroTimeline.to(
+          heroName,
+          {
+            y: mobile ? -60 : -120,
+            opacity: 0,
+            scale: 1.1,
+            ease: "power1.in",
+            duration: 0.38,
+          },
+          0.55
+        );
+      }
+
       heroTimeline.to(
         heroContent,
-        { y: mobile ? -10 : -22, opacity: 0.94, scale: 0.996, ease: "power1.out" },
-        0.55
+        { opacity: 0, ease: "power1.in", duration: 0.32 },
+        0.64
       );
-
-      if (heroHint) {
-        heroTimeline.fromTo(heroHint, { opacity: 1, y: 0 }, { opacity: 0.9, y: -6, ease: "none" }, 0);
-        heroTimeline.to(heroHint, { opacity: 0.82, y: -12, ease: "power1.out" }, 0.55);
-      }
 
       const allWords = [];
       lineEls.forEach((line) => {
@@ -159,6 +179,14 @@ export default function HomeCinematic({ onPortraitReady }) {
         });
         wordOffset += words.length * 0.035 + 0.06;
       });
+
+      // Statement breathes at full presence, then hands off to the next
+      // chapter by drifting up and receding as the pin releases.
+      ethosTimeline.to(
+        ethosContent,
+        { yPercent: -16, opacity: 0.12, scale: 0.965, ease: "power1.in", duration: 0.2 },
+        0.8
+      );
     });
 
     requestAnimationFrame(() => refreshScrollTriggersNow());
@@ -195,7 +223,10 @@ export default function HomeCinematic({ onPortraitReady }) {
             ref={heroContentRef}
             className="pointer-events-none absolute inset-x-0 bottom-0 z-20 bg-gradient-to-t from-hq-deep from-25% via-hq-deep/95 to-transparent px-6 pb-10 pt-24 text-center max-md:pt-28 md:px-10 md:pb-14 md:pt-32"
           >
-            <p className="font-serif text-statement text-ink text-balance drop-shadow-[0_2px_24px_rgba(0,0,0,0.35)]">
+            <p
+              ref={heroNameRef}
+              className="font-serif text-statement text-ink text-balance drop-shadow-[0_2px_24px_rgba(0,0,0,0.35)]"
+            >
               {home.nameReveal}
             </p>
             <p

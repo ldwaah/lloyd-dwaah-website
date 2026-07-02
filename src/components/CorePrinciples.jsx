@@ -149,62 +149,35 @@ export default function CorePrinciples() {
     const carousel = carouselRef.current;
     if (!section || !headerBlock || !carousel) return undefined;
 
-    let removeScrollListener = () => {};
-    let retryTimer = null;
-    let retryInterval = null;
-
     const ctx = gsap.context(() => {
-      gsap.set([headerBlock, carousel], { opacity: 1, y: 0 });
-
-      const tl = gsap
-        .timeline({ paused: true })
+      // Scrubbed chapter entrance: the section rises to meet the ethos
+      // statement's exit, so the handoff reads as one continuous move.
+      gsap
+        .timeline({
+          scrollTrigger: {
+            trigger: section,
+            start: "top 96%",
+            end: "top 42%",
+            scrub: 0.5,
+            invalidateOnRefresh: true,
+          },
+        })
         .fromTo(
           headerBlock,
-          { y: 28 },
-          { y: 0, duration: 0.7, ease: [0.22, 1, 0.36, 1] }
+          { y: 80, opacity: 0.1 },
+          { y: 0, opacity: 1, duration: 0.6, ease: "power1.out" }
         )
         .fromTo(
           carousel,
-          { y: 28 },
-          { y: 0, duration: 0.65, ease: [0.22, 1, 0.36, 1] },
-          0.12
+          { y: 110, opacity: 0.05 },
+          { y: 0, opacity: 1, duration: 0.6, ease: "power1.out" },
+          0.1
         );
-
-      const playEntrance = () => {
-        if (tl.progress() < 1) tl.play();
-      };
-
-      ScrollTrigger.create({
-        trigger: section,
-        start: "top 85%",
-        once: true,
-        onEnter: playEntrance,
-      });
-
-      const revealIfVisible = () => {
-        const { top, bottom } = section.getBoundingClientRect();
-        if (top < window.innerHeight * 0.9 && bottom > 0) {
-          tl.progress(1);
-        }
-      };
-
-      requestAnimationFrame(() => {
-        refreshScrollTriggersNow();
-        revealIfVisible();
-      });
-
-      window.addEventListener("scroll", revealIfVisible, { passive: true });
-      removeScrollListener = () => window.removeEventListener("scroll", revealIfVisible);
-      retryInterval = window.setInterval(revealIfVisible, 400);
-      retryTimer = window.setTimeout(() => {
-        if (retryInterval) window.clearInterval(retryInterval);
-      }, 4000);
     });
 
+    requestAnimationFrame(() => refreshScrollTriggersNow());
+
     return () => {
-      removeScrollListener();
-      if (retryInterval) window.clearInterval(retryInterval);
-      if (retryTimer) window.clearTimeout(retryTimer);
       ctx.revert();
     };
   }, [reduced]);
@@ -245,7 +218,7 @@ export default function CorePrinciples() {
     <section
       id="principles"
       ref={sectionRef}
-      className="relative z-10 overflow-hidden border-t border-line bg-hq-deep"
+      className="relative z-10 overflow-hidden bg-hq-deep"
       aria-roledescription="carousel"
       aria-label={ethos.principlesHeading}
     >
